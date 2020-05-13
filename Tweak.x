@@ -13,7 +13,11 @@
 @interface MTTitledPlatterView : MTPlatterView
 @end
 
+@interface VelvetIndicatorView : UIView
+@end
+
 @interface NCNotificationShortLookView : MTTitledPlatterView
+@property (retain, nonatomic) VelvetIndicatorView * colorIndicator;
 @end
 
 @interface NCNotificationViewController : UIViewController
@@ -21,11 +25,9 @@
 
 @interface NCNotificationShortLookViewController : NCNotificationViewController
 @property (nonatomic,readonly) NCNotificationShortLookView * viewForPreview;
-@property (retain, nonatomic) UIView * colorIndicator;
 @end
 
-@interface VelvetIndicatorView : UIView
-@end
+
 
 @implementation VelvetIndicatorView
 @end
@@ -34,29 +36,31 @@
 - (void)setIcons:(NSArray *)arg1 {
 	%orig;
 
-	VelvetIndicatorView *colorIndicator = nil;
-	for (VelvetIndicatorView *subview in self.superview.subviews) {
-		if ([subview isMemberOfClass:%c(VelvetIndicatorView)]) {
-			colorIndicator = subview;
-		}
-	}
+	if (![self.superview isKindOfClass:%c(NCNotificationShortLookView)]) return;
+
+	VelvetIndicatorView *colorIndicator = ((NCNotificationShortLookView *)self.superview).colorIndicator;
 
 	if (colorIndicator) {
 		UIImage *icon = arg1[0];
 		colorIndicator.backgroundColor = [icon velvetDominantColor];
-		// [colorIndicator setFrame:CGRectMake(0, 0, 5, self.superview.frame.size.height)];
 	}
 }
 %end
 
-%hook NCNotificationShortLookViewController
+%hook NCNotificationShortLookView
 %property (retain, nonatomic) VelvetIndicatorView *colorIndicator;
+%end
+
+%hook NCNotificationShortLookViewController
+
 - (void)viewDidLoad {
 	%orig;
 
-	self.colorIndicator = [[VelvetIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 359, 2)];
-	[self.viewForPreview insertSubview:self.colorIndicator atIndex:1];
+	NCNotificationShortLookView *view = self.viewForPreview;
 
-	self.viewForPreview.backgroundMaterialView.layer.cornerRadius = 0;
+	view.colorIndicator = [[VelvetIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 359, 2)];
+	[view insertSubview:view.colorIndicator atIndex:1];
+
+	view.backgroundMaterialView.layer.cornerRadius = 0;
 }
 %end
