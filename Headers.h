@@ -6,6 +6,7 @@
 
 @interface MTPlatterView : UIView
 @property (nonatomic,readonly) MTMaterialView * backgroundMaterialView;
+@property (nonatomic,readonly) UIView * customContentView;
 @end
 
 @interface MTTitledPlatterView : MTPlatterView
@@ -17,6 +18,8 @@
 @interface NCNotificationShortLookView : MTTitledPlatterView
 @property (nonatomic,copy) NSArray * icons;
 @property (retain, nonatomic) VelvetIndicatorView * colorIndicator;
+@property (retain, nonatomic) UIBlurEffect * blurEffect;
+@property (retain, nonatomic) UIVisualEffectView * blurEffectView;
 @end
 
 @interface NCNotificationViewController : UIViewController
