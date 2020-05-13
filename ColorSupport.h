@@ -2,7 +2,7 @@
 @property int r, g, b, d;
 @end
 
-@interface UIImage (CozyBadges)
+@interface UIImage (Velvet)
 - (UIColor *)velvetDominantColor;
 -(int)colourDistance:(RGBPixel *)a andB:(RGBPixel *)b;
 @end

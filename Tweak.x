@@ -21,32 +21,41 @@
 
 @interface NCNotificationShortLookViewController : NCNotificationViewController
 @property (nonatomic,readonly) NCNotificationShortLookView * viewForPreview;
+@property (retain, nonatomic) UIView * colorIndicator;
+@end
+
+@interface VelvetIndicatorView : UIView
+@end
+
+@implementation VelvetIndicatorView
 @end
 
 %hook PLPlatterHeaderContentView
--(void)setIcons:(NSArray *)arg1 {
+- (void)setIcons:(NSArray *)arg1 {
 	%orig;
 
-	UIView *headerLine = nil;
-	for (UIView *subview in self.superview.subviews) {
-		if ([subview isMemberOfClass:%c(UIView)]) {
-			headerLine = subview;
+	VelvetIndicatorView *colorIndicator = nil;
+	for (VelvetIndicatorView *subview in self.superview.subviews) {
+		if ([subview isMemberOfClass:%c(VelvetIndicatorView)]) {
+			colorIndicator = subview;
 		}
 	}
 
-	if (headerLine) {
+	if (colorIndicator) {
 		UIImage *icon = arg1[0];
-		headerLine.backgroundColor = [icon velvetDominantColor];
+		colorIndicator.backgroundColor = [icon velvetDominantColor];
+		// [colorIndicator setFrame:CGRectMake(0, 0, 5, self.superview.frame.size.height)];
 	}
 }
 %end
 
 %hook NCNotificationShortLookViewController
+%property (retain, nonatomic) VelvetIndicatorView *colorIndicator;
 - (void)viewDidLoad {
 	%orig;
 
-	UIView *headerLine = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 359, 2)];
-	[self.viewForPreview insertSubview:headerLine atIndex:1];
+	self.colorIndicator = [[VelvetIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 359, 2)];
+	[self.viewForPreview insertSubview:self.colorIndicator atIndex:1];
 
 	self.viewForPreview.backgroundMaterialView.layer.cornerRadius = 0;
 }
