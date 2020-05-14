@@ -2,13 +2,7 @@
 @property (assign) BOOL continuousCorners;
 @end
 
-@interface _NCNotificationShortLookScrollView : UIScrollView
-@end
-
 @interface MTMaterialView : UIView
-@end
-
-@interface PLPlatterHeaderContentView : UIView
 @end
 
 @interface PLPlatterView : UIView
@@ -16,7 +10,7 @@
 @property (nonatomic,readonly) UIView * customContentView;
 @end
 
-@interface VelvetIndicatorView : UIView
+@interface PLPlatterHeaderContentView : UIView
 @end
 
 @interface PLTitledPlatterView : PLPlatterView {
@@ -26,6 +20,9 @@
 - (CGRect)_mainContentFrame;
 @end
 
+@interface VelvetIndicatorView : UIView
+@end
+
 @interface NCNotificationContentView : UIView
 @end
 
@@ -33,6 +30,24 @@
 @property (nonatomic,copy) NSArray * icons;
 @property (getter=_notificationContentView,nonatomic,readonly) NCNotificationContentView * notificationContentView;
 @property (retain, nonatomic) VelvetIndicatorView * colorIndicator;
+@end
+
+@interface NCNotificationViewControllerView : UIView
+@property (assign,nonatomic) PLPlatterView * contentView;
+@end
+
+@interface NCNotificationListCell : UIView
+-(NCNotificationViewControllerView *)_notificationCellView;
+@end
+
+@interface NCNotificationListView : UIScrollView
+@property(nonatomic, getter=isGrouped) BOOL grouped;
+@property(nonatomic, getter=hasPerformedFirstLayout) BOOL performedFirstLayout;
+@property(retain, nonatomic) NSMutableDictionary *visibleViews;
+- (NCNotificationListCell *)_visibleViewAtIndex:(unsigned long long)index;
+@end
+
+@interface _NCNotificationShortLookScrollView : UIScrollView
 @end
 
 @interface NCNotificationViewController : UIViewController

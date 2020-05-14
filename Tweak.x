@@ -33,11 +33,13 @@ int style = 2;
 			{
 				view.colorIndicator.frame = CGRectMake(0, 0, view.frame.size.width, 4); // full indicator top
 				view.colorIndicator.layer.cornerRadius = 0;
+				view.backgroundMaterialView.layer.cornerRadius = 0;
         	} break;
         case 2:
 			{
 				view.colorIndicator.frame = CGRectMake(0, 0, 4, view.frame.size.height); // full indicator left
 				view.colorIndicator.layer.cornerRadius = 0;
+				view.backgroundMaterialView.layer.cornerRadius = 0;
         	} break;
         case 3:
 			{
@@ -55,9 +57,6 @@ int style = 2;
 				view.colorIndicator.layer.cornerRadius = 0;
         	} break;
 	}
-
-	UIImage *icon = view.icons[0];
-	view.colorIndicator.backgroundColor = [icon velvetDominantColor];
 }
 %end
 
@@ -74,14 +73,44 @@ int style = 2;
 }
 %end
 
-%hook _NCNotificationShortLookScrollView
--(void)setFrame:(CGRect)frame {
+%hook NCNotificationListView
+- (void)layoutSubviews {
+	%orig;
 
-	// Make notifications a bit less wide
-	frame.origin.x = self.superview.frame.origin.x + 10;
-	frame.size.width = self.superview.frame.size.width - 20;
+	// This are ListViews that contain ALL current notifications and are therefore irrelevant
+	if (!self.grouped) return;
 
-	%orig(frame);
+	NCNotificationListCell *frontCell = [self _visibleViewAtIndex:0];
+	NCNotificationViewControllerView *frontView = [frontCell _notificationCellView];
+	NCNotificationShortLookView *shortLookView = (NCNotificationShortLookView *)frontView.contentView;
 
+	if (shortLookView.colorIndicator == nil) return;
+
+	UIImage *icon = shortLookView.icons[0];
+	UIColor *dominantColor = [icon velvetDominantColor];
+
+	if (!dominantColor) return;
+
+	for (UIView *subview in self.subviews) {
+		if ([subview isKindOfClass:%c(NCNotificationListCell)]) {
+			NCNotificationListCell *cell = (NCNotificationListCell *)subview;
+			NCNotificationViewControllerView *frontView = [cell _notificationCellView];
+			NCNotificationShortLookView *shortLookView = (NCNotificationShortLookView *)frontView.contentView;
+
+			shortLookView.colorIndicator.backgroundColor = dominantColor;
+		}
+	}
 }
 %end
+
+// %hook _NCNotificationShortLookScrollView
+// -(void)setFrame:(CGRect)frame {
+
+// 	// Make notifications a bit less wide
+// 	frame.origin.x = self.superview.frame.origin.x + 10;
+// 	frame.size.width = self.superview.frame.size.width - 20;
+
+// 	%orig(frame);
+
+// }
+// %end
