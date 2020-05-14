@@ -61,6 +61,7 @@ int style = 2;
 }
 %end
 
+
 %hook PLTitledPlatterView
 - (CGRect)_mainContentFrame {
 	CGRect frame = %orig;
@@ -70,5 +71,17 @@ int style = 2;
 		frame.size.width = frame.size.width - 50;
 	}
 	return frame;
+}
+%end
+
+%hook _NCNotificationShortLookScrollView
+-(void)setFrame:(CGRect)frame {
+
+	// Make notifications a bit less wide
+	frame.origin.x = self.superview.frame.origin.x + 10;
+	frame.size.width = self.superview.frame.size.width - 20;
+
+	%orig(frame);
+
 }
 %end

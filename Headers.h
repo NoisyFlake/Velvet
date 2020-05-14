@@ -2,6 +2,9 @@
 @property (assign) BOOL continuousCorners;
 @end
 
+@interface _NCNotificationShortLookScrollView : UIScrollView
+@end
+
 @interface MTMaterialView : UIView
 @end
 
