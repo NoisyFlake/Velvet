@@ -8,10 +8,12 @@
 %property (retain, nonatomic) VelvetIndicatorView * colorIndicator;
 %property (retain, nonatomic) UIBlurEffect * blurEffect;
 %property (retain, nonatomic) UIVisualEffectView * blurEffectView;
+%property (retain, nonatomic) UIVibrancyEffect * vibrancyEffect;
+%property (retain, nonatomic) UIVisualEffectView * vibrancyEffectView;
 %end
 
 %hook NCNotificationShortLookViewController
-
+// @property (nonatomic,readonly) UIView * contentView;
 - (void)viewDidLayoutSubviews {
 	%orig;
 
@@ -27,10 +29,18 @@
 		view.colorIndicator = colorIndicator;
 
 		// add blur effect view with blur effect style (regular adapts to user style)
-		view.blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleRegular];
+		view.blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemMaterial];
 		view.blurEffectView = [[UIVisualEffectView alloc] initWithEffect:view.blurEffect];
 		[view insertSubview:view.blurEffectView atIndex:0];
-		view.blurEffectView.alpha = 0.75; // change alpha (?)
+		// view.blurEffectView.alpha = 0.75; // change alpha (?)
+
+		// add vibrancy effect view (makes the content blend in with the background)
+		view.vibrancyEffect = [UIVibrancyEffect effectForBlurEffect:view.blurEffect];
+		view.vibrancyEffectView = [[UIVisualEffectView alloc] initWithEffect:view.vibrancyEffect];
+		[[view.vibrancyEffectView contentView] addSubview:view.customContentView];
+
+		// add vibrancy view to blur view
+		[[view.blurEffectView contentView] insertSubview:view.vibrancyEffectView atIndex:0];
 
 		// view.backgroundMaterialView.layer.cornerRadius = 0;
 		// view.backgroundMaterialView.alpha = 0;
@@ -45,6 +55,7 @@
 		view.colorIndicator.frame = CGRectMake(0, 0, view.frame.size.width, 2);
 	}
 	view.blurEffectView.frame = CGRectMake(0, 0, view.frame.size.width, view.frame.size.height);
+	view.vibrancyEffectView.frame = CGRectMake(view.customContentView.frame.origin.x, view.customContentView.frame.origin.y, view.customContentView.frame.size.width, view.customContentView.frame.size.height);
 
 	UIImage *icon = view.icons[0];
 	view.colorIndicator.backgroundColor = [icon velvetDominantColor];

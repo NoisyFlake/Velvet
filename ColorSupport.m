@@ -35,8 +35,7 @@
     CGContextDrawImage(context, CGRectMake(0, 0, width, height), imageRef);
     CGContextRelease(context);
 
-
-    NSMutableArray *imageColors = [NSMutableArray new];
+    NSMutableArray *imageColors = [[NSMutableArray alloc] init];
 
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
@@ -45,7 +44,7 @@
 
             if (rawData[i + 3] < 128) continue;
 
-            RGBPixel *pixel = [RGBPixel new];
+            RGBPixel *pixel = [[RGBPixel alloc] init];
             pixel.r = rawData[i];
             pixel.g = rawData[i + 1];
             pixel.b = rawData[i + 2];
