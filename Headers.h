@@ -37,7 +37,6 @@
 @property (nonatomic,copy) NSArray * icons;
 @property (getter=_notificationContentView,nonatomic,readonly) NCNotificationContentView * notificationContentView;
 @property (retain, nonatomic) VelvetIndicatorView * colorIndicator;
-@property (retain, nonatomic) _UIBackdropView * blurView;
 @end
 
 @interface NCNotificationViewController : UIViewController
