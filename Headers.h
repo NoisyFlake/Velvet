@@ -1,6 +1,20 @@
 @interface MTMaterialView : UIView
 @end
 
+@interface _UIBackdropViewSettings : NSObject
+-(void)setColorTint:(UIColor *)arg1 ;
+-(void)setColorTintAlpha:(double)arg1 ;
+@end
+
+@interface _UIBackdropView : UIView
+-(id)initWithStyle:(long long)arg1 ;
+-(_UIBackdropViewSettings *)inputSettings;
+-(void)setInputSettings:(_UIBackdropViewSettings *)arg1 ;
+-(void)setBlurRadius:(double)arg1 ;
+-(void)setBlurRadiusSetOnce:(BOOL)arg1 ;
+-(void)setBlurQuality:(id)arg1 ;
+@end
+
 @interface PLPlatterHeaderContentView : UIView
 @end
 
@@ -23,10 +37,7 @@
 @property (nonatomic,copy) NSArray * icons;
 @property (getter=_notificationContentView,nonatomic,readonly) NCNotificationContentView * notificationContentView;
 @property (retain, nonatomic) VelvetIndicatorView * colorIndicator;
-@property (retain, nonatomic) UIBlurEffect * blurEffect;
-@property (retain, nonatomic) UIVisualEffectView * blurEffectView;
-@property (retain, nonatomic) UIVibrancyEffect * vibrancyEffect;
-@property (retain, nonatomic) UIVisualEffectView * vibrancyEffectView;
+@property (retain, nonatomic) _UIBackdropView * blurView;
 @end
 
 @interface NCNotificationViewController : UIViewController

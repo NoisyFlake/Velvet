@@ -6,10 +6,7 @@
 
 %hook NCNotificationShortLookView
 %property (retain, nonatomic) VelvetIndicatorView * colorIndicator;
-%property (retain, nonatomic) UIBlurEffect * blurEffect;
-%property (retain, nonatomic) UIVisualEffectView * blurEffectView;
-%property (retain, nonatomic) UIVibrancyEffect * vibrancyEffect;
-%property (retain, nonatomic) UIVisualEffectView * vibrancyEffectView;
+%property (retain, nonatomic) _UIBackdropView * blurView;
 %end
 
 %hook NCNotificationShortLookViewController
@@ -27,21 +24,15 @@
 		[view insertSubview:colorIndicator atIndex:1];
 		view.colorIndicator = colorIndicator;
 
-		// add blur effect view with blur effect style (regular adapts to user style)
-		view.blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemMaterial];
-		view.blurEffectView = [[UIVisualEffectView alloc] initWithEffect:view.blurEffect];
-		[view insertSubview:view.blurEffectView atIndex:0];
-		// view.blurEffectView.alpha = 0.75; // change alpha (?)
-
-		// add vibrancy effect view (makes the content blend in with the background)
-		view.vibrancyEffect = [UIVibrancyEffect effectForBlurEffect:view.blurEffect];
-		view.vibrancyEffectView = [[UIVisualEffectView alloc] initWithEffect:view.vibrancyEffect];
-
-		// add content to vibrancy view
-		[[view.vibrancyEffectView contentView] addSubview:view.customContentView];
-
-		// add vibrancy effect view to blur view
-		[[view.blurEffectView contentView] insertSubview:view.vibrancyEffectView atIndex:0];
+		view.blurView = [[_UIBackdropView alloc] initWithStyle:4007];
+		// _UIBackdropViewSettings *settings = [view.blurView inputSettings];
+		// [settings setColorTint:[UIColor colorWithRed:0.5 green:0.5 blue:0.0 alpha:1.0]];
+		// [settings setColorTintAlpha:0.1];
+		// [view.blurView setInputSettings:settings];
+		// [view.blurView setBlurRadiusSetOnce:NO];
+		// [view.blurView setBlurRadius:3.0];
+		// [view.blurView setBlurQuality:@"default"];
+		[view insertSubview:view.blurView atIndex:0];
 
 		// view.backgroundMaterialView.layer.cornerRadius = 0;
 		// view.backgroundMaterialView.alpha = 0;
@@ -55,8 +46,7 @@
 	} else {
 		view.colorIndicator.frame = CGRectMake(0, 0, view.frame.size.width, 2);
 	}
-	view.blurEffectView.frame = CGRectMake(0, 0, view.frame.size.width, view.frame.size.height);
-	view.vibrancyEffectView.frame = CGRectMake(0, 0, view.frame.size.width, view.frame.size.width);
+
 	UIImage *icon = view.icons[0];
 	view.colorIndicator.backgroundColor = [icon velvetDominantColor];
 }
