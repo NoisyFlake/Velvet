@@ -13,7 +13,6 @@
 %end
 
 %hook NCNotificationShortLookViewController
-// @property (nonatomic,readonly) UIView * contentView;
 - (void)viewDidLayoutSubviews {
 	%orig;
 
@@ -37,9 +36,11 @@
 		// add vibrancy effect view (makes the content blend in with the background)
 		view.vibrancyEffect = [UIVibrancyEffect effectForBlurEffect:view.blurEffect];
 		view.vibrancyEffectView = [[UIVisualEffectView alloc] initWithEffect:view.vibrancyEffect];
+
+		// add content to vibrancy view
 		[[view.vibrancyEffectView contentView] addSubview:view.customContentView];
 
-		// add vibrancy view to blur view
+		// add vibrancy effect view to blur view
 		[[view.blurEffectView contentView] insertSubview:view.vibrancyEffectView atIndex:0];
 
 		// view.backgroundMaterialView.layer.cornerRadius = 0;
@@ -55,8 +56,7 @@
 		view.colorIndicator.frame = CGRectMake(0, 0, view.frame.size.width, 2);
 	}
 	view.blurEffectView.frame = CGRectMake(0, 0, view.frame.size.width, view.frame.size.height);
-	view.vibrancyEffectView.frame = CGRectMake(view.customContentView.frame.origin.x, view.customContentView.frame.origin.y, view.customContentView.frame.size.width, view.customContentView.frame.size.height);
-
+	view.vibrancyEffectView.frame = CGRectMake(0, 0, view.frame.size.width, view.frame.size.width);
 	UIImage *icon = view.icons[0];
 	view.colorIndicator.backgroundColor = [icon velvetDominantColor];
 }
