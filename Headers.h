@@ -1,3 +1,7 @@
+@interface CALayer (Undocumented)
+@property (assign) BOOL continuousCorners;
+@end
+
 @interface MTMaterialView : UIView
 @end
 
@@ -12,8 +16,11 @@
 @interface VelvetIndicatorView : UIView
 @end
 
-@interface PLTitledPlatterView : PLPlatterView
+@interface PLTitledPlatterView : PLPlatterView {
+	PLPlatterHeaderContentView * _headerContentView;
+}
 @property (nonatomic,readonly) UIView * customContentView;
+- (CGRect)_mainContentFrame;
 @end
 
 @interface NCNotificationContentView : UIView
