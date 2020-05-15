@@ -29,6 +29,9 @@
 @end
 
 @interface NCNotificationContentView : UIView
+@property (setter=_setPrimaryLabel:,getter=_primaryLabel,nonatomic,retain) UILabel * primaryLabel;
+@property (setter=_setPrimarySubtitleLabel:,getter=_primarySubtitleLabel,nonatomic,retain) UILabel * primarySubtitleLabel;
+@property (getter=_secondaryLabel,nonatomic,readonly) UILabel * secondaryLabel;
 @end
 
 @interface NCNotificationShortLookView : PLTitledPlatterView

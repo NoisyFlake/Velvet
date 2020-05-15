@@ -138,6 +138,16 @@ int style = 5;
 }
 %end
 
+%hook NCNotificationContentView
+- (void)layoutSubviews {
+	%orig;
+
+	self.primaryLabel.textColor = [UIColor blueColor];
+	self.primarySubtitleLabel.textColor = [UIColor blueColor];
+	self.secondaryLabel.textColor = [UIColor blueColor];
+}
+%end
+
 %hook NCNotificationListView
 - (void)layoutSubviews {
 	%orig;
