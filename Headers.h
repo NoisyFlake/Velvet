@@ -82,3 +82,8 @@
 @property (nonatomic,readonly) NCNotificationShortLookView * viewForPreview;
 -(void)velvetHideHeader;
 @end
+
+@interface JBBulletinManager : NSObject
++(id)sharedInstance;
+-(id)showBulletinWithTitle:(NSString *)title message:(NSString *)message bundleID:(NSString *)bundleID;
+@end
