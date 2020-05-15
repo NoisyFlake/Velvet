@@ -147,7 +147,8 @@ BOOL colorPrimaryLabel = YES;
 
 	if (shortLookView.colorIndicator == nil) return;
 
-	UIImage *icon = shortLookView.icons[0];
+	NCNotificationShortLookViewController *controller = shortLookView._viewControllerForAncestor;
+	UIImage *icon = [UIImage _applicationIconImageForBundleIdentifier: controller.notificationRequest.sectionIdentifier format:2 scale:[UIScreen mainScreen].scale];
 	UIColor *dominantColor = [icon velvetDominantColor];
 
 	if (!dominantColor) return;

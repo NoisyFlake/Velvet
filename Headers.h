@@ -1,3 +1,11 @@
+@interface UIImage (UIApplicationIconPrivate)
++(id)_applicationIconImageForBundleIdentifier:(id)arg1 format:(int)arg2 scale:(double)arg3 ;
+@end
+
+@interface UIView (Velvet)
+-(id)_viewControllerForAncestor;
+@end
+
 @interface CALayer (Undocumented)
 @property (assign) BOOL continuousCorners;
 @end
@@ -62,7 +70,12 @@
 @interface _NCNotificationShortLookScrollView : UIScrollView
 @end
 
+@interface NCNotificationRequest : NSObject
+@property (nonatomic,copy,readonly) NSString* sectionIdentifier;
+@end
+
 @interface NCNotificationViewController : UIViewController
+@property (nonatomic,retain) NCNotificationRequest * notificationRequest;
 @end
 
 @interface NCNotificationShortLookViewController : NCNotificationViewController
