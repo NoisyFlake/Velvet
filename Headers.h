@@ -10,7 +10,12 @@
 @property (nonatomic,readonly) UIView * customContentView;
 @end
 
-@interface PLPlatterHeaderContentView : UIView
+@interface PLPlatterHeaderContentView : UIView {
+	UIButton* _utilityButton;
+}
+@property (getter=_dateLabel,nonatomic, readonly) UILabel * dateLabel;
+@property (getter=_titleLabel,nonatomic,readonly) UILabel * titleLabel;
+@property (nonatomic,readonly) UIButton * utilityButton;
 @end
 
 @interface PLTitledPlatterView : PLPlatterView {
@@ -30,6 +35,7 @@
 @property (nonatomic,copy) NSArray * icons;
 @property (getter=_notificationContentView,nonatomic,readonly) NCNotificationContentView * notificationContentView;
 @property (retain, nonatomic) VelvetIndicatorView * colorIndicator;
+@property (retain, nonatomic) UIImageView * imageIndicator;
 @end
 
 @interface NCNotificationViewControllerView : UIView
