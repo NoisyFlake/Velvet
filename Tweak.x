@@ -57,18 +57,7 @@ BOOL colorPrimaryLabel = YES;
 				view.colorIndicator.layer.cornerRadius = width/2;
 				view.colorIndicator.layer.continuousCorners = YES;
 
-				// hide header elements
-				PLPlatterHeaderContentView *header = [view valueForKey:@"_headerContentView"];
-
-				for (UIView *subview in header.subviews) {
-					if ([subview isKindOfClass:%c(UIButton)]) {
-						// hide icon
-						subview.alpha = 0;
-					}
-				}
-
-				UILabel * titleLabel = header.titleLabel;
-				titleLabel.alpha = 0;
+				[self velvetHideHeader];
         	} break;
         case 4: // circle left
 			{
@@ -77,36 +66,14 @@ BOOL colorPrimaryLabel = YES;
 				view.colorIndicator.layer.cornerRadius = size/2;
 				view.colorIndicator.layer.continuousCorners = YES;
 
-				// hide header elements
-				PLPlatterHeaderContentView *header = [view valueForKey:@"_headerContentView"];
-
-				for (UIView *subview in header.subviews) {
-					if ([subview isKindOfClass:%c(UIButton)]) {
-						// hide icon
-						subview.alpha = 0;
-					}
-				}
-
-				UILabel * titleLabel = header.titleLabel;
-				titleLabel.alpha = 0;
+				[self velvetHideHeader];
 			} break;
         case 5: // icon left
 			{
 				float size = 24;
 				view.imageIndicator.frame = CGRectMake(20, (view.frame.size.height - size)/2, size, size);
 
-				// hide header elements
-				PLPlatterHeaderContentView *header = [view valueForKey:@"_headerContentView"];
-
-				for (UIView *subview in header.subviews) {
-					if ([subview isKindOfClass:%c(UIButton)]) {
-						// hide icon
-						subview.alpha = 0;
-					}
-				}
-
-				UILabel * titleLabel = header.titleLabel;
-				titleLabel.alpha = 0;
+				[self velvetHideHeader];
         	} break;
         default:
 	        {
@@ -114,6 +81,34 @@ BOOL colorPrimaryLabel = YES;
 				view.colorIndicator.layer.cornerRadius = 0;
         	} break;
 	}
+}
+
+%new
+-(void)velvetHideHeader {
+	PLPlatterHeaderContentView *header = [self.viewForPreview valueForKey:@"_headerContentView"];
+
+	for (UIView *subview in header.subviews) {
+		if ([subview isKindOfClass:%c(UIButton)]) {
+			// hide icon
+			subview.hidden = YES;
+		}
+	}
+
+	header.titleLabel.hidden = YES;
+}
+%end
+
+%hook BSUIDefaultDateLabel
+-(void)setFrame:(CGRect)frame {
+	// Move the dateLabel into the corner to make room for the centered notification text
+	if (style == 3 || style == 4 || style == 5) {
+		if (self.superview.frame.size.width > 0) {
+			frame.origin.y -= 3;
+			frame.origin.x += 4;
+		}
+	}
+
+	%orig;
 }
 %end
 

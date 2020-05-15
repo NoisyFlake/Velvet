@@ -28,6 +28,9 @@
 @interface VelvetIndicatorView : UIView
 @end
 
+@interface BSUIDefaultDateLabel : UILabel
+@end
+
 @interface NCNotificationContentView : UIView
 @property (setter=_setPrimaryLabel:,getter=_primaryLabel,nonatomic,retain) UILabel * primaryLabel;
 @property (setter=_setPrimarySubtitleLabel:,getter=_primarySubtitleLabel,nonatomic,retain) UILabel * primarySubtitleLabel;
@@ -64,4 +67,5 @@
 
 @interface NCNotificationShortLookViewController : NCNotificationViewController
 @property (nonatomic,readonly) NCNotificationShortLookView * viewForPreview;
+-(void)velvetHideHeader;
 @end
