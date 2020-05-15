@@ -73,6 +73,8 @@ BOOL colorPrimaryLabel = YES;
 				float size = 24;
 				view.imageIndicator.frame = CGRectMake(20, (view.frame.size.height - size)/2, size, size);
 
+				view.imageIndicator.image = [UIImage _applicationIconImageForBundleIdentifier: self.notificationRequest.sectionIdentifier format:2 scale:[UIScreen mainScreen].scale];
+
 				[self velvetHideHeader];
         	} break;
         default:
@@ -121,14 +123,17 @@ BOOL colorPrimaryLabel = YES;
 	if (style == 3) {
 		frame.origin.y = frame.origin.y - 14;
 		frame.origin.x = frame.origin.x + 25;
+		frame.size.width -= 25;
 	}
 	if (style == 4) {
 		frame.origin.y = frame.origin.y - 14;
 		frame.origin.x = frame.origin.x + 32;
+		frame.size.width -= 32;
 	}
 	if (style == 5) {
 		frame.origin.y = frame.origin.y - 14;
 		frame.origin.x = frame.origin.x + 45;
+		frame.size.width -= 45;
 	}
 	return frame;
 }
@@ -152,11 +157,6 @@ BOOL colorPrimaryLabel = YES;
 	UIColor *dominantColor = [icon velvetDominantColor];
 
 	if (!dominantColor) return;
-
-	// add icon to image indicator
-	if (style == 5) {
-		shortLookView.imageIndicator.image = icon;
-	}
 
 	for (UIView *subview in self.subviews) {
 		if ([subview isKindOfClass:%c(NCNotificationListCell)]) {
