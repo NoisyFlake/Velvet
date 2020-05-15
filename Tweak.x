@@ -2,6 +2,7 @@
 #import "ColorSupport.h"
 
 int style = 5;
+BOOL colorPrimaryLabel = YES;
 
 @implementation VelvetIndicatorView
 @end
@@ -138,16 +139,6 @@ int style = 5;
 }
 %end
 
-%hook NCNotificationContentView
-- (void)layoutSubviews {
-	%orig;
-
-	self.primaryLabel.textColor = [UIColor blueColor];
-	self.primarySubtitleLabel.textColor = [UIColor blueColor];
-	self.secondaryLabel.textColor = [UIColor blueColor];
-}
-%end
-
 %hook NCNotificationListView
 - (void)layoutSubviews {
 	%orig;
@@ -178,6 +169,12 @@ int style = 5;
 			NCNotificationShortLookView *shortLookView = (NCNotificationShortLookView *)frontView.contentView;
 
 			shortLookView.colorIndicator.backgroundColor = dominantColor;
+
+			if (colorPrimaryLabel) {
+				shortLookView.notificationContentView.primaryLabel.textColor = dominantColor;
+				// shortLookView.notificationContentView.primarySubtitleLabel.textColor = dominantColor;
+				// shortLookView.notificationContentView.secondaryLabel.textColor = dominantColor;
+			}
 		}
 	}
 }
