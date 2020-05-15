@@ -123,17 +123,14 @@ BOOL colorPrimaryLabel = YES;
 	if (style == 3) {
 		frame.origin.y = frame.origin.y - 14;
 		frame.origin.x = frame.origin.x + 25;
-		frame.size.width -= 25;
 	}
 	if (style == 4) {
 		frame.origin.y = frame.origin.y - 14;
 		frame.origin.x = frame.origin.x + 32;
-		frame.size.width -= 32;
 	}
 	if (style == 5) {
 		frame.origin.y = frame.origin.y - 14;
 		frame.origin.x = frame.origin.x + 45;
-		frame.size.width -= 45;
 	}
 	return frame;
 }
@@ -164,8 +161,6 @@ BOOL colorPrimaryLabel = YES;
 			NCNotificationViewControllerView *frontView = [cell _notificationCellView];
 			NCNotificationShortLookView *shortLookView = (NCNotificationShortLookView *)frontView.contentView;
 
-			shortLookView.colorIndicator.backgroundColor = dominantColor;
-
 			if (colorPrimaryLabel) {
 				shortLookView.notificationContentView.primaryLabel.textColor = dominantColor;
 				// shortLookView.notificationContentView.primarySubtitleLabel.textColor = dominantColor;
@@ -173,6 +168,27 @@ BOOL colorPrimaryLabel = YES;
 			}
 		}
 	}
+}
+%end
+
+%hook NCNotificationContentView
+- (void)layoutSubviews {
+	%orig;
+	CGRect secondaryLabelFrame = self.secondaryLabel.frame;
+	CGFloat labelWidth;
+
+	if (style == 3) {
+		labelWidth = 25;
+	}
+	if (style == 4) {
+		labelWidth = 32;
+	}
+	if (style == 5) {
+		labelWidth = 45;
+	}
+
+	secondaryLabelFrame.size.width = self.secondaryLabel.frame.size.width - labelWidth;
+	self.secondaryLabel.frame = secondaryLabelFrame;
 }
 %end
 
@@ -190,6 +206,10 @@ BOOL colorPrimaryLabel = YES;
                                                            message:@"@HiMyNameIsUbik liked your post."
                                                            bundleID:@"com.atebits.Tweetie2"];
 
+		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Spotify"
+                                                           message:@"🔥 Your favourite artist released a new track!"
+                                                           bundleID:@"com.spotify.client"];
+
 		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"NoisyFlake"
                                                            message:@"ETA?!"
                                                            bundleID:@"com.apple.MobileSMS"];
@@ -199,7 +219,6 @@ BOOL colorPrimaryLabel = YES;
                                                            bundleID:@"com.apple.MobileSMS"];
 	});
 }
-
 
 // %hook _NCNotificationShortLookScrollView
 // -(void)setFrame:(CGRect)frame {
