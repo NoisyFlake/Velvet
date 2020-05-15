@@ -178,25 +178,25 @@ BOOL colorPrimaryLabel = YES;
 
 %ctor {
 	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 5.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void) {
-		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"UBIK"
-                                                           message:@"Ich geb mir die Kugel"
+		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Instagram"
+                                                           message:@"Somebody liked your post."
+                                                           bundleID:@"com.burbn.instagram"];
+
+		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"YouTube"
+                                                           message:@"PewDiePie uploaded a new video."
+                                                           bundleID:@"com.google.ios.youtube"];
+
+		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Twitter"
+                                                           message:@"@HiMyNameIsUbik liked your post."
+                                                           bundleID:@"com.atebits.Tweetie2"];
+
+		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"NoisyFlake"
+                                                           message:@"ETA?!"
                                                            bundleID:@"com.apple.MobileSMS"];
 
-		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"UBIK"
-                                                           message:@"Ich geb mir die Kugel"
+		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"NoisyFlake"
+                                                           message:@"That looks nice!"
                                                            bundleID:@"com.apple.MobileSMS"];
-
-		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Amazon"
-                                                           message:@"Your parcel will arrive today"
-                                                           bundleID:@"com.amazon.AmazonDE"];
-
-		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Spotify"
-                                                           message:@"Your favorite artist released a new track!"
-                                                           bundleID:@"com.spotify.client"];
-
-		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Spotify"
-                                                           message:@"There a 5 new updates available"
-                                                           bundleID:@"com.saurik.Cydia"];
 	});
 }
 
