@@ -12,6 +12,7 @@ TWEAK_NAME = Velvet
 
 Velvet_FILES = ColorSupport.m Tweak.x
 Velvet_FRAMEWORKS = CoreGraphics
+Velvet_LIBRARIES = bulletin
 
 Velvet_CFLAGS = -fobjc-arc
 
