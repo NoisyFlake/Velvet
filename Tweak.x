@@ -5,6 +5,8 @@ int style = 5;
 BOOL colorPrimaryLabel = YES;
 BOOL colorBackground = NO;
 
+float iconSize = 40; // 24, 32, 40, 48 are good options
+
 @implementation VelvetIndicatorView
 @end
 
@@ -64,8 +66,7 @@ BOOL colorBackground = NO;
 			[self velvetHideHeader];
 		} break;
         case 5: { // icon left
-			float size = 24;
-			view.imageIndicator.frame = CGRectMake(20, (view.frame.size.height - size)/2, size, size);
+			view.imageIndicator.frame = CGRectMake(20, (view.frame.size.height - iconSize)/2, iconSize, iconSize);
 			view.imageIndicator.image = [UIImage _applicationIconImageForBundleIdentifier: self.notificationRequest.sectionIdentifier format:2 scale:[UIScreen mainScreen].scale];
 
 			[self velvetHideHeader];
@@ -158,7 +159,7 @@ BOOL colorBackground = NO;
 	}
 	if (style == 5) {
 		frame.origin.y = frame.origin.y - 14;
-		frame.origin.x = frame.origin.x + 45;
+		frame.origin.x = frame.origin.x + (iconSize + 21);
 	}
 	return frame;
 }
@@ -179,7 +180,7 @@ BOOL colorBackground = NO;
 		labelWidth = 32;
 	}
 	if (style == 5) {
-		labelWidth = 45;
+		labelWidth = (iconSize + 21);
 	}
 
 	primaryLabelFrame.size.width = self.primaryLabel.frame.size.width - labelWidth;
