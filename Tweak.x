@@ -4,6 +4,7 @@
 int style = 5;
 BOOL colorPrimaryLabel = YES;
 BOOL colorBackground = NO;
+BOOL colorBorder = NO;
 
 float iconSize = 40; // 24, 32, 40, 48 are good options
 
@@ -86,6 +87,11 @@ float iconSize = 40; // 24, 32, 40, 48 are good options
 	if (colorBackground) {
 		// Only looks good in dark mode so far, need to fix this
 		view.backgroundMaterialView.backgroundColor = [dominantColor colorWithAlphaComponent:0.6];
+	}
+
+	if (colorBorder) {
+		view.backgroundMaterialView.layer.borderColor = dominantColor.CGColor;
+		view.backgroundMaterialView.layer.borderWidth = 2;
 	}
 
 }
@@ -206,7 +212,7 @@ float iconSize = 40; // 24, 32, 40, 48 are good options
                                                            bundleID:@"com.google.ios.youtube"];
 
 		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"iTunes Store"
-                                                           message:@"🔥 Your favourite artist released a new track!"
+                                                           message:@"Your favourite artist released a new track!"
                                                            bundleID:@"com.apple.MobileStore"];
 
 		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Twitter"
