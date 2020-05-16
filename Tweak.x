@@ -167,7 +167,9 @@ BOOL colorBackground = NO;
 %hook NCNotificationContentView
 - (void)layoutSubviews {
 	%orig;
+	CGRect primaryLabelFrame = self.primaryLabel.frame;
 	CGRect secondaryLabelFrame = self.secondaryLabel.frame;
+
 	CGFloat labelWidth;
 
 	if (style == 3) {
@@ -180,7 +182,10 @@ BOOL colorBackground = NO;
 		labelWidth = 45;
 	}
 
+	primaryLabelFrame.size.width = self.primaryLabel.frame.size.width - labelWidth;
 	secondaryLabelFrame.size.width = self.secondaryLabel.frame.size.width - labelWidth;
+
+	self.primaryLabel.frame = primaryLabelFrame;
 	self.secondaryLabel.frame = secondaryLabelFrame;
 }
 %end
