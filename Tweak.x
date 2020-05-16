@@ -3,6 +3,7 @@
 
 int style = 5;
 BOOL colorPrimaryLabel = YES;
+BOOL colorBackground = NO;
 
 @implementation VelvetIndicatorView
 @end
@@ -73,13 +74,19 @@ BOOL colorPrimaryLabel = YES;
 
 	UIColor *dominantColor = [self getDominantColor];
 
+	view.colorIndicator.backgroundColor = dominantColor;
+
 	if (colorPrimaryLabel) {
 		view.notificationContentView.primaryLabel.textColor = dominantColor;
 		// view.notificationContentView.primarySubtitleLabel.textColor = dominantColor;
 		// view.notificationContentView.secondaryLabel.textColor = dominantColor;
 	}
 
-	view.colorIndicator.backgroundColor = dominantColor;
+	if (colorBackground) {
+		// Only looks good in dark mode so far, need to fix this
+		view.backgroundMaterialView.backgroundColor = [dominantColor colorWithAlphaComponent:0.6];
+	}
+
 }
 
 %new
