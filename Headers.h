@@ -1,3 +1,9 @@
+#ifdef DEBUG
+#define NSLog(fmt, ...) HBLogWarn((@"[Velvet] " fmt), ##__VA_ARGS__)
+#else
+#define NSLog(fmt, ...)
+#endif
+
 @interface UIImage (UIApplicationIconPrivate)
 +(id)_applicationIconImageForBundleIdentifier:(id)arg1 format:(int)arg2 scale:(double)arg3 ;
 @end
@@ -76,11 +82,13 @@
 
 @interface NCNotificationViewController : UIViewController
 @property (nonatomic,retain) NCNotificationRequest * notificationRequest;
+@property (assign,nonatomic) UIView * associatedView;
 @end
 
 @interface NCNotificationShortLookViewController : NCNotificationViewController
 @property (nonatomic,readonly) NCNotificationShortLookView * viewForPreview;
 -(void)velvetHideHeader;
+-(UIColor *)getDominantColor;
 @end
 
 @interface JBBulletinManager : NSObject

@@ -35,54 +35,51 @@ BOOL colorPrimaryLabel = YES;
 		view.imageIndicator = imageIndicator;
 	}
 
-	// Now update the frame and color (this is necessary every time because iOS might reuse this UIView for multiple notifications)
-
 	switch (style) {
-        case 1: // full bar bottom
-			{
-				view.colorIndicator.frame = CGRectMake(0, 0, view.frame.size.width, 4);
-				view.colorIndicator.layer.cornerRadius = 0;
-				view.backgroundMaterialView.layer.cornerRadius = 0;
-        	} break;
-        case 2: // full bar left
-			{
-				view.colorIndicator.frame = CGRectMake(0, 0, 4, view.frame.size.height);
-				view.colorIndicator.layer.cornerRadius = 0;
-				view.backgroundMaterialView.layer.cornerRadius = 0;
-        	} break;
-        case 3: // rounded bar left
-			{
-				float width = 3;
-				view.colorIndicator.frame = CGRectMake(20, 20, width, view.frame.size.height-40);
-				view.colorIndicator.layer.cornerRadius = width/2;
-				view.colorIndicator.layer.continuousCorners = YES;
+        case 1: { // full bar bottom
+			view.colorIndicator.frame = CGRectMake(0, 0, view.frame.size.width, 4);
+			view.colorIndicator.layer.cornerRadius = 0;
+			view.backgroundMaterialView.layer.cornerRadius = 0;
+		} break;
+        case 2: { // full bar left
+			view.colorIndicator.frame = CGRectMake(0, 0, 4, view.frame.size.height);
+			view.colorIndicator.layer.cornerRadius = 0;
+			view.backgroundMaterialView.layer.cornerRadius = 0;
+		} break;
+        case 3: { // rounded bar left
+			float width = 3;
+			view.colorIndicator.frame = CGRectMake(20, 20, width, view.frame.size.height-40);
+			view.colorIndicator.layer.cornerRadius = width/2;
+			view.colorIndicator.layer.continuousCorners = YES;
 
-				[self velvetHideHeader];
-        	} break;
-        case 4: // circle left
-			{
-				float size = 12;
-				view.colorIndicator.frame = CGRectMake(20, (view.frame.size.height - size)/2, size, size);
-				view.colorIndicator.layer.cornerRadius = size/2;
-				view.colorIndicator.layer.continuousCorners = YES;
+			[self velvetHideHeader];
+		} break;
+        case 4: { // circle left
+			float size = 12;
+			view.colorIndicator.frame = CGRectMake(20, (view.frame.size.height - size)/2, size, size);
+			view.colorIndicator.layer.cornerRadius = size/2;
+			view.colorIndicator.layer.continuousCorners = YES;
 
-				[self velvetHideHeader];
-			} break;
-        case 5: // icon left
-			{
-				float size = 24;
-				view.imageIndicator.frame = CGRectMake(20, (view.frame.size.height - size)/2, size, size);
+			[self velvetHideHeader];
+		} break;
+        case 5: { // icon left
+			float size = 24;
+			view.imageIndicator.frame = CGRectMake(20, (view.frame.size.height - size)/2, size, size);
+			view.imageIndicator.image = [UIImage _applicationIconImageForBundleIdentifier: self.notificationRequest.sectionIdentifier format:2 scale:[UIScreen mainScreen].scale];
 
-				view.imageIndicator.image = [UIImage _applicationIconImageForBundleIdentifier: self.notificationRequest.sectionIdentifier format:2 scale:[UIScreen mainScreen].scale];
-
-				[self velvetHideHeader];
-        	} break;
-        default:
-	        {
-				view.colorIndicator.frame = CGRectMake(0, 0, 4, view.frame.size.height);
-				view.colorIndicator.layer.cornerRadius = 0;
-        	} break;
+			[self velvetHideHeader];
+		} break;
 	}
+
+	UIColor *dominantColor = [self getDominantColor];
+
+	if (colorPrimaryLabel) {
+		view.notificationContentView.primaryLabel.textColor = dominantColor;
+		// view.notificationContentView.primarySubtitleLabel.textColor = dominantColor;
+		// view.notificationContentView.secondaryLabel.textColor = dominantColor;
+	}
+
+	view.colorIndicator.backgroundColor = dominantColor;
 }
 
 %new
@@ -97,6 +94,30 @@ BOOL colorPrimaryLabel = YES;
 	}
 
 	header.titleLabel.hidden = YES;
+}
+
+%new
+-(UIColor *)getDominantColor {
+	NSString *bundleId = nil;
+
+	if (self.associatedView) {
+		// This could be one of those pseudo notifications that are empty, so we have to find the first actual notification in the list to get the color
+		NCNotificationListCell *cell = (NCNotificationListCell *)self.associatedView;
+		NCNotificationListView *listView = (NCNotificationListView *)cell.superview;
+
+		NCNotificationListCell *frontCell = [listView _visibleViewAtIndex:0];
+		NCNotificationViewControllerView *frontView = [frontCell _notificationCellView];
+		NCNotificationShortLookView *shortLookView = (NCNotificationShortLookView *)frontView.contentView;
+
+		NCNotificationShortLookViewController *controller = shortLookView._viewControllerForAncestor;
+		bundleId = controller.notificationRequest.sectionIdentifier;
+	} else {
+		// This is a single notification, we can safely use our own bundleId
+		bundleId = self.notificationRequest.sectionIdentifier;
+	}
+
+	UIImage *icon = [UIImage _applicationIconImageForBundleIdentifier:bundleId format:2 scale:[UIScreen mainScreen].scale];
+	return [icon velvetDominantColor];
 }
 %end
 
@@ -136,41 +157,6 @@ BOOL colorPrimaryLabel = YES;
 }
 %end
 
-%hook NCNotificationListView
-- (void)layoutSubviews {
-	%orig;
-
-	// This are ListViews that contain ALL current notifications and are therefore irrelevant
-	if (!self.grouped) return;
-
-	NCNotificationListCell *frontCell = [self _visibleViewAtIndex:0];
-	NCNotificationViewControllerView *frontView = [frontCell _notificationCellView];
-	NCNotificationShortLookView *shortLookView = (NCNotificationShortLookView *)frontView.contentView;
-
-	if (shortLookView.colorIndicator == nil) return;
-
-	NCNotificationShortLookViewController *controller = shortLookView._viewControllerForAncestor;
-	UIImage *icon = [UIImage _applicationIconImageForBundleIdentifier: controller.notificationRequest.sectionIdentifier format:2 scale:[UIScreen mainScreen].scale];
-	UIColor *dominantColor = [icon velvetDominantColor];
-
-	if (!dominantColor) return;
-
-	for (UIView *subview in self.subviews) {
-		if ([subview isKindOfClass:%c(NCNotificationListCell)]) {
-			NCNotificationListCell *cell = (NCNotificationListCell *)subview;
-			NCNotificationViewControllerView *frontView = [cell _notificationCellView];
-			NCNotificationShortLookView *shortLookView = (NCNotificationShortLookView *)frontView.contentView;
-
-			if (colorPrimaryLabel) {
-				shortLookView.notificationContentView.primaryLabel.textColor = dominantColor;
-				// shortLookView.notificationContentView.primarySubtitleLabel.textColor = dominantColor;
-				// shortLookView.notificationContentView.secondaryLabel.textColor = dominantColor;
-			}
-		}
-	}
-}
-%end
-
 %hook NCNotificationContentView
 - (void)layoutSubviews {
 	%orig;
@@ -194,6 +180,10 @@ BOOL colorPrimaryLabel = YES;
 
 %ctor {
 	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 5.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void) {
+		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Home"
+                                                           message:@"Would you like to turn the lights on?"
+                                                           bundleID:@"com.apple.Home"];
+
 		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Instagram"
                                                            message:@"Somebody liked your post."
                                                            bundleID:@"com.burbn.instagram"];
@@ -202,13 +192,13 @@ BOOL colorPrimaryLabel = YES;
                                                            message:@"PewDiePie uploaded a new video."
                                                            bundleID:@"com.google.ios.youtube"];
 
+		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"iTunes Store"
+                                                           message:@"🔥 Your favourite artist released a new track!"
+                                                           bundleID:@"com.apple.MobileStore"];
+
 		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Twitter"
                                                            message:@"@HiMyNameIsUbik liked your post."
                                                            bundleID:@"com.atebits.Tweetie2"];
-
-		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Spotify"
-                                                           message:@"🔥 Your favourite artist released a new track!"
-                                                           bundleID:@"com.spotify.client"];
 
 		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"NoisyFlake"
                                                            message:@"ETA?!"
