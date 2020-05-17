@@ -42,6 +42,9 @@
 @interface VelvetIndicatorView : UIView
 @end
 
+@interface VelvetBackgroundView : UIView
+@end
+
 @interface BSUIDefaultDateLabel : UILabel
 @end
 
@@ -55,6 +58,7 @@
 @property (nonatomic,copy) NSArray * icons;
 @property (getter=_notificationContentView,nonatomic,readonly) NCNotificationContentView * notificationContentView;
 @property (retain, nonatomic) VelvetIndicatorView * colorIndicator;
+@property (retain, nonatomic) VelvetBackgroundView * velvetBackground;
 @property (retain, nonatomic) UIImageView * imageIndicator;
 @end
 

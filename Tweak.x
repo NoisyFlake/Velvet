@@ -2,8 +2,8 @@
 #import "ColorSupport.h"
 
 int style = 5;
-BOOL colorPrimaryLabel = YES;
-BOOL colorBackground = NO;
+BOOL colorPrimaryLabel = NO;
+BOOL colorBackground = YES;
 BOOL colorBorder = NO;
 
 float iconSize = 40; // 24, 32, 40, 48 are good options
@@ -11,9 +11,18 @@ float iconSize = 40; // 24, 32, 40, 48 are good options
 @implementation VelvetIndicatorView
 @end
 
+@implementation VelvetBackgroundView
+@end
+
 %hook NCNotificationShortLookView
 %property (retain, nonatomic) VelvetIndicatorView * colorIndicator;
+%property (retain, nonatomic) VelvetBackgroundView * velvetBackground;
 %property (retain, nonatomic) UIImageView * imageIndicator;
+- (void)layoutSubviews {
+	%orig;
+	CGRect frame = self.frame;
+	self.velvetBackground.frame = frame;
+}
 %end
 
 %hook NCNotificationShortLookViewController
@@ -28,14 +37,24 @@ float iconSize = 40; // 24, 32, 40, 48 are good options
 	if (view.colorIndicator == nil) {
 		VelvetIndicatorView *colorIndicator = [[VelvetIndicatorView alloc] initWithFrame:CGRectZero];
 
-		[view insertSubview:colorIndicator atIndex:1];
+		[view insertSubview:colorIndicator atIndex:2];
 		view.colorIndicator = colorIndicator;
 	}
+
+	if (view.velvetBackground == nil) {
+		VelvetBackgroundView *velvetBackground = [[VelvetBackgroundView alloc] initWithFrame:CGRectZero];
+		velvetBackground.layer.cornerRadius = 13;
+		velvetBackground.layer.continuousCorners = YES;
+
+		[view insertSubview:velvetBackground atIndex:1];
+		view.velvetBackground = velvetBackground;
+	}
+
 
 	if (view.imageIndicator == nil) {
 		UIImageView *imageIndicator = [[UIImageView alloc] initWithFrame:CGRectZero];
 
-		[view insertSubview:imageIndicator atIndex:1];
+		[view insertSubview:imageIndicator atIndex:3];
 		view.imageIndicator = imageIndicator;
 	}
 
@@ -85,8 +104,9 @@ float iconSize = 40; // 24, 32, 40, 48 are good options
 	}
 
 	if (colorBackground) {
-		// Only looks good in dark mode so far, need to fix this
-		view.backgroundMaterialView.backgroundColor = [dominantColor colorWithAlphaComponent:0.6];
+		// backgroundMaterialView only looks good in dark mode
+		// view.backgroundMaterialView.backgroundColor = [dominantColor colorWithAlphaComponent:0.6];
+		view.velvetBackground.backgroundColor = [dominantColor colorWithAlphaComponent:0.6];
 	}
 
 	if (colorBorder) {
