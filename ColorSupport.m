@@ -19,7 +19,7 @@
         height = (int)(limit / maxWidth);
     }
 
-    int tolerance = 27;
+    int tolerance = 40;
 
     CGImageRef imageRef = [self CGImage];
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
