@@ -89,6 +89,7 @@
 @property (nonatomic,readonly) NCNotificationShortLookView * viewForPreview;
 -(void)velvetHideHeader;
 -(UIColor *)getDominantColor;
+-(UIImage *)getIconForBundleId:(NSString *)bundleId;
 @end
 
 @interface JBBulletinManager : NSObject

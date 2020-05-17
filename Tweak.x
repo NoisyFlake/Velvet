@@ -68,7 +68,7 @@ float iconSize = 40; // 24, 32, 40, 48 are good options
 		} break;
         case 5: { // icon left
 			view.imageIndicator.frame = CGRectMake(20, (view.frame.size.height - iconSize)/2, iconSize, iconSize);
-			view.imageIndicator.image = [UIImage _applicationIconImageForBundleIdentifier: self.notificationRequest.sectionIdentifier format:2 scale:[UIScreen mainScreen].scale];
+			view.imageIndicator.image = [self getIconForBundleId:self.notificationRequest.sectionIdentifier];
 
 			[self velvetHideHeader];
 		} break;
@@ -130,8 +130,20 @@ float iconSize = 40; // 24, 32, 40, 48 are good options
 		bundleId = self.notificationRequest.sectionIdentifier;
 	}
 
-	UIImage *icon = [UIImage _applicationIconImageForBundleIdentifier:bundleId format:2 scale:[UIScreen mainScreen].scale];
+	UIImage *icon = [self getIconForBundleId:bundleId];
 	return [icon velvetDominantColor];
+}
+
+%new
+-(UIImage *)getIconForBundleId:(NSString *)bundleId {
+	UIImage *icon = [UIImage _applicationIconImageForBundleIdentifier:bundleId format:2 scale:[UIScreen mainScreen].scale];
+
+	if (!icon) {
+		// Fallback to the default 20x20 icon
+		icon = self.viewForPreview.icons[0];
+	}
+
+	return icon;
 }
 %end
 
