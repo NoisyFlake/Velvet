@@ -101,10 +101,10 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 		} break;
         case 6: { // colored header
 			PLPlatterHeaderContentView *header = [self.viewForPreview valueForKey:@"_headerContentView"];
-			CAShapeLayer * maskLayer = [CAShapeLayer layer];
-			maskLayer.path = [UIBezierPath bezierPathWithRoundedRect: view.bounds byRoundingCorners: UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii: (CGSize){13.0, 13.}].CGPath;
+			header.layer.cornerRadius = 13;
+			header.layer.continuousCorners = YES;
+			header.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
 
-			header.layer.mask = maskLayer;
 			header.backgroundColor = dominantColor;
 		} break;
 	}
