@@ -1,11 +1,11 @@
 #import "Headers.h"
 #import "ColorSupport.h"
 
-int style = 5;
+int style = 6;
 BOOL colorPrimaryLabel = YES;
 BOOL colorBackground = NO;
 BOOL colorBorder = NO;
-BOOL useFirstLineAsTitle = YES;
+BOOL useFirstLineAsTitle = NO;
 
 float iconSize = 32; // 24, 32, 40, 48 are good options
 
@@ -24,6 +24,13 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 	CGRect frame = self.frame;
 	self.velvetBackground.frame = frame;
 }
+- (CGSize)sizeThatFitsContentWithSize:(CGSize)arg1 {
+    CGSize orig = %orig;
+	if (style == 6) {
+    	orig.height += 10;
+	}
+    return orig;
+}
 %end
 
 %hook NCNotificationShortLookViewController
@@ -34,6 +41,7 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 
 	// Notification view is not yet fully initialized
 	if (view.frame.size.width == 0) return;
+	UIColor *dominantColor = [self getDominantColor];
 
 	if (view.colorIndicator == nil) {
 		VelvetIndicatorView *colorIndicator = [[VelvetIndicatorView alloc] initWithFrame:CGRectZero];
@@ -50,7 +58,6 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 		[view insertSubview:velvetBackground atIndex:1];
 		view.velvetBackground = velvetBackground;
 	}
-
 
 	if (view.imageIndicator == nil) {
 		UIImageView *imageIndicator = [[UIImageView alloc] initWithFrame:CGRectZero];
@@ -92,9 +99,15 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 
 			[self velvetHideHeader];
 		} break;
-	}
+        case 6: { // colored header
+			PLPlatterHeaderContentView *header = [self.viewForPreview valueForKey:@"_headerContentView"];
+			CAShapeLayer * maskLayer = [CAShapeLayer layer];
+			maskLayer.path = [UIBezierPath bezierPathWithRoundedRect: view.bounds byRoundingCorners: UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii: (CGSize){13.0, 13.}].CGPath;
 
-	UIColor *dominantColor = [self getDominantColor];
+			header.layer.mask = maskLayer;
+			header.backgroundColor = dominantColor;
+		} break;
+	}
 
 	view.colorIndicator.backgroundColor = dominantColor;
 
@@ -201,6 +214,9 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 		frame.origin.y = frame.origin.y - 14;
 		frame.origin.x = frame.origin.x + (iconSize + 21);
 	}
+	if (style == 6) {
+		frame.origin.y = frame.origin.y + 7;
+	}
 	return frame;
 }
 %end
@@ -260,7 +276,7 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
                                                            message:@"Your favourite artist released a new track!"
                                                            bundleID:@"com.apple.MobileStore"];
 
-		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:nil
+		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Twitter"
                                                            message:@"ubik\nMachst du auch mal was?"
                                                            bundleID:@"com.atebits.Tweetie2"];
 
@@ -269,7 +285,7 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
                                                            bundleID:@"com.apple.MobileSMS"];
 
 		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"NoisyFlake"
-                                                           message:@"That looks nice!"
+                                                           message:@"That looks nice! But I have much more to say so this can be a really really long and annoying message."
                                                            bundleID:@"com.apple.MobileSMS"];
 	});
 }
