@@ -2,10 +2,12 @@
 #import "ColorSupport.h"
 
 int style = 6;
-BOOL colorPrimaryLabel = YES;
+BOOL colorPrimaryLabel = NO;
 BOOL colorBackground = NO;
 BOOL colorBorder = NO;
 BOOL useFirstLineAsTitle = NO;
+
+float cornerRadius = 5;
 
 float iconSize = 32; // 24, 32, 40, 48 are good options
 
@@ -43,20 +45,21 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 	if (view.frame.size.width == 0) return;
 	UIColor *dominantColor = [self getDominantColor];
 
-	if (view.colorIndicator == nil) {
-		VelvetIndicatorView *colorIndicator = [[VelvetIndicatorView alloc] initWithFrame:CGRectZero];
-
-		[view insertSubview:colorIndicator atIndex:2];
-		view.colorIndicator = colorIndicator;
-	}
-
 	if (view.velvetBackground == nil) {
 		VelvetBackgroundView *velvetBackground = [[VelvetBackgroundView alloc] initWithFrame:CGRectZero];
-		velvetBackground.layer.cornerRadius = 13;
+		velvetBackground.layer.cornerRadius = cornerRadius;
 		velvetBackground.layer.continuousCorners = YES;
+		velvetBackground.clipsToBounds = YES;
 
 		[view insertSubview:velvetBackground atIndex:1];
 		view.velvetBackground = velvetBackground;
+	}
+
+	if (view.colorIndicator == nil) {
+		VelvetIndicatorView *colorIndicator = [[VelvetIndicatorView alloc] initWithFrame:CGRectZero];
+
+		[view.velvetBackground insertSubview:colorIndicator atIndex:1];
+		view.colorIndicator = colorIndicator;
 	}
 
 	if (view.imageIndicator == nil) {
@@ -66,16 +69,14 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 		view.imageIndicator = imageIndicator;
 	}
 
+	view.backgroundMaterialView.layer.cornerRadius = cornerRadius;
+
 	switch (style) {
         case 1: { // full bar bottom
 			view.colorIndicator.frame = CGRectMake(0, 0, view.frame.size.width, 4);
-			view.colorIndicator.layer.cornerRadius = 0;
-			view.backgroundMaterialView.layer.cornerRadius = 0;
 		} break;
         case 2: { // full bar left
 			view.colorIndicator.frame = CGRectMake(0, 0, 4, view.frame.size.height);
-			view.colorIndicator.layer.cornerRadius = 0;
-			view.backgroundMaterialView.layer.cornerRadius = 0;
 		} break;
         case 3: { // rounded bar left
 			float width = 3;
@@ -101,7 +102,7 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 		} break;
         case 6: { // colored header
 			PLPlatterHeaderContentView *header = [self.viewForPreview valueForKey:@"_headerContentView"];
-			header.layer.cornerRadius = 13;
+			header.layer.cornerRadius = cornerRadius;
 			header.layer.continuousCorners = YES;
 			header.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
 
@@ -118,8 +119,6 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 	}
 
 	if (colorBackground) {
-		// backgroundMaterialView only looks good in dark mode
-		// view.backgroundMaterialView.backgroundColor = [dominantColor colorWithAlphaComponent:0.6];
 		view.velvetBackground.backgroundColor = [dominantColor colorWithAlphaComponent:0.6];
 	}
 
@@ -276,7 +275,7 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
                                                            message:@"Your favourite artist released a new track!"
                                                            bundleID:@"com.apple.MobileStore"];
 
-		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Twitter"
+		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:nil
                                                            message:@"ubik\nMachst du auch mal was?"
                                                            bundleID:@"com.atebits.Tweetie2"];
 
