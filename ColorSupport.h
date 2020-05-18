@@ -6,3 +6,7 @@
 - (UIColor *)velvetDominantColor;
 -(int)colourDistance:(RGBPixel *)a andB:(RGBPixel *)b;
 @end
+
+@interface UIColor (Velvet)
+- (CGFloat)velvetColorBrightness;
+@end

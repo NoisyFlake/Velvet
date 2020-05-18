@@ -108,7 +108,7 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 			header.layer.continuousCorners = YES;
 			header.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
 
-			header.backgroundColor = dominantColor;
+			header.backgroundColor = [dominantColor colorWithAlphaComponent:0.8];
 		} break;
 	}
 

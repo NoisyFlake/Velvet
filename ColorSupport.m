@@ -101,3 +101,11 @@
     return abs(a.r-b.r)+abs(a.g-b.g)+abs(a.b-b.b);
 }
 @end
+
+@implementation UIColor (Velvet)
+// Returns a value between 0 (black) and 1 (white)
+- (CGFloat)velvetColorBrightness {
+    const CGFloat *componentColors = CGColorGetComponents(self.CGColor);
+    return ((componentColors[0] * 299) + (componentColors[1] * 587) + (componentColors[2] * 114)) / 1000;
+}
+@end
