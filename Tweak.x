@@ -70,6 +70,8 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 	}
 
 	view.backgroundMaterialView.layer.cornerRadius = cornerRadius;
+	UIView *stackDimmingView = [self.view valueForKey:@"_stackDimmingView"];
+	stackDimmingView.layer.cornerRadius = cornerRadius;
 
 	switch (style) {
         case 1: { // full bar bottom
@@ -214,7 +216,7 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 		frame.origin.x = frame.origin.x + (iconSize + 21);
 	}
 	if (style == 6) {
-		frame.origin.y = frame.origin.y + 7;
+		frame.origin.y = frame.origin.y + 10;
 	}
 	return frame;
 }
