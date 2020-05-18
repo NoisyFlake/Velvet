@@ -2,11 +2,12 @@
 #import "ColorSupport.h"
 
 int style = 5;
-BOOL colorPrimaryLabel = NO;
-BOOL colorBackground = YES;
+BOOL colorPrimaryLabel = YES;
+BOOL colorBackground = NO;
 BOOL colorBorder = NO;
+BOOL useFirstLineAsTitle = YES;
 
-float iconSize = 40; // 24, 32, 40, 48 are good options
+float iconSize = 32; // 24, 32, 40, 48 are good options
 
 @implementation VelvetIndicatorView
 @end
@@ -132,6 +133,7 @@ float iconSize = 40; // 24, 32, 40, 48 are good options
 
 %new
 -(UIColor *)getDominantColor {
+
 	NSString *bundleId = nil;
 
 	if (self.associatedView) {
@@ -206,6 +208,17 @@ float iconSize = 40; // 24, 32, 40, 48 are good options
 %hook NCNotificationContentView
 - (void)layoutSubviews {
 	%orig;
+
+	// If it's a multi-line message with no title, set the first line as title so it's emphasized
+	if (useFirstLineAsTitle && self.primaryLabel.text == nil && self.secondaryLabel.text) {
+		NSMutableArray *lines = [[self.secondaryLabel.text componentsSeparatedByString:@"\n"] mutableCopy];
+		if ([lines count] > 1) {
+			self.primaryLabel.text = lines[0];
+			[lines removeObjectAtIndex:0];
+			self.secondaryLabel.text = [lines componentsJoinedByString:@"\n"];
+		}
+	}
+
 	CGRect primaryLabelFrame = self.primaryLabel.frame;
 	CGRect secondaryLabelFrame = self.secondaryLabel.frame;
 
@@ -247,8 +260,8 @@ float iconSize = 40; // 24, 32, 40, 48 are good options
                                                            message:@"Your favourite artist released a new track!"
                                                            bundleID:@"com.apple.MobileStore"];
 
-		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Twitter"
-                                                           message:@"@HiMyNameIsUbik liked your post."
+		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:nil
+                                                           message:@"ubik\nMachst du auch mal was?"
                                                            bundleID:@"com.atebits.Tweetie2"];
 
 		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"NoisyFlake"
