@@ -91,7 +91,9 @@
 
 @interface NCNotificationShortLookViewController : NCNotificationViewController
 @property (nonatomic,readonly) NCNotificationShortLookView * viewForPreview;
+@property (retain, nonatomic) UIColor * kalmColor;
 -(void)velvetHideHeader;
+-(void)velvetHideGroupedNotifications;
 -(UIColor *)getDominantColor;
 -(UIImage *)getIconForBundleId:(NSString *)bundleId;
 @end

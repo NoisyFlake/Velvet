@@ -1,15 +1,18 @@
 #import "Headers.h"
 #import "ColorSupport.h"
 
-int style = 6;
-BOOL colorPrimaryLabel = NO;
+int style = 3;
+
+BOOL colorPrimaryLabel = YES;
 BOOL colorBackground = NO;
 BOOL colorBorder = NO;
 BOOL useFirstLineAsTitle = NO;
+BOOL hideBackground = YES;
+BOOL useKalmColor = YES;
 
-float cornerRadius = 5;
-
+float cornerRadius = 13;
 float iconSize = 32; // 24, 32, 40, 48 are good options
+
 
 @implementation VelvetIndicatorView
 @end
@@ -43,7 +46,15 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 
 	// Notification view is not yet fully initialized
 	if (view.frame.size.width == 0) return;
-	UIColor *dominantColor = [self getDominantColor];
+	UIColor *dominantColor;
+
+	NSString *kalmColor = [[[NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/hi.my.name.is.ubik.kalm.plist"] valueForKey:@"colorSelect"] stringValue];
+
+	if (useKalmColor && kalmColor != nil) {
+		dominantColor = [UIColor colorFromHexString:kalmColor];
+	} else {
+		dominantColor = [self getDominantColor];
+	}
 
 	if (view.velvetBackground == nil) {
 		VelvetBackgroundView *velvetBackground = [[VelvetBackgroundView alloc] initWithFrame:CGRectZero];
@@ -124,6 +135,11 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 		view.velvetBackground.backgroundColor = [dominantColor colorWithAlphaComponent:0.6];
 	}
 
+	if (hideBackground) {
+		view.backgroundMaterialView.alpha = 0;
+		[self velvetHideGroupedNotifications];
+	}
+
 	if (colorBorder) {
 		view.backgroundMaterialView.layer.borderColor = dominantColor.CGColor;
 		view.backgroundMaterialView.layer.borderWidth = 2;
@@ -143,6 +159,19 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 	}
 
 	header.titleLabel.hidden = YES;
+}
+
+%new
+-(void)velvetHideGroupedNotifications {
+	if (self.associatedView) {
+		NCNotificationListCell *cell = (NCNotificationListCell *)self.associatedView;
+		NCNotificationListView *listView = (NCNotificationListView *)cell.superview;
+
+		NCNotificationListCell *frontCell = [listView _visibleViewAtIndex:0];
+		for (UIView *subview in listView.subviews) {
+			if (subview != frontCell && [subview isKindOfClass:%c(NCNotificationListCell)]) subview.hidden = listView.grouped;
+		}
+	}
 }
 
 %new
@@ -189,7 +218,9 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 	if (style == 3 || style == 4 || style == 5) {
 		if (self.superview.frame.size.width > 0) {
 			frame.origin.y -= 3;
-			frame.origin.x += 4;
+			if (!colorBorder) {
+				frame.origin.x += 4;
+			}
 		}
 	}
 
@@ -240,9 +271,13 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 	CGRect secondaryLabelFrame = self.secondaryLabel.frame;
 
 	CGFloat labelWidth;
+	CGFloat extra = 0;
+	if (colorBorder) {
+		extra = 5;
+	}
 
 	if (style == 3) {
-		labelWidth = 25;
+		labelWidth = 25 - extra;
 	}
 	if (style == 4) {
 		labelWidth = 32;
@@ -251,11 +286,23 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 		labelWidth = (iconSize + 21);
 	}
 
-	primaryLabelFrame.size.width = self.primaryLabel.frame.size.width - labelWidth;
-	secondaryLabelFrame.size.width = self.secondaryLabel.frame.size.width - labelWidth;
+	primaryLabelFrame.size.width = self.primaryLabel.frame.size.width - labelWidth - extra;
+	secondaryLabelFrame.size.width = self.secondaryLabel.frame.size.width - labelWidth - extra;
 
 	self.primaryLabel.frame = primaryLabelFrame;
 	self.secondaryLabel.frame = secondaryLabelFrame;
+}
+%end
+
+%hook NCNotificationListView
+- (CGSize)sizeThatFits:(CGSize)arg1 {
+    CGSize orig = %orig;
+
+	if (hideBackground) {
+		orig.height -= 20;
+	}
+
+    return orig;
 }
 %end
 
@@ -269,24 +316,24 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
                                                            message:@"Somebody liked your post."
                                                            bundleID:@"com.burbn.instagram"];
 
-		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"YouTube"
-                                                           message:@"PewDiePie uploaded a new video."
-                                                           bundleID:@"com.google.ios.youtube"];
-
 		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"iTunes Store"
                                                            message:@"Your favourite artist released a new track!"
                                                            bundleID:@"com.apple.MobileStore"];
 
-		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:nil
-                                                           message:@"ubik\nMachst du auch mal was?"
+		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Twitter"
+                                                           message:@"I wonder if this ever will be released."
                                                            bundleID:@"com.atebits.Tweetie2"];
 
-		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"NoisyFlake"
+		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"YouTube"
+                                                           message:@"PewDiePie uploaded a new video."
+                                                           bundleID:@"com.google.ios.youtube"];
+
+		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Bill Gates"
                                                            message:@"ETA?!"
                                                            bundleID:@"com.apple.MobileSMS"];
 
-		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"NoisyFlake"
-                                                           message:@"That looks nice! But I have much more to say so this can be a really really long and annoying message."
+		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Bill Gates"
+                                                           message:@"Are you still working on that new tweak?"
                                                            bundleID:@"com.apple.MobileSMS"];
 	});
 }
