@@ -1,13 +1,15 @@
 #import "Headers.h"
 #import "ColorSupport.h"
 
+NSUserDefaults *preferences;
+
 int style = 3;
 
 BOOL colorPrimaryLabel = YES;
 BOOL colorBackground = NO;
 BOOL colorBorder = NO;
 BOOL useFirstLineAsTitle = NO;
-BOOL hideBackground = YES;
+BOOL hideBackground = NO;
 BOOL useKalmColor = YES;
 
 float cornerRadius = 13;
@@ -307,6 +309,16 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 %end
 
 %ctor {
+	preferences = [[NSUserDefaults alloc] initWithSuiteName:@"com.initwithframe.velvet"];
+
+	[preferences registerDefaults:@{
+		@"enabled": @YES,
+	}];
+
+	if (![preferences boolForKey:@"enabled"]) return;
+
+	%init;
+
 	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 5.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void) {
 		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Home"
                                                            message:@"Would you like to turn the lights on?"
@@ -337,15 +349,3 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
                                                            bundleID:@"com.apple.MobileSMS"];
 	});
 }
-
-// %hook _NCNotificationShortLookScrollView
-// -(void)setFrame:(CGRect)frame {
-
-// 	// Make notifications a bit less wide
-// 	frame.origin.x = self.superview.frame.origin.x + 10;
-// 	frame.size.width = self.superview.frame.size.width - 20;
-
-// 	%orig(frame);
-
-// }
-// %end

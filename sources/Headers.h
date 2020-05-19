@@ -4,6 +4,10 @@
 #define NSLog(fmt, ...)
 #endif
 
+@interface NSUserDefaults (Private)
+- (instancetype)_initWithSuiteName:(NSString *)suiteName container:(NSURL *)container;
+@end
+
 @interface UIImage (UIApplicationIconPrivate)
 +(id)_applicationIconImageForBundleIdentifier:(id)arg1 format:(int)arg2 scale:(double)arg3 ;
 @end

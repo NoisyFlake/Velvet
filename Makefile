@@ -10,10 +10,12 @@ include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = Velvet
 
-Velvet_FILES = ColorSupport.m Tweak.x
+Velvet_FILES = $(wildcard sources/*.x sources/*.m)
 Velvet_FRAMEWORKS = CoreGraphics
 Velvet_LIBRARIES = bulletin
 
 Velvet_CFLAGS = -fobjc-arc
 
 include $(THEOS_MAKE_PATH)/tweak.mk
+SUBPROJECTS += preferences
+include $(THEOS_MAKE_PATH)/aggregate.mk
