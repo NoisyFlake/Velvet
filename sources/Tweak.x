@@ -10,11 +10,10 @@ BOOL colorBackground = NO;
 BOOL colorBorder = NO;
 BOOL useFirstLineAsTitle = NO;
 BOOL hideBackground = NO;
-BOOL useKalmColor = YES;
+BOOL useKalmColor = NO;
 
 float cornerRadius = 13;
 float iconSize = 32; // 24, 32, 40, 48 are good options
-
 
 @implementation VelvetIndicatorView
 @end
@@ -49,11 +48,10 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 	// Notification view is not yet fully initialized
 	if (view.frame.size.width == 0) return;
 	UIColor *dominantColor;
-
-	NSString *kalmColor = [[[NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/hi.my.name.is.ubik.kalm.plist"] valueForKey:@"colorSelect"] stringValue];
+	UIColor *kalmColor = [%c(KalmAPI) getColor];
 
 	if (useKalmColor && kalmColor != nil) {
-		dominantColor = [UIColor colorFromHexString:kalmColor];
+		dominantColor = kalmColor;
 	} else {
 		dominantColor = [self getDominantColor];
 	}

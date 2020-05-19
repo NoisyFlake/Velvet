@@ -106,3 +106,7 @@
 +(id)sharedInstance;
 -(id)showBulletinWithTitle:(NSString *)title message:(NSString *)message bundleID:(NSString *)bundleID;
 @end
+
+@interface KalmAPI
++ (UIColor *)getColor;
+@end
