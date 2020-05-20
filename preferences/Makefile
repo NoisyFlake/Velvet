@@ -13,7 +13,7 @@ include $(THEOS)/makefiles/common.mk
 
 BUNDLE_NAME = Velvet
 
-Velvet_FILES = $(wildcard *.m)
+Velvet_FILES = $(wildcard *.m CustomCells/*.m)
 Velvet_INSTALL_PATH = /Library/PreferenceBundles
 Velvet_FRAMEWORKS = UIKit
 Velvet_PRIVATE_FRAMEWORKS = Preferences

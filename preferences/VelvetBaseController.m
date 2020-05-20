@@ -3,8 +3,8 @@
 
 @implementation VelvetBaseController
 
-- (void)viewWillAppear:(BOOL)animated {
-	[super viewWillAppear:animated];
+- (void)viewDidLayoutSubviews {
+	[super viewDidLayoutSubviews];
 
 	self.navigationItem.navigationBar.tintColor = kVELVETCOLOR;
 	
@@ -15,8 +15,7 @@
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
 
-	UIViewController *parent = [self valueForKey:@"_parentController"];
-	if ([parent isMemberOfClass:objc_getClass("PSUIPrefsListController")]) {
+	if ([self isMemberOfClass:[VelvetRootListController class]] && self.navigationController.viewControllers.count == 1) {
 		// Remove the navigationBar tintColor as the user is about to leave our settings area
 		self.navigationItem.navigationBar.tintColor = nil;
 	}
