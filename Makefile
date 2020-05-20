@@ -1,4 +1,9 @@
-TARGET = iphone:clang:12.4:12.4
+ifneq ("$(wildcard $(THEOS)/sdks/iPhoneOS12.4.sdk)", "")
+	TARGET = iphone:clang:12.4:12.4
+else
+	TARGET = iphone:clang:latest
+endif
+
 ARCHS = arm64
 ifeq ($(shell uname -s),Darwin)
 	ARCHS += arm64e
