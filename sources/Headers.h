@@ -1,11 +1,15 @@
 #ifdef DEBUG
-#define NSLog(fmt, ...) HBLogWarn((@"[Velvet] " fmt), ##__VA_ARGS__)
+#define NSLog(fmt, ...) NSLog((@"[Velvet] " fmt), ##__VA_ARGS__)
 #else
 #define NSLog(fmt, ...)
 #endif
 
 @interface NSUserDefaults (Private)
 - (instancetype)_initWithSuiteName:(NSString *)suiteName container:(NSURL *)container;
+@end
+
+@interface NSObject (Velvet)
+- (id)safeValueForKey:(id)arg1;
 @end
 
 @interface UIImage (UIApplicationIconPrivate)
@@ -41,6 +45,9 @@
 }
 @property (nonatomic,readonly) UIView * customContentView;
 - (CGRect)_mainContentFrame;
+@end
+
+@interface NCAuxiliaryOptionsView : UIView
 @end
 
 @interface VelvetIndicatorView : UIView

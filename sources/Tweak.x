@@ -7,7 +7,7 @@ int style = 3;
 
 BOOL colorPrimaryLabel = YES;
 BOOL colorBackground = NO;
-BOOL colorBorder = NO;
+BOOL colorBorder = YES;
 BOOL useFirstLineAsTitle = NO;
 BOOL hideBackground = NO;
 BOOL useKalmColor = NO;
@@ -271,13 +271,10 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 	CGRect secondaryLabelFrame = self.secondaryLabel.frame;
 
 	CGFloat labelWidth;
-	CGFloat extra = 0;
-	if (colorBorder) {
-		extra = 5;
-	}
+	CGFloat extra = colorBorder ? 5 : 0;
 
 	if (style == 3) {
-		labelWidth = 25 - extra;
+		labelWidth = 25;
 	}
 	if (style == 4) {
 		labelWidth = 32;
@@ -291,7 +288,43 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 
 	self.primaryLabel.frame = primaryLabelFrame;
 	self.secondaryLabel.frame = secondaryLabelFrame;
+
+	// Moves the image preview to the correct place
+	UIImageView *thumbnail = [self safeValueForKey:@"_thumbnailImageView"];
+	if (thumbnail) {
+		CGRect thumbFrame = thumbnail.frame;
+		thumbFrame.origin.x = thumbFrame.origin.x - labelWidth - extra;
+		thumbnail.frame = thumbFrame;
+	}
 }
+%end
+
+// This is the view that occasionally asks "Do you want to keep receiving notifications from this app?"
+%hook NCAuxiliaryOptionsView
+-(void)layoutSubviews {
+	CGRect auxFrame = self.frame;
+
+	if (auxFrame.size.width <= 0) return;
+	
+	CGFloat labelWidth;
+	CGFloat extra = colorBorder ? 5 : 0;
+
+	if (style == 3) {
+		labelWidth = 25;
+	}
+	if (style == 4) {
+		labelWidth = 32;
+	}
+	if (style == 5) {
+		labelWidth = (iconSize + 21);
+	}
+	
+	auxFrame.size.width = auxFrame.size.width - labelWidth - extra;
+	self.frame = auxFrame;
+
+	%orig;
+}
+
 %end
 
 %hook NCNotificationListView
@@ -327,7 +360,7 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
                                                            bundleID:@"com.burbn.instagram"];
 
 		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"iTunes Store"
-                                                           message:@"Your favourite artist released a new track!"
+                                                           message:@"Your favourite artist released a new track! ngl this is long"
                                                            bundleID:@"com.apple.MobileStore"];
 
 		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Twitter"
