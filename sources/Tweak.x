@@ -330,6 +330,12 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 	auxFrame.size.width = auxFrame.size.width - labelWidth - extra;
 	self.frame = auxFrame;
 
+	float cornerRadius = getCornerRadius();
+	if (cornerRadius < 0) cornerRadius = self.frame.size.height / 2;
+
+	UIView *overlayView = [self safeValueForKey:@"_overlayView"];
+	overlayView.layer.cornerRadius = cornerRadius;	
+	
 	%orig;
 }
 
