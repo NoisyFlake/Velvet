@@ -9,8 +9,17 @@
 @property (assign,nonatomic) UINavigationBar * navigationBar;
 @end
 
+@interface PSSegmentableSlider : UISlider
+@end
+
 @interface PSControlTableCell : PSTableCell
 @property (nonatomic, retain) UIControl *control;
+@end
+
+@interface PSSliderTableCell : PSControlTableCell
+@end
+
+@interface VelvetSlider : PSSliderTableCell
 @end
 
 @interface PSSwitchTableCell : PSControlTableCell
@@ -21,6 +30,7 @@
 @end
 
 @interface VelvetBaseController : PSListController
+-(NSUserDefaults *)preferences;
 @end
 
 @interface VelvetRootListController : VelvetBaseController

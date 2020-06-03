@@ -117,3 +117,5 @@
 @interface KalmAPI
 + (UIColor *)getColor;
 @end
+
+static float getCornerRadius();

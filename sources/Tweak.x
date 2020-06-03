@@ -3,16 +3,11 @@
 
 NSUserDefaults *preferences;
 
-int style = 3;
+int style = 0;
 
-BOOL colorPrimaryLabel = YES;
-BOOL colorBackground = NO;
-BOOL colorBorder = YES;
 BOOL useFirstLineAsTitle = NO;
-BOOL hideBackground = NO;
 BOOL useKalmColor = NO;
 
-float cornerRadius = 13;
 float iconSize = 32; // 24, 32, 40, 48 are good options
 
 @implementation VelvetIndicatorView
@@ -47,6 +42,10 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 
 	// Notification view is not yet fully initialized
 	if (view.frame.size.width == 0) return;
+
+	float cornerRadius = getCornerRadius();
+	if (cornerRadius < 0) cornerRadius = view.frame.size.height / 2;
+	
 	UIColor *dominantColor;
 	UIColor *kalmColor = [%c(KalmAPI) getColor];
 
@@ -96,22 +95,16 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 			view.colorIndicator.frame = CGRectMake(20, 20, width, view.frame.size.height-40);
 			view.colorIndicator.layer.cornerRadius = width/2;
 			view.colorIndicator.layer.continuousCorners = YES;
-
-			[self velvetHideHeader];
 		} break;
         case 4: { // circle left
 			float size = 12;
 			view.colorIndicator.frame = CGRectMake(20, (view.frame.size.height - size)/2, size, size);
 			view.colorIndicator.layer.cornerRadius = size/2;
 			view.colorIndicator.layer.continuousCorners = YES;
-
-			[self velvetHideHeader];
 		} break;
         case 5: { // icon left
 			view.imageIndicator.frame = CGRectMake(20, (view.frame.size.height - iconSize)/2, iconSize, iconSize);
 			view.imageIndicator.image = [self getIconForBundleId:self.notificationRequest.sectionIdentifier];
-
-			[self velvetHideHeader];
 		} break;
         case 6: { // colored header
 			PLPlatterHeaderContentView *header = [self.viewForPreview valueForKey:@"_headerContentView"];
@@ -123,26 +116,32 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 		} break;
 	}
 
-	view.colorIndicator.backgroundColor = dominantColor;
-
-	if (colorPrimaryLabel) {
-		view.notificationContentView.primaryLabel.textColor = dominantColor;
-		// view.notificationContentView.primarySubtitleLabel.textColor = dominantColor;
-		// view.notificationContentView.secondaryLabel.textColor = dominantColor;
+	if ([[preferences valueForKey:@"style"] isEqual:@"modern"]) {
+		[self velvetHideHeader];
 	}
 
-	if (colorBackground) {
+	view.colorIndicator.backgroundColor = dominantColor;
+
+	if ([preferences boolForKey:@"colorPrimaryLabel"]) {
+		view.notificationContentView.primaryLabel.textColor = dominantColor;
+	}
+
+	if ([preferences boolForKey:@"colorSecondaryLabel"]) {
+		view.notificationContentView.secondaryLabel.textColor = dominantColor;
+	}
+
+	if ([preferences boolForKey:@"colorBackground"]) {
 		view.velvetBackground.backgroundColor = [dominantColor colorWithAlphaComponent:0.6];
 	}
 
-	if (hideBackground) {
+	if ([preferences boolForKey:@"hideBackground"]) {
 		view.backgroundMaterialView.alpha = 0;
 		[self velvetHideGroupedNotifications];
 	}
 
-	if (colorBorder) {
-		view.backgroundMaterialView.layer.borderColor = dominantColor.CGColor;
-		view.backgroundMaterialView.layer.borderWidth = 2;
+	if ([preferences boolForKey:@"colorBorder"]) {
+		view.velvetBackground.layer.borderColor = dominantColor.CGColor;
+		view.velvetBackground.layer.borderWidth = 2;
 	}
 
 }
@@ -215,10 +214,10 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 %hook BSUIDefaultDateLabel
 -(void)setFrame:(CGRect)frame {
 	// Move the dateLabel into the corner to make room for the centered notification text
-	if (style == 3 || style == 4 || style == 5) {
+	if ([[preferences valueForKey:@"style"] isEqual:@"modern"]) {
 		if (self.superview.frame.size.width > 0) {
 			frame.origin.y -= 3;
-			if (!colorBorder) {
+			if (![preferences boolForKey:@"colorBorder"]) {
 				frame.origin.x += 4;
 			}
 		}
@@ -234,16 +233,18 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 	self.customContentView.clipsToBounds = NO;
 
 	CGRect frame = %orig;
-	if (style == 3) {
+
+	if ([[preferences valueForKey:@"style"] isEqual:@"modern"]) {
 		frame.origin.y = frame.origin.y - 14;
+	}
+	
+	if (style == 3) {
 		frame.origin.x = frame.origin.x + 25;
 	}
 	if (style == 4) {
-		frame.origin.y = frame.origin.y - 14;
 		frame.origin.x = frame.origin.x + 32;
 	}
 	if (style == 5) {
-		frame.origin.y = frame.origin.y - 14;
 		frame.origin.x = frame.origin.x + (iconSize + 21);
 	}
 	if (style == 6) {
@@ -271,7 +272,7 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 	CGRect secondaryLabelFrame = self.secondaryLabel.frame;
 
 	CGFloat labelWidth;
-	CGFloat extra = colorBorder ? 5 : 0;
+	CGFloat extra = [preferences boolForKey:@"colorBorder"] ? 5 : 0;
 
 	if (style == 3) {
 		labelWidth = 25;
@@ -307,7 +308,7 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 	if (auxFrame.size.width <= 0) return;
 	
 	CGFloat labelWidth;
-	CGFloat extra = colorBorder ? 5 : 0;
+	CGFloat extra = [preferences boolForKey:@"colorBorder"] ? 5 : 0;
 
 	if (style == 3) {
 		labelWidth = 25;
@@ -327,23 +328,44 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 
 %end
 
-%hook NCNotificationListView
-- (CGSize)sizeThatFits:(CGSize)arg1 {
-    CGSize orig = %orig;
+// TODO: Fix this, as it makes notifications with no background but enabled border overlap each other
+// %hook NCNotificationListView
+// - (CGSize)sizeThatFits:(CGSize)arg1 {
+//     CGSize orig = %orig;
 
-	if (hideBackground) {
-		orig.height -= 20;
+// 	if ([preferences boolForKey:@"hideBackground"]) {
+// 		orig.height -= 20;
+// 	}
+
+//     return orig;
+// }
+// %end
+
+static float getCornerRadius() {
+	if ([[preferences valueForKey:@"roundedCorners"] isEqual:@"none"]) {
+		return 0;
+	} else if ([[preferences valueForKey:@"roundedCorners"] isEqual:@"round"]) {
+		return -1;
+	} else if ([[preferences valueForKey:@"roundedCorners"] isEqual:@"custom"]) {
+		return [preferences floatForKey:@"customCornerRadius"];
 	}
 
-    return orig;
+	return 13; // stock
 }
-%end
 
 %ctor {
 	preferences = [[NSUserDefaults alloc] initWithSuiteName:@"com.initwithframe.velvet"];
 
 	[preferences registerDefaults:@{
 		@"enabled": @YES,
+		@"style": @"modern",
+		@"hideBackground": @NO,
+		@"colorBackground": @NO,
+		@"colorBorder": @NO,
+		@"colorPrimaryLabel": @NO,
+		@"colorSecondaryLabel": @NO,
+		@"roundedCorners": @"stock",
+		@"customCornerRadius": @13,
 	}];
 
 	if (![preferences boolForKey:@"enabled"]) return;

@@ -5,18 +5,110 @@
 	<key>items</key>
 	<array>
 		<dict>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<true/>
-			<key>defaults</key>
-			<string>com.initwithframe.velvet</string>
-			<key>key</key>
-			<string>enabled</string>
-			<key>label</key>
-			<string>Enabled</string>
-			<key>cellClass</key>
-			<string>VelvetToggle</string>
+			<key>cell</key>							<string>PSSwitchCell</string>
+			<key>default</key>						<true/>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>enabled</string>
+			<key>label</key>						<string>Enabled</string>
+			<key>cellClass</key>					<string>VelvetToggle</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>							<string>PSGroupCell</string>
+			<key>label</key>						<string>Style</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSegmentCell</string>
+			<key>default</key>						<string>modern</string>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>style</string>
+			<key>validTitles</key>					<array>
+														<string>Classic</string>
+														<string>Modern</string>
+													</array>
+			<key>validValues</key>					<array>
+														<string>classic</string>
+														<string>modern</string>
+													</array>
+		</dict>
+
+		<dict>
+			<key>cell</key>							<string>PSGroupCell</string>
+			<key>label</key>						<string>Options</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSwitchCell</string>
+			<key>default</key>						<false/>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>hideBackground</string>
+			<key>label</key>						<string>Hide Background</string>
+			<key>cellClass</key>					<string>VelvetToggle</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSwitchCell</string>
+			<key>default</key>						<false/>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>colorBackground</string>
+			<key>label</key>						<string>Color Background</string>
+			<key>cellClass</key>					<string>VelvetToggle</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSwitchCell</string>
+			<key>default</key>						<false/>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>colorBorder</string>
+			<key>label</key>						<string>Color Border</string>
+			<key>cellClass</key>					<string>VelvetToggle</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSwitchCell</string>
+			<key>default</key>						<false/>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>colorPrimaryLabel</string>
+			<key>label</key>						<string>Color Title</string>
+			<key>cellClass</key>					<string>VelvetToggle</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSwitchCell</string>
+			<key>default</key>						<false/>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>colorSecondaryLabel</string>
+			<key>label</key>						<string>Color Message</string>
+			<key>cellClass</key>					<string>VelvetToggle</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>							<string>PSGroupCell</string>
+			<key>label</key>						<string>Rounded Corners</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSegmentCell</string>
+			<key>default</key>						<string>stock</string>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>roundedCorners</string>
+			<key>set</key>							<string>setRoundedCorners:specifier:</string>
+			<key>validTitles</key>					<array>
+														<string>None</string>
+														<string>Stock</string>
+														<string>Round</string>
+														<string>Custom</string>
+													</array>
+			<key>validValues</key>					<array>
+														<string>none</string>
+														<string>stock</string>
+														<string>round</string>
+														<string>custom</string>
+													</array>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSliderCell</string>
+			<key>cellClass</key>					<string>VelvetSlider</string>
+			<key>min</key>							<real>0</real>
+			<key>max</key>							<real>30</real>
+			<key>showValue</key>					<true/>
+			<key>default</key>						<real>13</real>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>customCornerRadius</string>
 		</dict>
 	</array>
 	<key>title</key>
