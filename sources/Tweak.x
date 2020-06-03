@@ -27,7 +27,7 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 }
 - (CGSize)sizeThatFitsContentWithSize:(CGSize)arg1 {
     CGSize orig = %orig;
-	if (style == 6) {
+	if ([[preferences valueForKey:@"style"] isEqual:@"classic"] && [preferences boolForKey:@"colorHeader"]) {
     	orig.height += 10;
 	}
     return orig;
@@ -106,18 +106,23 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 			view.imageIndicator.frame = CGRectMake(20, (view.frame.size.height - iconSize)/2, iconSize, iconSize);
 			view.imageIndicator.image = [self getIconForBundleId:self.notificationRequest.sectionIdentifier];
 		} break;
-        case 6: { // colored header
-			PLPlatterHeaderContentView *header = [self.viewForPreview valueForKey:@"_headerContentView"];
-			header.layer.cornerRadius = cornerRadius;
-			header.layer.continuousCorners = YES;
-			header.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
-
-			header.backgroundColor = [dominantColor colorWithAlphaComponent:0.8];
-		} break;
 	}
 
 	if ([[preferences valueForKey:@"style"] isEqual:@"modern"]) {
 		[self velvetHideHeader];
+	} 
+
+	if ([[preferences valueForKey:@"style"] isEqual:@"classic"] && [preferences boolForKey:@"colorHeader"]) {
+		PLPlatterHeaderContentView *header = [self.viewForPreview valueForKey:@"_headerContentView"];
+		// header.layer.cornerRadius = cornerRadius;
+		header.layer.continuousCorners = YES;
+		header.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
+
+		header.backgroundColor = [dominantColor colorWithAlphaComponent:0.8];
+
+		// Move the header to the velvetBackground view so that it gets automatically cut off with higher cornerRadius settings
+		[view.velvetBackground insertSubview:header atIndex:1];
+
 	}
 
 	view.colorIndicator.backgroundColor = dominantColor;
@@ -237,6 +242,10 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 	if ([[preferences valueForKey:@"style"] isEqual:@"modern"]) {
 		frame.origin.y = frame.origin.y - 14;
 	}
+
+	if ([[preferences valueForKey:@"style"] isEqual:@"classic"] && [preferences boolForKey:@"colorHeader"]) {
+		frame.origin.y = frame.origin.y + 10;
+	}
 	
 	if (style == 3) {
 		frame.origin.x = frame.origin.x + 25;
@@ -247,9 +256,7 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 	if (style == 5) {
 		frame.origin.x = frame.origin.x + (iconSize + 21);
 	}
-	if (style == 6) {
-		frame.origin.y = frame.origin.y + 10;
-	}
+	
 	return frame;
 }
 %end
@@ -359,6 +366,7 @@ static float getCornerRadius() {
 	[preferences registerDefaults:@{
 		@"enabled": @YES,
 		@"style": @"modern",
+		@"colorHeader": @NO,
 		@"hideBackground": @NO,
 		@"colorBackground": @NO,
 		@"colorBorder": @NO,

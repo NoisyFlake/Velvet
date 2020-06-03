@@ -22,6 +22,8 @@
 			<key>default</key>						<string>modern</string>
 			<key>defaults</key>						<string>com.initwithframe.velvet</string>
 			<key>key</key>							<string>style</string>
+			<key>id</key>							<string>style</string>
+			<key>set</key>							<string>setStyle:specifier:</string>
 			<key>validTitles</key>					<array>
 														<string>Classic</string>
 														<string>Modern</string>
@@ -30,6 +32,15 @@
 														<string>classic</string>
 														<string>modern</string>
 													</array>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSwitchCell</string>
+			<key>default</key>						<false/>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>colorHeader</string>
+			<key>id</key>							<string>colorHeader</string>
+			<key>label</key>						<string>Color Header</string>
+			<key>cellClass</key>					<string>VelvetToggle</string>
 		</dict>
 
 		<dict>
@@ -86,6 +97,7 @@
 			<key>default</key>						<string>stock</string>
 			<key>defaults</key>						<string>com.initwithframe.velvet</string>
 			<key>key</key>							<string>roundedCorners</string>
+			<key>id</key>							<string>roundedCorners</string>
 			<key>set</key>							<string>setRoundedCorners:specifier:</string>
 			<key>validTitles</key>					<array>
 														<string>None</string>
@@ -109,6 +121,7 @@
 			<key>default</key>						<real>13</real>
 			<key>defaults</key>						<string>com.initwithframe.velvet</string>
 			<key>key</key>							<string>customCornerRadius</string>
+			<key>id</key>							<string>customCornerRadius</string>
 		</dict>
 	</array>
 	<key>title</key>
