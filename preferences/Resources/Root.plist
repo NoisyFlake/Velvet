@@ -102,13 +102,13 @@
 			<key>validTitles</key>					<array>
 														<string>None</string>
 														<string>Stock</string>
-														<string>Round</string>
+														<!-- <string>Round</string> -->
 														<string>Custom</string>
 													</array>
 			<key>validValues</key>					<array>
 														<string>none</string>
 														<string>stock</string>
-														<string>round</string>
+														<!-- <string>round</string> -->
 														<string>custom</string>
 													</array>
 		</dict>
