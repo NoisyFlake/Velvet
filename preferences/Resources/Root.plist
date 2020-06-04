@@ -33,6 +33,36 @@
 														<string>modern</string>
 													</array>
 		</dict>
+
+		<dict>
+			<key>cell</key>							<string>PSLinkListCell</string>
+			<key>detail</key>						<string>VelvetListItemsController</string>
+			<key>default</key>						<string>icon</string>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>indicatorClassic</string>
+			<key>id</key>							<string>indicatorClassic</string>
+			<key>label</key>						<string>Indicator</string>
+			<key>validTitles</key>					<array>
+														<string>App Icon</string>
+														<string>Dot</string>
+														<string>None</string>
+													</array>
+			<key>validValues</key>					<array>
+														<string>icon</string>
+														<string>dot</string>
+														<string>none</string>
+													</array>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSwitchCell</string>
+			<key>default</key>						<false/>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>colorHeader</string>
+			<key>id</key>							<string>colorHeader</string>
+			<key>label</key>						<string>Color Header</string>
+			<key>cellClass</key>					<string>VelvetToggle</string>
+		</dict>
+
 		<dict>
 			<key>cell</key>							<string>PSLinkListCell</string>
 			<key>detail</key>						<string>VelvetListItemsController</string>
@@ -40,6 +70,7 @@
 			<key>defaults</key>						<string>com.initwithframe.velvet</string>
 			<key>key</key>							<string>indicatorModern</string>
 			<key>id</key>							<string>indicatorModern</string>
+			<key>set</key>							<string>setIndicatorModern:specifier:</string>
 			<key>label</key>						<string>Indicator</string>
 			<key>validTitles</key>					<array>
 														<string>App Icon</string>
@@ -55,15 +86,27 @@
 													</array>
 		</dict>
 		<dict>
-			<key>cell</key>							<string>PSSwitchCell</string>
-			<key>default</key>						<false/>
+			<key>cell</key>							<string>PSLinkListCell</string>
+			<key>detail</key>						<string>VelvetListItemsController</string>
+			<key>default</key>						<real>32</real>
 			<key>defaults</key>						<string>com.initwithframe.velvet</string>
-			<key>key</key>							<string>colorHeader</string>
-			<key>id</key>							<string>colorHeader</string>
-			<key>label</key>						<string>Color Header</string>
-			<key>cellClass</key>					<string>VelvetToggle</string>
+			<key>key</key>							<string>indicatorModernSize</string>
+			<key>id</key>							<string>indicatorModernSize</string>
+			<key>label</key>						<string>Indicator Size</string>
+			<key>validTitles</key>					<array>
+														<string>Small</string>
+														<string>Medium</string>
+														<string>Large</string>
+														<string>Huge</string>
+													</array>
+			<key>validValues</key>					<array>
+														<real>24</real>
+														<real>32</real>
+														<real>40</real>
+														<real>48</real>
+													</array>
 		</dict>
-
+		
 		<dict>
 			<key>cell</key>							<string>PSGroupCell</string>
 			<key>label</key>						<string>Options</string>

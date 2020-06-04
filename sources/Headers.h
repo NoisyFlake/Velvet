@@ -37,6 +37,7 @@
 }
 @property (getter=_dateLabel,nonatomic, readonly) UILabel * dateLabel;
 @property (getter=_titleLabel,nonatomic,readonly) UILabel * titleLabel;
+@property (nonatomic,readonly) NSArray * iconButtons;
 @property (nonatomic,readonly) UIButton * utilityButton;
 @end
 
@@ -120,3 +121,4 @@
 @end
 
 static float getCornerRadius();
+static float getIndicatorOffset();
