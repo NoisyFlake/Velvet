@@ -14,6 +14,10 @@
 			if ([spec.properties[@"key"] isEqual:@"colorHeader"]) {
 				if (![[[self preferences] valueForKey:@"style"] isEqual:@"classic"]) [mutableSpecifiers removeObject:spec];
 			}
+
+			if ([spec.properties[@"key"] isEqual:@"borderWidth"]) {
+				if ([[[self preferences] valueForKey:@"border"] isEqual:@"none"]) [mutableSpecifiers removeObject:spec];
+			}
 		}
 		
 		_specifiers = mutableSpecifiers;
@@ -55,6 +59,24 @@
 		}
 	} else {
 		[self removeSpecifierID:@"colorHeader" animated:YES];
+	}
+}
+
+- (void)setBorder:(id)value specifier:(PSSpecifier*)specifier {
+	[super setPreferenceValue:value specifier:specifier];
+
+	if (![value isEqual:@"none"]) {
+		if ([self specifierForID:@"borderWidth"] == nil) {
+			NSArray *specifiers = [self loadSpecifiersFromPlistName:@"Root" target:self];
+			for (PSSpecifier *spec in specifiers) {
+				if ([spec.properties[@"key"] isEqual:@"borderWidth"]) {
+					[self insertSpecifier:spec afterSpecifierID:@"border" animated:YES];
+					break;
+				}
+			}
+		}
+	} else {
+		[self removeSpecifierID:@"borderWidth" animated:YES];
 	}
 }
 

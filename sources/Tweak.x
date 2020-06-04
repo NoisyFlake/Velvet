@@ -3,8 +3,6 @@
 
 NSUserDefaults *preferences;
 
-int style = 0;
-
 BOOL useFirstLineAsTitle = NO;
 BOOL useKalmColor = NO;
 
@@ -18,6 +16,7 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 
 %hook NCNotificationShortLookView
 %property (retain, nonatomic) VelvetIndicatorView * colorIndicator;
+%property (retain, nonatomic) UIView * velvetBorder;
 %property (retain, nonatomic) VelvetBackgroundView * velvetBackground;
 %property (retain, nonatomic) UIImageView * imageIndicator;
 - (void)layoutSubviews {
@@ -72,6 +71,13 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 		view.colorIndicator = colorIndicator;
 	}
 
+	if (view.velvetBorder == nil) {
+		UIView *velvetBorder = [[UIView alloc] initWithFrame:CGRectZero];
+
+		[view.velvetBackground insertSubview:velvetBorder atIndex:1];
+		view.velvetBorder = velvetBorder;
+	}
+
 	if (view.imageIndicator == nil) {
 		UIImageView *imageIndicator = [[UIImageView alloc] initWithFrame:CGRectZero];
 
@@ -83,33 +89,24 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 	UIView *stackDimmingView = [self.view valueForKey:@"_stackDimmingView"];
 	stackDimmingView.layer.cornerRadius = cornerRadius;
 
-	switch (style) {
-        case 1: { // full bar bottom
-			view.colorIndicator.frame = CGRectMake(0, 0, view.frame.size.width, 4);
-		} break;
-        case 2: { // full bar left
-			view.colorIndicator.frame = CGRectMake(0, 0, 4, view.frame.size.height);
-		} break;
-        case 3: { // rounded bar left
-			float width = 3;
-			view.colorIndicator.frame = CGRectMake(20, 20, width, view.frame.size.height-40);
-			view.colorIndicator.layer.cornerRadius = width/2;
-			view.colorIndicator.layer.continuousCorners = YES;
-		} break;
-        case 4: { // circle left
+
+	if ([[preferences valueForKey:@"style"] isEqual:@"modern"]) {
+		[self velvetHideHeader];
+
+		if ([[preferences valueForKey:@"indicatorModern"] isEqual:@"icon"]) {
+			view.imageIndicator.frame = CGRectMake(20, (view.frame.size.height - iconSize)/2, iconSize, iconSize);
+			view.imageIndicator.image = [self getIconForBundleId:self.notificationRequest.sectionIdentifier];
+		} else if ([[preferences valueForKey:@"indicatorModern"] isEqual:@"dot"]) {
 			float size = 12;
 			view.colorIndicator.frame = CGRectMake(20, (view.frame.size.height - size)/2, size, size);
 			view.colorIndicator.layer.cornerRadius = size/2;
 			view.colorIndicator.layer.continuousCorners = YES;
-		} break;
-        case 5: { // icon left
-			view.imageIndicator.frame = CGRectMake(20, (view.frame.size.height - iconSize)/2, iconSize, iconSize);
-			view.imageIndicator.image = [self getIconForBundleId:self.notificationRequest.sectionIdentifier];
-		} break;
-	}
-
-	if ([[preferences valueForKey:@"style"] isEqual:@"modern"]) {
-		[self velvetHideHeader];
+		} else if ([[preferences valueForKey:@"indicatorModern"] isEqual:@"line"]) {
+			float width = 3;
+			view.colorIndicator.frame = CGRectMake(20, 20, width, view.frame.size.height-40);
+			view.colorIndicator.layer.cornerRadius = width/2;
+			view.colorIndicator.layer.continuousCorners = YES;
+		}
 	} 
 
 	if ([[preferences valueForKey:@"style"] isEqual:@"classic"] && [preferences boolForKey:@"colorHeader"]) {
@@ -126,6 +123,7 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 	}
 
 	view.colorIndicator.backgroundColor = dominantColor;
+	view.velvetBorder.backgroundColor = dominantColor;
 
 	if ([preferences boolForKey:@"colorPrimaryLabel"]) {
 		view.notificationContentView.primaryLabel.textColor = dominantColor;
@@ -144,9 +142,18 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 		[self velvetHideGroupedNotifications];
 	}
 
-	if ([preferences boolForKey:@"colorBorder"]) {
+	int borderWidth = [preferences integerForKey:@"borderWidth"];
+	if ([[preferences valueForKey:@"border"] isEqual:@"all"]) {
 		view.velvetBackground.layer.borderColor = dominantColor.CGColor;
-		view.velvetBackground.layer.borderWidth = 2;
+		view.velvetBackground.layer.borderWidth = borderWidth;
+	} else if ([[preferences valueForKey:@"border"] isEqual:@"top"]) {
+		view.velvetBorder.frame = CGRectMake(0, 0, view.frame.size.width, borderWidth);
+	} else if ([[preferences valueForKey:@"border"] isEqual:@"right"]) {
+		view.velvetBorder.frame = CGRectMake(view.frame.size.width - borderWidth, 0, borderWidth, view.frame.size.height);
+	} else if ([[preferences valueForKey:@"border"] isEqual:@"bottom"]) {
+		view.velvetBorder.frame = CGRectMake(0, view.frame.size.height - borderWidth, view.frame.size.width, borderWidth);
+	} else if ([[preferences valueForKey:@"border"] isEqual:@"left"]) {
+		view.velvetBorder.frame = CGRectMake(0, 0, borderWidth, view.frame.size.height);
 	}
 
 }
@@ -241,20 +248,18 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 
 	if ([[preferences valueForKey:@"style"] isEqual:@"modern"]) {
 		frame.origin.y = frame.origin.y - 14;
+
+		if ([[preferences valueForKey:@"indicatorModern"] isEqual:@"icon"]) {
+			frame.origin.x = frame.origin.x + (iconSize + 21);
+		} else if ([[preferences valueForKey:@"indicatorModern"] isEqual:@"dot"]) {
+			frame.origin.x = frame.origin.x + 32;
+		} else if ([[preferences valueForKey:@"indicatorModern"] isEqual:@"line"]) {
+			frame.origin.x = frame.origin.x + 25;
+		}
 	}
 
 	if ([[preferences valueForKey:@"style"] isEqual:@"classic"] && [preferences boolForKey:@"colorHeader"]) {
 		frame.origin.y = frame.origin.y + 10;
-	}
-	
-	if (style == 3) {
-		frame.origin.x = frame.origin.x + 25;
-	}
-	if (style == 4) {
-		frame.origin.x = frame.origin.x + 32;
-	}
-	if (style == 5) {
-		frame.origin.x = frame.origin.x + (iconSize + 21);
 	}
 	
 	return frame;
@@ -278,17 +283,17 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 	CGRect primaryLabelFrame = self.primaryLabel.frame;
 	CGRect secondaryLabelFrame = self.secondaryLabel.frame;
 
-	CGFloat labelWidth;
+	CGFloat labelWidth = 0;
 	CGFloat extra = [preferences boolForKey:@"colorBorder"] ? 5 : 0;
 
-	if (style == 3) {
-		labelWidth = 25;
-	}
-	if (style == 4) {
-		labelWidth = 32;
-	}
-	if (style == 5) {
-		labelWidth = (iconSize + 21);
+	if ([[preferences valueForKey:@"style"] isEqual:@"modern"]) {
+		if ([[preferences valueForKey:@"indicatorModern"] isEqual:@"icon"]) {
+			labelWidth = (iconSize + 21);
+		} else if ([[preferences valueForKey:@"indicatorModern"] isEqual:@"dot"]) {
+			labelWidth = 32;
+		} else if ([[preferences valueForKey:@"indicatorModern"] isEqual:@"line"]) {
+			labelWidth = 25;
+		}
 	}
 
 	primaryLabelFrame.size.width = self.primaryLabel.frame.size.width - labelWidth - extra;
@@ -314,17 +319,17 @@ float iconSize = 32; // 24, 32, 40, 48 are good options
 
 	if (auxFrame.size.width <= 0) return;
 	
-	CGFloat labelWidth;
+	CGFloat labelWidth = 0;
 	CGFloat extra = [preferences boolForKey:@"colorBorder"] ? 5 : 0;
 
-	if (style == 3) {
-		labelWidth = 25;
-	}
-	if (style == 4) {
-		labelWidth = 32;
-	}
-	if (style == 5) {
-		labelWidth = (iconSize + 21);
+	if ([[preferences valueForKey:@"style"] isEqual:@"modern"]) {
+		if ([[preferences valueForKey:@"indicatorModern"] isEqual:@"icon"]) {
+			labelWidth = (iconSize + 21);
+		} else if ([[preferences valueForKey:@"indicatorModern"] isEqual:@"dot"]) {
+			labelWidth = 32;
+		} else if ([[preferences valueForKey:@"indicatorModern"] isEqual:@"line"]) {
+			labelWidth = 25;
+		}
 	}
 	
 	auxFrame.size.width = auxFrame.size.width - labelWidth - extra;
@@ -371,13 +376,19 @@ static float getCornerRadius() {
 
 	[preferences registerDefaults:@{
 		@"enabled": @YES,
+
 		@"style": @"modern",
+		@"indicatorModern": @"icon",
 		@"colorHeader": @NO,
+
 		@"hideBackground": @NO,
 		@"colorBackground": @NO,
-		@"colorBorder": @NO,
 		@"colorPrimaryLabel": @NO,
 		@"colorSecondaryLabel": @NO,
+
+		@"border": @"none",
+		@"borderWidth": @2,
+		
 		@"roundedCorners": @"stock",
 		@"customCornerRadius": @13,
 	}];

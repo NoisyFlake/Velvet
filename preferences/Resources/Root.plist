@@ -34,6 +34,27 @@
 													</array>
 		</dict>
 		<dict>
+			<key>cell</key>							<string>PSLinkListCell</string>
+			<key>detail</key>						<string>VelvetListItemsController</string>
+			<key>default</key>						<string>icon</string>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>indicatorModern</string>
+			<key>id</key>							<string>indicatorModern</string>
+			<key>label</key>						<string>Indicator</string>
+			<key>validTitles</key>					<array>
+														<string>App Icon</string>
+														<string>Dot</string>
+														<string>Line</string>
+														<string>None</string>
+													</array>
+			<key>validValues</key>					<array>
+														<string>icon</string>
+														<string>dot</string>
+														<string>line</string>
+														<string>none</string>
+													</array>
+		</dict>
+		<dict>
 			<key>cell</key>							<string>PSSwitchCell</string>
 			<key>default</key>						<false/>
 			<key>defaults</key>						<string>com.initwithframe.velvet</string>
@@ -67,14 +88,6 @@
 			<key>cell</key>							<string>PSSwitchCell</string>
 			<key>default</key>						<false/>
 			<key>defaults</key>						<string>com.initwithframe.velvet</string>
-			<key>key</key>							<string>colorBorder</string>
-			<key>label</key>						<string>Color Border</string>
-			<key>cellClass</key>					<string>VelvetToggle</string>
-		</dict>
-		<dict>
-			<key>cell</key>							<string>PSSwitchCell</string>
-			<key>default</key>						<false/>
-			<key>defaults</key>						<string>com.initwithframe.velvet</string>
 			<key>key</key>							<string>colorPrimaryLabel</string>
 			<key>label</key>						<string>Color Title</string>
 			<key>cellClass</key>					<string>VelvetToggle</string>
@@ -86,6 +99,50 @@
 			<key>key</key>							<string>colorSecondaryLabel</string>
 			<key>label</key>						<string>Color Message</string>
 			<key>cellClass</key>					<string>VelvetToggle</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>							<string>PSGroupCell</string>
+			<key>label</key>						<string>Border Options</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSLinkListCell</string>
+			<key>detail</key>						<string>VelvetListItemsController</string>
+			<key>default</key>						<string>none</string>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>border</string>
+			<key>id</key>							<string>border</string>
+			<key>label</key>						<string>Border</string>
+			<key>set</key>							<string>setBorder:specifier:</string>
+			<key>validTitles</key>					<array>
+														<string>None</string>
+														<string>All</string>
+														<string>Top</string>
+														<string>Right</string>
+														<string>Bottom</string>
+														<string>Left</string>
+													</array>
+			<key>validValues</key>					<array>
+														<string>none</string>
+														<string>all</string>
+														<string>top</string>
+														<string>right</string>
+														<string>bottom</string>
+														<string>left</string>
+													</array>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSliderCell</string>
+			<key>cellClass</key>					<string>VelvetSlider</string>
+			<key>min</key>							<integer>1</integer>
+			<key>max</key>							<integer>5</integer>
+			<key>isSegmented</key>					<true/>
+			<key>segmentCount</key>					<integer>4</integer>
+			<key>showValue</key>					<true/>
+			<key>default</key>						<integer>2</integer>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>borderWidth</string>
+			<key>id</key>							<string>borderWidth</string>
 		</dict>
 
 		<dict>

@@ -69,6 +69,7 @@
 @property (nonatomic,copy) NSArray * icons;
 @property (getter=_notificationContentView,nonatomic,readonly) NCNotificationContentView * notificationContentView;
 @property (retain, nonatomic) VelvetIndicatorView * colorIndicator;
+@property (retain, nonatomic) UIView * velvetBorder;
 @property (retain, nonatomic) VelvetBackgroundView * velvetBackground;
 @property (retain, nonatomic) UIImageView * imageIndicator;
 @end

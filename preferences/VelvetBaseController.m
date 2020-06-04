@@ -9,7 +9,7 @@
 
 	self.navigationItem.navigationBar.tintColor = kVELVETCOLOR;
 	
-	UITableView *table = [self valueForKey:@"_table"]; //self.view.subviews[0];
+	UITableView *table = [self valueForKey:@"_table"];
 	table.separatorStyle = 0;
 
 	UIBarButtonItem *applyButton = [[UIBarButtonItem alloc] initWithTitle:@"Respring" style:UIBarButtonItemStylePlain target:self action:@selector(respring)];
