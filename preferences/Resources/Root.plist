@@ -11,6 +11,7 @@
 			<key>key</key>							<string>enabled</string>
 			<key>label</key>						<string>Enabled</string>
 			<key>cellClass</key>					<string>VelvetToggle</string>
+			<key>set</key>							<string>setWithRespring:specifier:</string>
 		</dict>
 
 		<dict>

@@ -38,4 +38,17 @@
 	posix_spawn(&pid, "/usr/bin/sbreload", NULL, NULL, (char* const*)args, NULL);
 }
 
+-(void)setWithRespring:(id)value specifier:(PSSpecifier *)specifier {
+	[self setPreferenceValue:value specifier:specifier];
+
+	UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Respring required" message:@"Changing this option requires a respring. Do you want to respring now?" preferredStyle:UIAlertControllerStyleAlert];
+
+	[alert addAction:[UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+		 [self respring];
+	}]];
+
+	[alert addAction:[UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleCancel handler:nil]];
+	[self presentViewController:alert animated:YES completion:nil];
+}
+
 @end
