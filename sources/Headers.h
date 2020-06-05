@@ -105,8 +105,8 @@
 @interface NCNotificationShortLookViewController : NCNotificationViewController
 @property (nonatomic,readonly) NCNotificationShortLookView * viewForPreview;
 @property (retain, nonatomic) UIColor * kalmColor;
--(void)velvetHideHeader;
--(void)velvetHideGroupedNotifications;
+-(void)velvetHideHeader:(BOOL)hidden;
+-(void)velvetHideGroupedNotifications:(BOOL)hidden;
 -(UIColor *)getDominantColor;
 -(UIImage *)getIconForBundleId:(NSString *)bundleId;
 @end
@@ -120,5 +120,26 @@
 + (UIColor *)getColor;
 @end
 
+@interface SBLockScreenManager : NSObject
+-(void)lockUIFromSource:(int)arg1 withOptions:(id)arg2 ;
+@end
+
+@interface LSApplicationProxy
+@property (nonatomic,readonly) NSString * applicationType;
+@property (nonatomic,readonly) NSString * applicationIdentifier;
+@property (getter=isRestricted,nonatomic,readonly) BOOL restricted;
+@property (nonatomic,readonly) NSArray * appTags;
+@property (getter=isLaunchProhibited,nonatomic,readonly) BOOL launchProhibited;
+@property (getter=isPlaceholder,nonatomic,readonly) BOOL placeholder;
+@property (getter=isRemovedSystemApp,nonatomic,readonly) BOOL removedSystemApp;
+-(id)localizedNameForContext:(id)arg1 ;
+@end
+
+@interface LSApplicationWorkspace : NSObject
++(id)defaultWorkspace;
+-(id)allInstalledApplications;
+@end
+
 static float getCornerRadius();
 static float getIndicatorOffset();
+static void createTestNotifications();

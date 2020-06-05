@@ -12,8 +12,8 @@
 	UITableView *table = [self valueForKey:@"_table"];
 	table.separatorStyle = 0;
 
-	UIBarButtonItem *applyButton = [[UIBarButtonItem alloc] initWithTitle:@"Respring" style:UIBarButtonItemStylePlain target:self action:@selector(respring)];
-	self.navigationItem.rightBarButtonItem = applyButton;
+	// UIBarButtonItem *applyButton = [[UIBarButtonItem alloc] initWithTitle:@"Respring" style:UIBarButtonItemStylePlain target:self action:@selector(respring)];
+	// self.navigationItem.rightBarButtonItem = applyButton;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

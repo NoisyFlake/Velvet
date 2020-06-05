@@ -44,7 +44,6 @@ NSUserDefaults *preferences;
 
 	if (view.velvetBackground == nil) {
 		VelvetBackgroundView *velvetBackground = [[VelvetBackgroundView alloc] initWithFrame:CGRectZero];
-		velvetBackground.layer.cornerRadius = cornerRadius;
 		velvetBackground.layer.continuousCorners = YES;
 		velvetBackground.clipsToBounds = YES;
 
@@ -76,20 +75,34 @@ NSUserDefaults *preferences;
 	view.backgroundMaterialView.layer.cornerRadius = cornerRadius;
 	UIView *stackDimmingView = [self.view valueForKey:@"_stackDimmingView"];
 	stackDimmingView.layer.cornerRadius = cornerRadius;
+	view.velvetBackground.layer.cornerRadius = cornerRadius;
 
-
+	// Hide and reset everything so we can set it up from scratch in the next steps
+	view.imageIndicator.hidden = YES;
+	view.velvetBorder.hidden = YES;
+	view.colorIndicator.hidden = YES;
+	view.colorIndicator.layer.cornerRadius = 0;
+	view.colorIndicator.layer.mask = nil;
+	view.velvetBackground.layer.borderWidth = 0;
+	
 	if ([[preferences valueForKey:@"style"] isEqual:@"modern"]) {
-		[self velvetHideHeader];
+		[self velvetHideHeader:YES];
 
 		if ([[preferences valueForKey:@"indicatorModern"] isEqual:@"icon"]) {
+			view.imageIndicator.hidden = NO;
+
 			float size = [preferences integerForKey:@"indicatorModernSize"];
 			view.imageIndicator.frame = CGRectMake(20, (view.frame.size.height - size)/2, size, size);
 			view.imageIndicator.image = [self getIconForBundleId:self.notificationRequest.sectionIdentifier];
 		} else if ([[preferences valueForKey:@"indicatorModern"] isEqual:@"dot"]) {
+			view.colorIndicator.hidden = NO;
+
 			float size = [preferences integerForKey:@"indicatorModernSize"] / 2;
 			view.colorIndicator.frame = CGRectMake(20, (view.frame.size.height - size)/2, size, size);
 			view.colorIndicator.layer.cornerRadius = size/2;
 		} else if ([[preferences valueForKey:@"indicatorModern"] isEqual:@"triangle"]) {
+			view.colorIndicator.hidden = NO;
+
 			float size = [preferences integerForKey:@"indicatorModernSize"] / 2;
 			view.colorIndicator.frame = CGRectMake(20, (view.frame.size.height - size)/2, size, size);
 
@@ -108,6 +121,8 @@ NSUserDefaults *preferences;
 			// Mask the view's layer with this shape
 			view.colorIndicator.layer.mask = mask;
 		} else if ([[preferences valueForKey:@"indicatorModern"] isEqual:@"line"]) {
+			view.colorIndicator.hidden = NO;
+
 			float width = 3;
 			view.colorIndicator.frame = CGRectMake(20, 20, width, view.frame.size.height-40);
 			view.colorIndicator.layer.cornerRadius = width/2;
@@ -116,6 +131,7 @@ NSUserDefaults *preferences;
 	} 
 
 	if ([[preferences valueForKey:@"style"] isEqual:@"classic"]) {
+		[self velvetHideHeader:NO];
 
 		PLPlatterHeaderContentView *header = [self.viewForPreview valueForKey:@"_headerContentView"];
 
@@ -124,17 +140,22 @@ NSUserDefaults *preferences;
 
 			// Move the header to the velvetBackground view so that it gets automatically cut off with higher cornerRadius settings
 			[view.velvetBackground insertSubview:header atIndex:1];
+		} else {
+			header.backgroundColor = nil;
 		}
 
-		if ([[preferences valueForKey:@"indicatorClassic"] isEqual:@"none"]) {
-			((UIView *)header.iconButtons[0]).alpha = 0;
-		} else if ([[preferences valueForKey:@"indicatorClassic"] isEqual:@"dot"]) {
-			((UIView *)header.iconButtons[0]).alpha = 0;
+		// Hide the icon
+		((UIView *)header.iconButtons[0]).alpha = 0;
+
+		if ([[preferences valueForKey:@"indicatorClassic"] isEqual:@"dot"]) {
+			view.colorIndicator.hidden = NO;
+
 			float size = 12;
 			view.colorIndicator.frame = CGRectMake(14.5, 14.5, size, size);
 			view.colorIndicator.layer.cornerRadius = size/2;
 		} else if ([[preferences valueForKey:@"indicatorClassic"] isEqual:@"triangle"]) {
-			((UIView *)header.iconButtons[0]).alpha = 0;
+			view.colorIndicator.hidden = NO;
+
 			float size = 12;
 			view.colorIndicator.frame = CGRectMake(14.5, 14.5, size, size);
 
@@ -152,28 +173,25 @@ NSUserDefaults *preferences;
 
 			// Mask the view's layer with this shape
 			view.colorIndicator.layer.mask = mask;
+		} else if ([[preferences valueForKey:@"indicatorClassic"] isEqual:@"icon"]) {
+			((UIView *)header.iconButtons[0]).alpha = 1;
 		}
 	}
 
 	view.colorIndicator.backgroundColor = dominantColor;
 	view.velvetBorder.backgroundColor = dominantColor;
-	
 
-	if ([preferences boolForKey:@"colorPrimaryLabel"]) {
-		view.notificationContentView.primaryLabel.textColor = dominantColor;
-	}
+	view.notificationContentView.primaryLabel.textColor = [preferences boolForKey:@"colorPrimaryLabel"] ? dominantColor : nil;
+	view.notificationContentView.secondaryLabel.textColor = [preferences boolForKey:@"colorSecondaryLabel"] ? dominantColor : nil;
 
-	if ([preferences boolForKey:@"colorSecondaryLabel"]) {
-		view.notificationContentView.secondaryLabel.textColor = dominantColor;
-	}
-
-	if ([preferences boolForKey:@"colorBackground"]) {
-		view.velvetBackground.backgroundColor = [dominantColor colorWithAlphaComponent:0.6];
-	}
+	view.velvetBackground.backgroundColor = [preferences boolForKey:@"colorBackground"] ? [dominantColor colorWithAlphaComponent:0.6] : nil;
 
 	if ([preferences boolForKey:@"hideBackground"]) {
 		view.backgroundMaterialView.alpha = 0;
-		[self velvetHideGroupedNotifications];
+		[self velvetHideGroupedNotifications:YES];
+	} else {
+		view.backgroundMaterialView.alpha = 1;
+		[self velvetHideGroupedNotifications:NO];
 	}
 
 	int borderWidth = [preferences integerForKey:@"borderWidth"];
@@ -181,40 +199,45 @@ NSUserDefaults *preferences;
 		view.velvetBackground.layer.borderColor = dominantColor.CGColor;
 		view.velvetBackground.layer.borderWidth = borderWidth;
 	} else if ([[preferences valueForKey:@"border"] isEqual:@"top"]) {
+		view.velvetBorder.hidden = NO;
 		view.velvetBorder.frame = CGRectMake(0, 0, view.frame.size.width, borderWidth);
 	} else if ([[preferences valueForKey:@"border"] isEqual:@"right"]) {
+		view.velvetBorder.hidden = NO;
 		view.velvetBorder.frame = CGRectMake(view.frame.size.width - borderWidth, 0, borderWidth, view.frame.size.height);
 	} else if ([[preferences valueForKey:@"border"] isEqual:@"bottom"]) {
+		view.velvetBorder.hidden = NO;
 		view.velvetBorder.frame = CGRectMake(0, view.frame.size.height - borderWidth, view.frame.size.width, borderWidth);
 	} else if ([[preferences valueForKey:@"border"] isEqual:@"left"]) {
+		view.velvetBorder.hidden = NO;
 		view.velvetBorder.frame = CGRectMake(0, 0, borderWidth, view.frame.size.height);
 	}
 
 }
 
 %new
--(void)velvetHideHeader {
+-(void)velvetHideHeader:(BOOL)hidden {
 	PLPlatterHeaderContentView *header = [self.viewForPreview valueForKey:@"_headerContentView"];
 
 	for (UIView *subview in header.subviews) {
 		if ([subview isKindOfClass:%c(UIButton)]) {
 			// hide icon
-			subview.hidden = YES;
+			subview.hidden = hidden;
 		}
 	}
 
-	header.titleLabel.hidden = YES;
+	header.titleLabel.hidden = hidden;
+	header.hidden = hidden;
 }
 
 %new
--(void)velvetHideGroupedNotifications {
+-(void)velvetHideGroupedNotifications:(BOOL)hidden {
 	if (self.associatedView) {
 		NCNotificationListCell *cell = (NCNotificationListCell *)self.associatedView;
 		NCNotificationListView *listView = (NCNotificationListView *)cell.superview;
 
 		NCNotificationListCell *frontCell = [listView _visibleViewAtIndex:0];
 		for (UIView *subview in listView.subviews) {
-			if (subview != frontCell && [subview isKindOfClass:%c(NCNotificationListCell)]) subview.hidden = listView.grouped;
+			if (subview != frontCell && [subview isKindOfClass:%c(NCNotificationListCell)]) subview.hidden = listView.grouped && hidden;
 		}
 	}
 }
@@ -275,6 +298,8 @@ NSUserDefaults *preferences;
 	return [[preferences valueForKey:@"indicatorClassic"] isEqual:@"none"] ? -18 : %orig;
 }
 %end
+
+
 
 %hook PLTitledPlatterView
 - (CGRect)_mainContentFrame {
@@ -385,6 +410,56 @@ static float getIndicatorOffset() {
 	return offset;
 }
 
+static void createTestNotifications(int amount) {
+	// [[%c(SBLockScreenManager) sharedInstance] lockUIFromSource:1 withOptions:nil];
+
+	NSMutableDictionary *installedApps = [[NSMutableDictionary alloc] init];
+
+	NSArray *apps = [[%c(LSApplicationWorkspace) defaultWorkspace] allInstalledApplications];
+	for (LSApplicationProxy *app in apps) {
+		if ([app.applicationType isEqual:@"User"] ||
+			(
+				[app.applicationType isEqual:@"System"] &&
+				![app.appTags containsObject:@"hidden"] &&
+				!app.launchProhibited &&
+				!app.placeholder &&
+				!app.removedSystemApp
+			)
+		) {
+			[installedApps setObject:[app localizedNameForContext:nil] forKey:app.applicationIdentifier];
+		}
+	}
+
+	NSArray *bundleIds = [installedApps allKeys];
+	for (int i = 0; i < amount; i++) {
+		NSString *bundleId = [bundleIds objectAtIndex:(arc4random()%[bundleIds count])];
+		NSString *appName = installedApps[bundleId];
+
+		if (i == 4) {
+			[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Velvet Notification"
+                                                           message:[NSString stringWithFormat:@"This is a second notification for %@", appName]
+                                                           bundleID:bundleId];
+		}
+
+		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Velvet Notification"
+                                                           message:[NSString stringWithFormat:@"This is a test notification for %@", appName]
+                                                           bundleID:bundleId];
+		
+	}
+	
+}
+
+static void testRegular() {
+	createTestNotifications(1);
+}
+
+static void testLockscreen() {
+	[[%c(SBLockScreenManager) sharedInstance] lockUIFromSource:1 withOptions:nil];
+	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void) {
+		createTestNotifications(5);
+	});
+}
+
 %ctor {
 	preferences = [[NSUserDefaults alloc] initWithSuiteName:@"com.initwithframe.velvet"];
 
@@ -413,33 +488,38 @@ static float getIndicatorOffset() {
 
 	%init;
 
-	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 5.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void) {
-		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Home"
-                                                           message:@"Would you like to turn the lights on?"
-                                                           bundleID:@"com.apple.Home"];
+	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)testRegular, CFSTR("com.initwithframe.velvet/testRegular"), NULL, CFNotificationSuspensionBehaviorCoalesce);
+	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)testLockscreen, CFSTR("com.initwithframe.velvet/testLockscreen"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 
-		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Instagram"
-                                                           message:@"Somebody liked your post."
-                                                           bundleID:@"com.burbn.instagram"];
+	// createTestNotifications();
+	// dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 5.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void) {
+		
+		// [[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Home"
+        //                                                    message:@"Would you like to turn the lights on?"
+        //                                                    bundleID:@"com.apple.Home"];
 
-		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"iTunes Store"
-                                                           message:@"Your favourite artist released a new track! ngl this is long"
-                                                           bundleID:@"com.apple.MobileStore"];
+		// [[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Instagram"
+        //                                                    message:@"Somebody liked your post."
+        //                                                    bundleID:@"com.burbn.instagram"];
 
-		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Twitter"
-                                                           message:@"I wonder if this ever will be released."
-                                                           bundleID:@"com.atebits.Tweetie2"];
+		// [[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"iTunes Store"
+        //                                                    message:@"Your favourite artist released a new track! ngl this is long"
+        //                                                    bundleID:@"com.apple.MobileStore"];
 
-		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"YouTube"
-                                                           message:@"PewDiePie uploaded a new video."
-                                                           bundleID:@"com.google.ios.youtube"];
+		// [[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Twitter"
+        //                                                    message:@"I wonder if this ever will be released."
+        //                                                    bundleID:@"com.atebits.Tweetie2"];
 
-		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Bill Gates"
-                                                           message:@"ETA?!"
-                                                           bundleID:@"com.apple.MobileSMS"];
+		// [[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"YouTube"
+        //                                                    message:@"PewDiePie uploaded a new video."
+        //                                                    bundleID:@"com.google.ios.youtube"];
 
-		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Bill Gates"
-                                                           message:@"Are you still working on that new tweak?"
-                                                           bundleID:@"com.apple.MobileSMS"];
-	});
+		// [[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Bill Gates"
+        //                                                    message:@"ETA?!"
+        //                                                    bundleID:@"com.apple.MobileSMS"];
+
+		// [[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Bill Gates"
+        //                                                    message:@"Are you still working on that new tweak?"
+        //                                                    bundleID:@"com.apple.MobileSMS"];
+	// });
 }

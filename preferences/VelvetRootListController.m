@@ -80,7 +80,7 @@
 				if ([spec.properties[@"key"] isEqual:@"indicatorModern"]) {
 					[self insertSpecifier:spec afterSpecifierID:@"style" animated:NO];
 				}
-				if ([spec.properties[@"key"] isEqual:@"indicatorModernSize"] && ([[[self preferences] valueForKey:@"indicatorModern"] isEqual:@"icon"] || [[[self preferences] valueForKey:@"indicatorModern"] isEqual:@"dot"])) {
+				if ([spec.properties[@"key"] isEqual:@"indicatorModernSize"] && ([[[self preferences] valueForKey:@"indicatorModern"] isEqual:@"icon"] || [[[self preferences] valueForKey:@"indicatorModern"] isEqual:@"dot"] || [[[self preferences] valueForKey:@"indicatorModern"] isEqual:@"triangle"])) {
 					[self insertSpecifier:spec afterSpecifierID:@"indicatorModern" animated:YES];
 				}
 			}
@@ -92,7 +92,7 @@
 - (void)setIndicatorModern:(id)value specifier:(PSSpecifier*)specifier {
 	[super setPreferenceValue:value specifier:specifier];
 
-	if ([value isEqual:@"icon"] || [value isEqual:@"dot"]) {
+	if ([value isEqual:@"icon"] || [value isEqual:@"dot"] || [value isEqual:@"triangle"]) {
 		if ([self specifierForID:@"indicatorModernSize"] == nil) {
 			NSArray *specifiers = [self loadSpecifiersFromPlistName:@"Root" target:self];
 			for (PSSpecifier *spec in specifiers) {
@@ -123,6 +123,14 @@
 	} else {
 		[self removeSpecifierID:@"borderWidth" animated:YES];
 	}
+}
+
+- (void)testLockscreen {
+	CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), (__bridge CFStringRef)@"com.initwithframe.velvet/testLockscreen", NULL, NULL, YES);
+}
+
+- (void)testRegular {
+	CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), (__bridge CFStringRef)@"com.initwithframe.velvet/testRegular", NULL, NULL, YES);
 }
 
 @end

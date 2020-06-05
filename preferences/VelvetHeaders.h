@@ -2,7 +2,7 @@
 #import <Preferences/PSTableCell.h>
 #import <Preferences/PSSpecifier.h>
 
-#define kVELVETCOLOR UIColor.orangeColor
+#define kVELVETCOLOR [UIColor colorWithRed: 0.46 green: 0.83 blue: 1.00 alpha: 1.00]
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 
 @interface UINavigationItem (Velvet)
@@ -20,6 +20,9 @@
 @end
 
 @interface VelvetSlider : PSSliderTableCell
+@end
+
+@interface VelvetButton : PSTableCell
 @end
 
 @interface PSSwitchTableCell : PSControlTableCell

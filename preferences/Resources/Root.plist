@@ -76,15 +76,15 @@
 			<key>label</key>						<string>Indicator</string>
 			<key>validTitles</key>					<array>
 														<string>App Icon</string>
-														<string>Dot</string>
 														<string>Triangle</string>
+														<string>Dot</string>
 														<string>Line</string>
 														<string>None</string>
 													</array>
 			<key>validValues</key>					<array>
 														<string>icon</string>
-														<string>dot</string>
 														<string>triangle</string>
+														<string>dot</string>
 														<string>line</string>
 														<string>none</string>
 													</array>
@@ -110,10 +110,10 @@
 														<real>48</real>
 													</array>
 		</dict>
-		
+
 		<dict>
 			<key>cell</key>							<string>PSGroupCell</string>
-			<key>label</key>						<string>Options</string>
+			<key>label</key>						<string>Background Options</string>
 		</dict>
 		<dict>
 			<key>cell</key>							<string>PSSwitchCell</string>
@@ -130,6 +130,11 @@
 			<key>key</key>							<string>colorBackground</string>
 			<key>label</key>						<string>Color Background</string>
 			<key>cellClass</key>					<string>VelvetToggle</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>							<string>PSGroupCell</string>
+			<key>label</key>						<string>Label Options</string>
 		</dict>
 		<dict>
 			<key>cell</key>							<string>PSSwitchCell</string>
@@ -159,7 +164,7 @@
 			<key>defaults</key>						<string>com.initwithframe.velvet</string>
 			<key>key</key>							<string>border</string>
 			<key>id</key>							<string>border</string>
-			<key>label</key>						<string>Border</string>
+			<key>label</key>						<string>Color Border</string>
 			<key>set</key>							<string>setBorder:specifier:</string>
 			<key>validTitles</key>					<array>
 														<string>None</string>
@@ -226,6 +231,29 @@
 			<key>defaults</key>						<string>com.initwithframe.velvet</string>
 			<key>key</key>							<string>customCornerRadius</string>
 			<key>id</key>							<string>customCornerRadius</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>							<string>PSGroupCell</string>
+			<key>label</key>						<string>Test your Setup</string>
+		</dict>
+		<dict>
+				<key>cell</key>                     <string>PSButtonCell</string>
+				<key>action</key>                   <string>testRegular</string>
+				<key>cellClass</key>                <string>VelvetButton</string>
+				<key>label</key>                    <string>Test Here</string>
+		</dict>
+		<dict>
+				<key>cell</key>                     <string>PSButtonCell</string>
+				<key>action</key>                   <string>testLockscreen</string>
+				<key>cellClass</key>                <string>VelvetButton</string>
+				<key>label</key>                    <string>Test Lockscreen</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>                         <string>PSGroupCell</string>
+			<key>footerText</key> 				    <string>Velvet 1.0 | initWithFrame</string>
+			<key>footerAlignment</key> 			    <string>1</string>
 		</dict>
 	</array>
 	<key>title</key>
