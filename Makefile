@@ -1,4 +1,8 @@
-TARGET = iphone:clang:latest:13.0
+ifneq ("$(wildcard $(THEOS)/sdks/iPhoneOS12.4.sdk)", "")
+	TARGET = iphone:clang:12.4:12.4
+else
+	TARGET = iphone:clang:latest
+endif
 ARCHS = arm64 arm64e
 
 INSTALL_TARGET_PROCESSES = SpringBoard

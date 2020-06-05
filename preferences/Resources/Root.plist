@@ -241,18 +241,18 @@
 				<key>cell</key>                     <string>PSButtonCell</string>
 				<key>action</key>                   <string>testRegular</string>
 				<key>cellClass</key>                <string>VelvetButton</string>
-				<key>label</key>                    <string>Test Here</string>
+				<key>label</key>                    <string>Test here</string>
 		</dict>
 		<dict>
 				<key>cell</key>                     <string>PSButtonCell</string>
 				<key>action</key>                   <string>testLockscreen</string>
 				<key>cellClass</key>                <string>VelvetButton</string>
-				<key>label</key>                    <string>Test Lockscreen</string>
+				<key>label</key>                    <string>Test on Lockscreen</string>
 		</dict>
 
 		<dict>
 			<key>cell</key>                         <string>PSGroupCell</string>
-			<key>footerText</key> 				    <string>Velvet 1.0 | initWithFrame</string>
+			<key>footerText</key> 				    <string>Velvet 1.0 - initWithFrame</string>
 			<key>footerAlignment</key> 			    <string>1</string>
 		</dict>
 	</array>

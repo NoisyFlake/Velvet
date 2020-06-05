@@ -1,7 +1,31 @@
 #include "VelvetHeaders.h"
 
 @implementation VelvetRootListController
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self setupHeader];
 
+	// Is only here because else it pops up when only set on #23
+	UIBarButtonItem *testButton = [[UIBarButtonItem alloc] initWithTitle:@"Test" style:UIBarButtonItemStylePlain target:self action:@selector(testRegular)];
+	self.navigationItem.rightBarButtonItem = testButton;
+}
+- (void)setupHeader {
+    UIView *header = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 140)];
+    UIImage *image = [[UIImage alloc] initWithContentsOfFile: @"/Library/PreferenceBundles/Velvet.bundle/Images/velvet-header-icon.png"];
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 30, self.view.bounds.size.width, 80)];
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
+    [imageView setImage:image];
+
+    [header addSubview:imageView];
+
+    [self.table setTableHeaderView:header];
+}
+- (void)viewDidLayoutSubviews {
+	[super viewDidLayoutSubviews];
+
+	UIBarButtonItem *testButton = [[UIBarButtonItem alloc] initWithTitle:@"Test" style:UIBarButtonItemStylePlain target:self action:@selector(testRegular)];
+	self.navigationItem.rightBarButtonItem = testButton;
+}
 - (NSArray *)specifiers {
 	if (!_specifiers) {
 		NSMutableArray *mutableSpecifiers = [[self loadSpecifiersFromPlistName:@"Root" target:self] mutableCopy];
@@ -25,7 +49,7 @@
 				if ([[[self preferences] valueForKey:@"border"] isEqual:@"none"]) [mutableSpecifiers removeObject:spec];
 			}
 		}
-		
+
 		_specifiers = mutableSpecifiers;
 	}
 
@@ -56,8 +80,8 @@
 	if ([value isEqual:@"classic"]) {
 		[self removeSpecifierID:@"indicatorModern" animated:NO];
 		[self removeSpecifierID:@"indicatorModernSize" animated:YES];
-		
-		
+
+
 		if ([self specifierForID:@"indicatorClassic"] == nil) {
 			NSArray *specifiers = [self loadSpecifiersFromPlistName:@"Root" target:self];
 			for (PSSpecifier *spec in specifiers) {
@@ -69,11 +93,11 @@
 				}
 			}
 		}
-		
+
 	} else {
 		[self removeSpecifierID:@"indicatorClassic" animated:NO];
 		[self removeSpecifierID:@"colorHeader" animated:YES];
-		
+
 		if ([self specifierForID:@"indicatorModern"] == nil) {
 			NSArray *specifiers = [self loadSpecifiersFromPlistName:@"Root" target:self];
 			for (PSSpecifier *spec in specifiers) {

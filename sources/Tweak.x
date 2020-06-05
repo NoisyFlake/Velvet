@@ -2,6 +2,7 @@
 #import "ColorSupport.h"
 
 NSUserDefaults *preferences;
+BOOL isTesting;
 
 @implementation VelvetIndicatorView
 @end
@@ -39,7 +40,7 @@ NSUserDefaults *preferences;
 
 	float cornerRadius = getCornerRadius();
 	if (cornerRadius < 0) cornerRadius = view.frame.size.height / 2;
-	
+
 	UIColor *dominantColor = [self getDominantColor];
 
 	if (view.velvetBackground == nil) {
@@ -84,7 +85,7 @@ NSUserDefaults *preferences;
 	view.colorIndicator.layer.cornerRadius = 0;
 	view.colorIndicator.layer.mask = nil;
 	view.velvetBackground.layer.borderWidth = 0;
-	
+
 	if ([[preferences valueForKey:@"style"] isEqual:@"modern"]) {
 		[self velvetHideHeader:YES];
 
@@ -128,7 +129,7 @@ NSUserDefaults *preferences;
 			view.colorIndicator.layer.cornerRadius = width/2;
 			view.colorIndicator.layer.continuousCorners = YES;
 		}
-	} 
+	}
 
 	if ([[preferences valueForKey:@"style"] isEqual:@"classic"]) {
 		[self velvetHideHeader:NO];
@@ -316,7 +317,7 @@ NSUserDefaults *preferences;
 	if ([[preferences valueForKey:@"style"] isEqual:@"classic"] && [preferences boolForKey:@"colorHeader"]) {
 		frame.origin.y = frame.origin.y + 10;
 	}
-	
+
 	return frame;
 }
 %end
@@ -352,7 +353,7 @@ NSUserDefaults *preferences;
 	CGRect auxFrame = self.frame;
 
 	if (auxFrame.size.width <= 0) return;
-	
+
 	auxFrame.size.width = auxFrame.size.width - getIndicatorOffset();
 	self.frame = auxFrame;
 
@@ -360,8 +361,8 @@ NSUserDefaults *preferences;
 	if (cornerRadius < 0) cornerRadius = self.frame.size.height / 2;
 
 	UIView *overlayView = [self safeValueForKey:@"_overlayView"];
-	overlayView.layer.cornerRadius = cornerRadius;	
-	
+	overlayView.layer.cornerRadius = cornerRadius;
+
 	%orig;
 }
 
@@ -444,16 +445,25 @@ static void createTestNotifications(int amount) {
 		[[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Velvet Notification"
                                                            message:[NSString stringWithFormat:@"This is a test notification for %@", appName]
                                                            bundleID:bundleId];
-		
+
 	}
-	
+
+	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^(void) {
+		isTesting = NO;
+	});
 }
 
 static void testRegular() {
+	if (isTesting) return; // Prevent unnecessary spam
+	isTesting = YES;
+
 	createTestNotifications(1);
 }
 
 static void testLockscreen() {
+	if (isTesting) return; // Prevent unnecessary spam
+	isTesting = YES;
+
 	[[%c(SBLockScreenManager) sharedInstance] lockUIFromSource:1 withOptions:nil];
 	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void) {
 		createTestNotifications(5);
@@ -493,7 +503,7 @@ static void testLockscreen() {
 
 	// createTestNotifications();
 	// dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 5.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void) {
-		
+
 		// [[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Home"
         //                                                    message:@"Would you like to turn the lights on?"
         //                                                    bundleID:@"com.apple.Home"];
