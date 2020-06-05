@@ -20,12 +20,7 @@
 
     [self.table setTableHeaderView:header];
 }
-- (void)viewDidLayoutSubviews {
-	[super viewDidLayoutSubviews];
 
-	UIBarButtonItem *testButton = [[UIBarButtonItem alloc] initWithTitle:@"Test" style:UIBarButtonItemStylePlain target:self action:@selector(testRegular)];
-	self.navigationItem.rightBarButtonItem = testButton;
-}
 - (NSArray *)specifiers {
 	if (!_specifiers) {
 		NSMutableArray *mutableSpecifiers = [[self loadSpecifiersFromPlistName:@"Root" target:self] mutableCopy];
@@ -38,7 +33,7 @@
 			if ([[[self preferences] valueForKey:@"style"] isEqual:@"classic"]) {
 				if ([spec.properties[@"key"] isEqual:@"indicatorModern"]) [mutableSpecifiers removeObject:spec];
 				if ([spec.properties[@"key"] isEqual:@"indicatorModernSize"]) [mutableSpecifiers removeObject:spec];
-			} else if ([[[self preferences] valueForKey:@"style"] isEqual:@"modern"]) {
+			} else {
 				if ([spec.properties[@"key"] isEqual:@"indicatorClassic"]) [mutableSpecifiers removeObject:spec];
 				if ([spec.properties[@"key"] isEqual:@"colorHeader"]) [mutableSpecifiers removeObject:spec];
 

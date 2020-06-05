@@ -368,19 +368,6 @@ BOOL isTesting;
 
 %end
 
-// TODO: Fix this, as it makes notifications with no background but enabled border overlap each other
-// %hook NCNotificationListView
-// - (CGSize)sizeThatFits:(CGSize)arg1 {
-//     CGSize orig = %orig;
-
-// 	if ([preferences boolForKey:@"hideBackground"]) {
-// 		orig.height -= 20;
-// 	}
-
-//     return orig;
-// }
-// %end
-
 static float getCornerRadius() {
 	if ([[preferences valueForKey:@"roundedCorners"] isEqual:@"none"]) {
 		return 0;
@@ -412,8 +399,6 @@ static float getIndicatorOffset() {
 }
 
 static void createTestNotifications(int amount) {
-	// [[%c(SBLockScreenManager) sharedInstance] lockUIFromSource:1 withOptions:nil];
-
 	NSMutableDictionary *installedApps = [[NSMutableDictionary alloc] init];
 
 	NSArray *apps = [[%c(LSApplicationWorkspace) defaultWorkspace] allInstalledApplications];
@@ -484,7 +469,7 @@ static void testLockscreen() {
 
 		@"hideBackground": @NO,
 		@"colorBackground": @NO,
-		@"colorPrimaryLabel": @NO,
+		@"colorPrimaryLabel": @YES,
 		@"colorSecondaryLabel": @NO,
 
 		@"border": @"none",
@@ -501,7 +486,6 @@ static void testLockscreen() {
 	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)testRegular, CFSTR("com.initwithframe.velvet/testRegular"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)testLockscreen, CFSTR("com.initwithframe.velvet/testLockscreen"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 
-	// createTestNotifications();
 	// dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 5.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void) {
 
 		// [[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Home"
