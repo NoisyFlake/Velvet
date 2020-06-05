@@ -99,6 +99,24 @@ BOOL useKalmColor = NO;
 			float size = [preferences integerForKey:@"indicatorModernSize"] / 2;
 			view.colorIndicator.frame = CGRectMake(20, (view.frame.size.height - size)/2, size, size);
 			view.colorIndicator.layer.cornerRadius = size/2;
+		} else if ([[preferences valueForKey:@"indicatorModern"] isEqual:@"triangle"]) {
+			float size = [preferences integerForKey:@"indicatorModernSize"] / 2;
+			view.colorIndicator.frame = CGRectMake(20, (view.frame.size.height - size)/2, size, size);
+
+			// Build a triangular path
+			UIBezierPath *path = [UIBezierPath new];
+			[path moveToPoint:(CGPoint){0, 0}];
+			[path addLineToPoint:(CGPoint){size, size/2}];
+			[path addLineToPoint:(CGPoint){0, size}];
+			[path addLineToPoint:(CGPoint){0, 0}];
+
+			// Create a CAShapeLayer with this triangular path
+			CAShapeLayer *mask = [CAShapeLayer new];
+			mask.frame = view.bounds;
+			mask.path = path.CGPath;
+
+			// Mask the view's layer with this shape
+			view.colorIndicator.layer.mask = mask;
 		} else if ([[preferences valueForKey:@"indicatorModern"] isEqual:@"line"]) {
 			float width = 3;
 			view.colorIndicator.frame = CGRectMake(20, 20, width, view.frame.size.height-40);
@@ -125,11 +143,31 @@ BOOL useKalmColor = NO;
 			float size = 12;
 			view.colorIndicator.frame = CGRectMake(14.5, 14.5, size, size);
 			view.colorIndicator.layer.cornerRadius = size/2;
+		} else if ([[preferences valueForKey:@"indicatorClassic"] isEqual:@"triangle"]) {
+			((UIView *)header.iconButtons[0]).alpha = 0;
+			float size = 12;
+			view.colorIndicator.frame = CGRectMake(14.5, 14.5, size, size);
+
+			// Build a triangular path
+			UIBezierPath *path = [UIBezierPath new];
+			[path moveToPoint:(CGPoint){0, 0}];
+			[path addLineToPoint:(CGPoint){size, size/2}];
+			[path addLineToPoint:(CGPoint){0, size}];
+			[path addLineToPoint:(CGPoint){0, 0}];
+
+			// Create a CAShapeLayer with this triangular path
+			CAShapeLayer *mask = [CAShapeLayer new];
+			mask.frame = view.bounds;
+			mask.path = path.CGPath;
+
+			// Mask the view's layer with this shape
+			view.colorIndicator.layer.mask = mask;
 		}
 	}
 
 	view.colorIndicator.backgroundColor = dominantColor;
 	view.velvetBorder.backgroundColor = dominantColor;
+	
 
 	if ([preferences boolForKey:@"colorPrimaryLabel"]) {
 		view.notificationContentView.primaryLabel.textColor = dominantColor;
@@ -355,7 +393,7 @@ static float getIndicatorOffset() {
 	if ([[preferences valueForKey:@"style"] isEqual:@"modern"]) {
 		if ([[preferences valueForKey:@"indicatorModern"] isEqual:@"icon"]) {
 			offset = ([preferences integerForKey:@"indicatorModernSize"] + 21);
-		} else if ([[preferences valueForKey:@"indicatorModern"] isEqual:@"dot"]) {
+		} else if ([[preferences valueForKey:@"indicatorModern"] isEqual:@"dot"] || [[preferences valueForKey:@"indicatorModern"] isEqual:@"triangle"]) {
 			offset = ([preferences integerForKey:@"indicatorModernSize"] / 2) + 21;
 		} else if ([[preferences valueForKey:@"indicatorModern"] isEqual:@"line"]) {
 			offset = 25;

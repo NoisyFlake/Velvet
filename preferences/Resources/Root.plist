@@ -44,11 +44,13 @@
 			<key>label</key>						<string>Indicator</string>
 			<key>validTitles</key>					<array>
 														<string>App Icon</string>
+														<string>Triangle</string>
 														<string>Dot</string>
 														<string>None</string>
 													</array>
 			<key>validValues</key>					<array>
 														<string>icon</string>
+														<string>triangle</string>
 														<string>dot</string>
 														<string>none</string>
 													</array>
@@ -75,12 +77,14 @@
 			<key>validTitles</key>					<array>
 														<string>App Icon</string>
 														<string>Dot</string>
+														<string>Triangle</string>
 														<string>Line</string>
 														<string>None</string>
 													</array>
 			<key>validValues</key>					<array>
 														<string>icon</string>
 														<string>dot</string>
+														<string>triangle</string>
 														<string>line</string>
 														<string>none</string>
 													</array>
