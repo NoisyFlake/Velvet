@@ -3,9 +3,6 @@
 
 NSUserDefaults *preferences;
 
-BOOL useFirstLineAsTitle = NO;
-BOOL useKalmColor = NO;
-
 @implementation VelvetIndicatorView
 @end
 
@@ -43,14 +40,7 @@ BOOL useKalmColor = NO;
 	float cornerRadius = getCornerRadius();
 	if (cornerRadius < 0) cornerRadius = view.frame.size.height / 2;
 	
-	UIColor *dominantColor;
-	UIColor *kalmColor = [%c(KalmAPI) getColor];
-
-	if (useKalmColor && kalmColor != nil) {
-		dominantColor = kalmColor;
-	} else {
-		dominantColor = [self getDominantColor];
-	}
+	UIColor *dominantColor = [self getDominantColor];
 
 	if (view.velvetBackground == nil) {
 		VelvetBackgroundView *velvetBackground = [[VelvetBackgroundView alloc] initWithFrame:CGRectZero];
@@ -309,16 +299,6 @@ BOOL useKalmColor = NO;
 %hook NCNotificationContentView
 - (void)layoutSubviews {
 	%orig;
-
-	// If it's a multi-line message with no title, set the first line as title so it's emphasized
-	if (useFirstLineAsTitle && self.primaryLabel.text == nil && self.secondaryLabel.text) {
-		NSMutableArray *lines = [[self.secondaryLabel.text componentsSeparatedByString:@"\n"] mutableCopy];
-		if ([lines count] > 1) {
-			self.primaryLabel.text = lines[0];
-			[lines removeObjectAtIndex:0];
-			self.secondaryLabel.text = [lines componentsJoinedByString:@"\n"];
-		}
-	}
 
 	CGRect primaryLabelFrame = self.primaryLabel.frame;
 	CGRect secondaryLabelFrame = self.secondaryLabel.frame;
