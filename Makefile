@@ -13,6 +13,7 @@ TWEAK_NAME = Velvet
 
 Velvet_FILES = $(wildcard sources/*.x sources/*.m)
 Velvet_FRAMEWORKS = CoreGraphics
+Velvet_PRIVATE_FRAMEWORKS = MediaRemote
 Velvet_LIBRARIES = bulletin
 
 Velvet_CFLAGS = -fobjc-arc

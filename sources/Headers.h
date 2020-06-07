@@ -140,6 +140,26 @@
 -(id)allInstalledApplications;
 @end
 
+@interface MRPlatterViewController : UIViewController
+@property (nonatomic,readonly) UIView * contentView;
+@property (nonatomic,retain) UIView * backgroundView;
+@end
+
+@interface CSCoverSheetViewControllerBase : UIViewController
+@end
+
+@interface SBFTouchPassThroughView : UIView
+@end
+
+@interface CSCoverSheetViewBase : SBFTouchPassThroughView
+@end
+
+@interface PLPlatterCustomContentView : UIView
+@end
+
+@interface CSMediaControlsView : CSCoverSheetViewBase
+@end
+
 static float getCornerRadius();
 static float getIndicatorOffset();
 static void createTestNotifications();
