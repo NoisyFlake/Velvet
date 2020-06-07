@@ -39,22 +39,38 @@ UIColor *velvetArtworkColor;
 	%orig;
 	CGRect superviewFrame = self.superview.frame;
 	velvetArtworkBackground.frame = superviewFrame;
-}
-- (void)didMoveToWindow {
+
 	PLPlatterView *platterView = (PLPlatterView *)self.superview.superview;
 	MTMaterialView *backgroundMaterialView = platterView.backgroundMaterialView;
 
+	if ([preferences boolForKey:@"hideBackground"]) {
+		backgroundMaterialView.alpha = 0;
+	} else {
+		backgroundMaterialView.alpha = 1;
+	}
+
+	int borderWidth = [preferences integerForKey:@"borderWidth"];
+	if ([[preferences valueForKey:@"border"] isEqual:@"all"]) {
+		velvetArtworkBackground.layer.borderWidth = borderWidth;
+	} else if ([[preferences valueForKey:@"border"] isEqual:@"top"]) {
+		velvetArtworkBorder.hidden = NO;
+		velvetArtworkBorder.frame = CGRectMake(0, 0, self.superview.frame.size.width, borderWidth);
+	} else if ([[preferences valueForKey:@"border"] isEqual:@"right"]) {
+		velvetArtworkBorder.hidden = NO;
+		velvetArtworkBorder.frame = CGRectMake(self.superview.frame.size.width - borderWidth, 0, borderWidth, self.superview.frame.size.height);
+	} else if ([[preferences valueForKey:@"border"] isEqual:@"bottom"]) {
+		velvetArtworkBorder.hidden = NO;
+		velvetArtworkBorder.frame = CGRectMake(0, self.superview.frame.size.height - borderWidth, self.superview.frame.size.width, borderWidth);
+	} else if ([[preferences valueForKey:@"border"] isEqual:@"left"]) {
+		velvetArtworkBorder.hidden = NO;
+		velvetArtworkBorder.frame = CGRectMake(0, 0, borderWidth, self.superview.frame.size.height);
+	}
+}
+- (void)didMoveToWindow {
+	PLPlatterView *platterView = (PLPlatterView *)self.superview.superview;
+
 	float cornerRadius = getCornerRadius();
 	if (cornerRadius < 0) cornerRadius = self.frame.size.height / 2;
-
-	MRMediaRemoteGetNowPlayingInfo(dispatch_get_main_queue(), ^(CFDictionaryRef information) {
-        NSDictionary *dict = (__bridge NSDictionary *)(information);
-		if(!dict) return;
-
-        NSData *artworkData = [dict objectForKey:(__bridge NSString *)kMRMediaRemoteNowPlayingInfoArtworkData];
-        __block UIImage *artwork = [UIImage imageWithData:artworkData];
-		velvetArtworkColor = [artwork velvetDominantColor];
-	});
 
 	if (velvetArtworkBackground == nil) {
 		velvetArtworkBackground = [[VelvetBackgroundView alloc] initWithFrame:CGRectZero];
@@ -72,38 +88,6 @@ UIColor *velvetArtworkColor;
 
 	platterView.layer.cornerRadius = cornerRadius;
 	velvetArtworkBackground.layer.cornerRadius = cornerRadius;
-
-	// This flashes the bg, so idk yet
-	// Hide and reset everything so we can set it up from scratch in the next steps
-	// velvetArtworkBorder.hidden = YES;
-	// velvetArtworkBackground.layer.borderWidth = 0;
-
-	velvetArtworkBorder.backgroundColor = velvetArtworkColor;
-	velvetArtworkBackground.backgroundColor = [preferences boolForKey:@"colorBackground"] ? [velvetArtworkColor colorWithAlphaComponent:0.6] : nil;
-
-	if ([preferences boolForKey:@"hideBackground"]) {
-		backgroundMaterialView.alpha = 0;
-	} else {
-		backgroundMaterialView.alpha = 1;
-	}
-
-	int borderWidth = [preferences integerForKey:@"borderWidth"];
-	if ([[preferences valueForKey:@"border"] isEqual:@"all"]) {
-		velvetArtworkBackground.layer.borderColor = velvetArtworkColor.CGColor;
-		velvetArtworkBackground.layer.borderWidth = borderWidth;
-	} else if ([[preferences valueForKey:@"border"] isEqual:@"top"]) {
-		velvetArtworkBorder.hidden = NO;
-		velvetArtworkBorder.frame = CGRectMake(0, 0, platterView.frame.size.width, borderWidth);
-	} else if ([[preferences valueForKey:@"border"] isEqual:@"right"]) {
-		velvetArtworkBorder.hidden = NO;
-		velvetArtworkBorder.frame = CGRectMake(platterView.frame.size.width - borderWidth, 0, borderWidth, platterView.frame.size.height);
-	} else if ([[preferences valueForKey:@"border"] isEqual:@"bottom"]) {
-		velvetArtworkBorder.hidden = NO;
-		velvetArtworkBorder.frame = CGRectMake(0, platterView.frame.size.height - borderWidth, platterView.frame.size.width, borderWidth);
-	} else if ([[preferences valueForKey:@"border"] isEqual:@"left"]) {
-		velvetArtworkBorder.hidden = NO;
-		velvetArtworkBorder.frame = CGRectMake(0, 0, borderWidth, platterView.frame.size.height);
-	}
 }
 %end
 
@@ -119,9 +103,12 @@ UIColor *velvetArtworkColor;
         __block UIImage *artwork = [UIImage imageWithData:artworkData];
 		velvetArtworkColor = [artwork velvetDominantColor];
 
-		// Needed to recolor when track changes without lockscreen media controls changing
-		velvetArtworkBorder.backgroundColor = velvetArtworkColor;
-		velvetArtworkBackground.backgroundColor = [preferences boolForKey:@"colorBackground"] ? [velvetArtworkColor colorWithAlphaComponent:0.6] : nil;
+		if (velvetArtworkColor != nil) {
+			// Needed to recolor when track changes without lockscreen media controls changing
+			velvetArtworkBorder.backgroundColor = velvetArtworkColor;
+			velvetArtworkBackground.layer.borderColor = velvetArtworkColor.CGColor;
+			velvetArtworkBackground.backgroundColor = [preferences boolForKey:@"colorBackground"] ? [velvetArtworkColor colorWithAlphaComponent:0.6] : nil;
+		}
 	});
 }
 %end
