@@ -158,6 +158,7 @@
 @end
 
 @interface CSMediaControlsView : CSCoverSheetViewBase
+- (void)velvetUpdateStyle;
 @end
 
 static float getCornerRadius();
