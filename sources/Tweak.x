@@ -35,37 +35,6 @@ UIColor *velvetArtworkColor;
 %end
 
 %hook CSMediaControlsView
-%new
-- (void)velvetUpdateStyle {
-	PLPlatterView *platterView = (PLPlatterView *)self.superview.superview;
-	MTMaterialView *backgroundMaterialView = platterView.backgroundMaterialView;
-
-	velvetArtworkBorder.hidden = YES;
-	velvetArtworkBackground.layer.borderWidth = 0;
-
-	if ([preferences boolForKey:@"hideBackground"]) {
-		backgroundMaterialView.alpha = 0;
-	} else {
-		backgroundMaterialView.alpha = 1;
-	}
-
-	int borderWidth = [preferences integerForKey:@"borderWidth"];
-	if ([[preferences valueForKey:@"border"] isEqual:@"all"]) {
-		velvetArtworkBackground.layer.borderWidth = borderWidth;
-	} else if ([[preferences valueForKey:@"border"] isEqual:@"top"]) {
-		velvetArtworkBorder.hidden = NO;
-		velvetArtworkBorder.frame = CGRectMake(0, 0, self.superview.frame.size.width, borderWidth);
-	} else if ([[preferences valueForKey:@"border"] isEqual:@"right"]) {
-		velvetArtworkBorder.hidden = NO;
-		velvetArtworkBorder.frame = CGRectMake(self.superview.frame.size.width - borderWidth, 0, borderWidth, self.superview.frame.size.height);
-	} else if ([[preferences valueForKey:@"border"] isEqual:@"bottom"]) {
-		velvetArtworkBorder.hidden = NO;
-		velvetArtworkBorder.frame = CGRectMake(0, self.superview.frame.size.height - borderWidth, self.superview.frame.size.width, borderWidth);
-	} else if ([[preferences valueForKey:@"border"] isEqual:@"left"]) {
-		velvetArtworkBorder.hidden = NO;
-		velvetArtworkBorder.frame = CGRectMake(0, 0, borderWidth, self.superview.frame.size.height);
-	}
-}
 - (void)didMoveToWindow {
 	CGRect superviewFrame = self.superview.frame;
 	velvetArtworkBackground.frame = superviewFrame;
@@ -94,7 +63,31 @@ UIColor *velvetArtworkColor;
 	backgroundMaterialView.layer.cornerRadius = cornerRadius;
 	velvetArtworkBackground.layer.cornerRadius = cornerRadius;
 
-	[self velvetUpdateStyle];
+	velvetArtworkBorder.hidden = YES;
+	velvetArtworkBackground.layer.borderWidth = 0;
+
+	if ([preferences boolForKey:@"hideBackground"]) {
+		backgroundMaterialView.alpha = 0;
+	} else {
+		backgroundMaterialView.alpha = 1;
+	}
+
+	int borderWidth = [preferences integerForKey:@"borderWidth"];
+	if ([[preferences valueForKey:@"border"] isEqual:@"all"]) {
+		velvetArtworkBackground.layer.borderWidth = borderWidth;
+	} else if ([[preferences valueForKey:@"border"] isEqual:@"top"]) {
+		velvetArtworkBorder.hidden = NO;
+		velvetArtworkBorder.frame = CGRectMake(0, 0, self.superview.frame.size.width, borderWidth);
+	} else if ([[preferences valueForKey:@"border"] isEqual:@"right"]) {
+		velvetArtworkBorder.hidden = NO;
+		velvetArtworkBorder.frame = CGRectMake(self.superview.frame.size.width - borderWidth, 0, borderWidth, self.superview.frame.size.height);
+	} else if ([[preferences valueForKey:@"border"] isEqual:@"bottom"]) {
+		velvetArtworkBorder.hidden = NO;
+		velvetArtworkBorder.frame = CGRectMake(0, self.superview.frame.size.height - borderWidth, self.superview.frame.size.width, borderWidth);
+	} else if ([[preferences valueForKey:@"border"] isEqual:@"left"]) {
+		velvetArtworkBorder.hidden = NO;
+		velvetArtworkBorder.frame = CGRectMake(0, 0, borderWidth, self.superview.frame.size.height);
+	}
 
 	MRMediaRemoteGetNowPlayingInfo(dispatch_get_main_queue(), ^(CFDictionaryRef information) {
         NSDictionary *dict = (__bridge NSDictionary *)(information);
