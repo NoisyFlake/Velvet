@@ -39,6 +39,12 @@
 @interface VelvetRootListController : VelvetBaseController
 @end
 
+@interface VelvetLockscreenController : VelvetBaseController
+@end
+
+@interface VelvetBannerController : VelvetBaseController
+@end
+
 @interface PSListItemsController : PSListController
 @end
 

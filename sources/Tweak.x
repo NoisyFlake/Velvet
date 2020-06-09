@@ -5,6 +5,8 @@
 NSUserDefaults *preferences;
 BOOL isTesting;
 
+BOOL isLockscreen = NO;
+
 VelvetBackgroundView *velvetArtworkBackground;
 UIView *velvetArtworkBorder;
 UIColor *velvetArtworkColor;
@@ -27,7 +29,7 @@ UIColor *velvetArtworkColor;
 }
 - (CGSize)sizeThatFitsContentWithSize:(CGSize)arg1 {
     CGSize orig = %orig;
-	if ([[preferences valueForKey:@"style"] isEqual:@"classic"] && [preferences boolForKey:@"colorHeader"]) {
+	if ([[preferences valueForKey:getPreferencesKeyFor(@"style")] isEqual:@"classic"] && [preferences boolForKey:getPreferencesKeyFor(@"colorHeader")]) {
     	orig.height += 10;
 	}
     return orig;
@@ -66,7 +68,7 @@ UIColor *velvetArtworkColor;
 	velvetArtworkBorder.hidden = YES;
 	velvetArtworkBackground.layer.borderWidth = 0;
 
-	if ([preferences boolForKey:@"hideBackground"]) {
+	if ([preferences boolForKey:getPreferencesKeyFor(@"hideBackground")]) {
 		backgroundMaterialView.alpha = 0;
 	} else {
 		backgroundMaterialView.alpha = 1;
@@ -138,6 +140,8 @@ UIColor *velvetArtworkColor;
 	// Notification view is not yet fully initialized
 	if (view.frame.size.width == 0) return;
 
+	isLockscreen = self.associatedView ? YES : NO;
+
 	float cornerRadius = getCornerRadius();
 	if (cornerRadius < 0) cornerRadius = view.frame.size.height / 2;
 
@@ -186,25 +190,25 @@ UIColor *velvetArtworkColor;
 	view.colorIndicator.layer.mask = nil;
 	view.velvetBackground.layer.borderWidth = 0;
 
-	if ([[preferences valueForKey:@"style"] isEqual:@"modern"]) {
+	if ([[preferences valueForKey:getPreferencesKeyFor(@"style")] isEqual:@"modern"]) {
 		[self velvetHideHeader:YES];
 
-		if ([[preferences valueForKey:@"indicatorModern"] isEqual:@"icon"]) {
+		if ([[preferences valueForKey:getPreferencesKeyFor(@"indicatorModern")] isEqual:@"icon"]) {
 			view.imageIndicator.hidden = NO;
 
-			float size = [preferences integerForKey:@"indicatorModernSize"];
+			float size = [preferences integerForKey:getPreferencesKeyFor(@"indicatorModernSize")];
 			view.imageIndicator.frame = CGRectMake(20, (view.frame.size.height - size)/2, size, size);
 			view.imageIndicator.image = [self getIconForBundleId:self.notificationRequest.sectionIdentifier];
-		} else if ([[preferences valueForKey:@"indicatorModern"] isEqual:@"dot"]) {
+		} else if ([[preferences valueForKey:getPreferencesKeyFor(@"indicatorModern")] isEqual:@"dot"]) {
 			view.colorIndicator.hidden = NO;
 
-			float size = [preferences integerForKey:@"indicatorModernSize"] / 2;
+			float size = [preferences integerForKey:getPreferencesKeyFor(@"indicatorModernSize")] / 2;
 			view.colorIndicator.frame = CGRectMake(20, (view.frame.size.height - size)/2, size, size);
 			view.colorIndicator.layer.cornerRadius = size/2;
-		} else if ([[preferences valueForKey:@"indicatorModern"] isEqual:@"triangle"]) {
+		} else if ([[preferences valueForKey:getPreferencesKeyFor(@"indicatorModern")] isEqual:@"triangle"]) {
 			view.colorIndicator.hidden = NO;
 
-			float size = [preferences integerForKey:@"indicatorModernSize"] / 2;
+			float size = [preferences integerForKey:getPreferencesKeyFor(@"indicatorModernSize")] / 2;
 			view.colorIndicator.frame = CGRectMake(20, (view.frame.size.height - size)/2, size, size);
 
 			// Build a triangular path
@@ -221,7 +225,7 @@ UIColor *velvetArtworkColor;
 
 			// Mask the view's layer with this shape
 			view.colorIndicator.layer.mask = mask;
-		} else if ([[preferences valueForKey:@"indicatorModern"] isEqual:@"line"]) {
+		} else if ([[preferences valueForKey:getPreferencesKeyFor(@"indicatorModern")] isEqual:@"line"]) {
 			view.colorIndicator.hidden = NO;
 
 			float width = 3;
@@ -231,12 +235,12 @@ UIColor *velvetArtworkColor;
 		}
 	}
 
-	if ([[preferences valueForKey:@"style"] isEqual:@"classic"]) {
+	if ([[preferences valueForKey:getPreferencesKeyFor(@"style")] isEqual:@"classic"]) {
 		[self velvetHideHeader:NO];
 
 		PLPlatterHeaderContentView *header = [self.viewForPreview valueForKey:@"_headerContentView"];
 
-		if ([preferences boolForKey:@"colorHeader"]) {
+		if ([preferences boolForKey:getPreferencesKeyFor(@"colorHeader")]) {
 			header.backgroundColor = [dominantColor colorWithAlphaComponent:0.8];
 
 			// Move the header to the velvetBackground view so that it gets automatically cut off with higher cornerRadius settings
@@ -248,13 +252,13 @@ UIColor *velvetArtworkColor;
 		// Hide the icon
 		((UIView *)header.iconButtons[0]).alpha = 0;
 
-		if ([[preferences valueForKey:@"indicatorClassic"] isEqual:@"dot"]) {
+		if ([[preferences valueForKey:getPreferencesKeyFor(@"indicatorClassic")] isEqual:@"dot"]) {
 			view.colorIndicator.hidden = NO;
 
 			float size = 12;
 			view.colorIndicator.frame = CGRectMake(14.5, 14.5, size, size);
 			view.colorIndicator.layer.cornerRadius = size/2;
-		} else if ([[preferences valueForKey:@"indicatorClassic"] isEqual:@"triangle"]) {
+		} else if ([[preferences valueForKey:getPreferencesKeyFor(@"indicatorClassic")] isEqual:@"triangle"]) {
 			view.colorIndicator.hidden = NO;
 
 			float size = 12;
@@ -274,7 +278,7 @@ UIColor *velvetArtworkColor;
 
 			// Mask the view's layer with this shape
 			view.colorIndicator.layer.mask = mask;
-		} else if ([[preferences valueForKey:@"indicatorClassic"] isEqual:@"icon"]) {
+		} else if ([[preferences valueForKey:getPreferencesKeyFor(@"indicatorClassic")] isEqual:@"icon"]) {
 			((UIView *)header.iconButtons[0]).alpha = 1;
 		}
 	}
@@ -282,12 +286,12 @@ UIColor *velvetArtworkColor;
 	view.colorIndicator.backgroundColor = dominantColor;
 	view.velvetBorder.backgroundColor = dominantColor;
 
-	view.notificationContentView.primaryLabel.textColor = [preferences boolForKey:@"colorPrimaryLabel"] ? dominantColor : nil;
-	view.notificationContentView.secondaryLabel.textColor = [preferences boolForKey:@"colorSecondaryLabel"] ? dominantColor : nil;
+	view.notificationContentView.primaryLabel.textColor = [preferences boolForKey:getPreferencesKeyFor(@"colorPrimaryLabel")] ? dominantColor : nil;
+	view.notificationContentView.secondaryLabel.textColor = [preferences boolForKey:getPreferencesKeyFor(@"colorSecondaryLabel")] ? dominantColor : nil;
 
-	view.velvetBackground.backgroundColor = [preferences boolForKey:@"colorBackground"] ? [dominantColor colorWithAlphaComponent:0.6] : nil;
+	view.velvetBackground.backgroundColor = [preferences boolForKey:getPreferencesKeyFor(@"colorBackground")] ? [dominantColor colorWithAlphaComponent:0.6] : nil;
 
-	if ([preferences boolForKey:@"hideBackground"]) {
+	if ([preferences boolForKey:getPreferencesKeyFor(@"hideBackground")]) {
 		view.backgroundMaterialView.alpha = 0;
 		[self velvetHideGroupedNotifications:YES];
 	} else {
@@ -295,20 +299,20 @@ UIColor *velvetArtworkColor;
 		[self velvetHideGroupedNotifications:NO];
 	}
 
-	int borderWidth = [preferences integerForKey:@"borderWidth"];
-	if ([[preferences valueForKey:@"border"] isEqual:@"all"]) {
+	int borderWidth = [preferences integerForKey:getPreferencesKeyFor(@"borderWidth")];
+	if ([[preferences valueForKey:getPreferencesKeyFor(@"border")] isEqual:@"all"]) {
 		view.velvetBackground.layer.borderColor = dominantColor.CGColor;
 		view.velvetBackground.layer.borderWidth = borderWidth;
-	} else if ([[preferences valueForKey:@"border"] isEqual:@"top"]) {
+	} else if ([[preferences valueForKey:getPreferencesKeyFor(@"border")] isEqual:@"top"]) {
 		view.velvetBorder.hidden = NO;
 		view.velvetBorder.frame = CGRectMake(0, 0, view.frame.size.width, borderWidth);
-	} else if ([[preferences valueForKey:@"border"] isEqual:@"right"]) {
+	} else if ([[preferences valueForKey:getPreferencesKeyFor(@"border")] isEqual:@"right"]) {
 		view.velvetBorder.hidden = NO;
 		view.velvetBorder.frame = CGRectMake(view.frame.size.width - borderWidth, 0, borderWidth, view.frame.size.height);
-	} else if ([[preferences valueForKey:@"border"] isEqual:@"bottom"]) {
+	} else if ([[preferences valueForKey:getPreferencesKeyFor(@"border")] isEqual:@"bottom"]) {
 		view.velvetBorder.hidden = NO;
 		view.velvetBorder.frame = CGRectMake(0, view.frame.size.height - borderWidth, view.frame.size.width, borderWidth);
-	} else if ([[preferences valueForKey:@"border"] isEqual:@"left"]) {
+	} else if ([[preferences valueForKey:getPreferencesKeyFor(@"border")] isEqual:@"left"]) {
 		view.velvetBorder.hidden = NO;
 		view.velvetBorder.frame = CGRectMake(0, 0, borderWidth, view.frame.size.height);
 	}
@@ -384,7 +388,7 @@ UIColor *velvetArtworkColor;
 %hook BSUIDefaultDateLabel
 -(void)setFrame:(CGRect)frame {
 	// Move the dateLabel into the corner to make room for the centered notification text
-	if ([[preferences valueForKey:@"style"] isEqual:@"modern"]) {
+	if ([[preferences valueForKey:getPreferencesKeyFor(@"style")] isEqual:@"modern"]) {
 		if (self.superview.frame.size.width > 0) {
 			frame.origin.y -= 3;
 		}
@@ -396,7 +400,7 @@ UIColor *velvetArtworkColor;
 
 %hook PLPlatterHeaderContentView
 - (CGFloat)_iconTrailingPadding {
-	return [[preferences valueForKey:@"indicatorClassic"] isEqual:@"none"] ? -18 : %orig;
+	return [[preferences valueForKey:getPreferencesKeyFor(@"indicatorClassic")] isEqual:@"none"] ? -18 : %orig;
 }
 %end
 
@@ -407,12 +411,12 @@ UIColor *velvetArtworkColor;
 
 	CGRect frame = %orig;
 
-	if ([[preferences valueForKey:@"style"] isEqual:@"modern"]) {
+	if ([[preferences valueForKey:getPreferencesKeyFor(@"style")] isEqual:@"modern"]) {
 		frame.origin.y = frame.origin.y - 14;
 		frame.origin.x = frame.origin.x + getIndicatorOffset();
 	}
 
-	if ([[preferences valueForKey:@"style"] isEqual:@"classic"] && [preferences boolForKey:@"colorHeader"]) {
+	if ([[preferences valueForKey:getPreferencesKeyFor(@"style")] isEqual:@"classic"] && [preferences boolForKey:getPreferencesKeyFor(@"colorHeader")]) {
 		frame.origin.y = frame.origin.y + 10;
 	}
 
@@ -467,12 +471,12 @@ UIColor *velvetArtworkColor;
 %end
 
 static float getCornerRadius() {
-	if ([[preferences valueForKey:@"roundedCorners"] isEqual:@"none"]) {
+	if ([[preferences valueForKey:getPreferencesKeyFor(@"roundedCorners")] isEqual:@"none"]) {
 		return 0;
-	} else if ([[preferences valueForKey:@"roundedCorners"] isEqual:@"round"]) {
+	} else if ([[preferences valueForKey:getPreferencesKeyFor(@"roundedCorners")] isEqual:@"round"]) {
 		return -1;
-	} else if ([[preferences valueForKey:@"roundedCorners"] isEqual:@"custom"]) {
-		return [preferences floatForKey:@"customCornerRadius"];
+	} else if ([[preferences valueForKey:getPreferencesKeyFor(@"roundedCorners")] isEqual:@"custom"]) {
+		return [preferences floatForKey:getPreferencesKeyFor(@"customCornerRadius")];
 	}
 
 	return 13; // stock
@@ -481,12 +485,12 @@ static float getCornerRadius() {
 static float getIndicatorOffset() {
 	float offset = 0;
 
-	if ([[preferences valueForKey:@"style"] isEqual:@"modern"]) {
-		if ([[preferences valueForKey:@"indicatorModern"] isEqual:@"icon"]) {
-			offset = ([preferences integerForKey:@"indicatorModernSize"] + 21);
-		} else if ([[preferences valueForKey:@"indicatorModern"] isEqual:@"dot"] || [[preferences valueForKey:@"indicatorModern"] isEqual:@"triangle"]) {
-			offset = ([preferences integerForKey:@"indicatorModernSize"] / 2) + 21;
-		} else if ([[preferences valueForKey:@"indicatorModern"] isEqual:@"line"]) {
+	if ([[preferences valueForKey:getPreferencesKeyFor(@"style")] isEqual:@"modern"]) {
+		if ([[preferences valueForKey:getPreferencesKeyFor(@"indicatorModern")] isEqual:@"icon"]) {
+			offset = ([preferences integerForKey:getPreferencesKeyFor(@"indicatorModernSize")] + 21);
+		} else if ([[preferences valueForKey:getPreferencesKeyFor(@"indicatorModern")] isEqual:@"dot"] || [[preferences valueForKey:getPreferencesKeyFor(@"indicatorModern")] isEqual:@"triangle"]) {
+			offset = ([preferences integerForKey:getPreferencesKeyFor(@"indicatorModernSize")] / 2) + 21;
+		} else if ([[preferences valueForKey:getPreferencesKeyFor(@"indicatorModern")] isEqual:@"line"]) {
 			offset = 25;
 		} else {
 			offset = 5;
@@ -494,6 +498,10 @@ static float getIndicatorOffset() {
 	}
 
 	return offset;
+}
+
+static NSString *getPreferencesKeyFor(NSString *key) {
+	return [NSString stringWithFormat:@"%@%@", key, isLockscreen ? @"Lockscreen" : @"Banner"];
 }
 
 static void createTestNotifications(int amount) {
@@ -554,27 +562,41 @@ static void testLockscreen() {
 }
 
 %ctor {
+	// The following line can be enabled to reset all settings to the default
+	// [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:@"com.initwithframe.velvet"];
+
 	preferences = [[NSUserDefaults alloc] initWithSuiteName:@"com.initwithframe.velvet"];
 
 	[preferences registerDefaults:@{
 		@"enabled": @YES,
 
-		@"style": @"modern",
-		@"indicatorClassic": @"icon",
-		@"indicatorModern": @"icon",
-		@"indicatorModernSize": @32,
-		@"colorHeader": @NO,
+		@"styleBanner": @"modern",
+		@"indicatorClassicBanner": @"icon",
+		@"indicatorModernBanner": @"icon",
+		@"indicatorModernSizeBanner": @32,
+		@"colorHeaderBanner": @NO,
+		@"hideBackgroundBanner": @NO,
+		@"colorBackgroundBanner": @NO,
+		@"colorPrimaryLabelBanner": @YES,
+		@"colorSecondaryLabelBanner": @NO,
+		@"borderBanner": @"none",
+		@"borderWidthBanner": @2,
+		@"roundedCornersBanner": @"stock",
+		@"customCornerRadiusBanner": @13,
 
-		@"hideBackground": @NO,
-		@"colorBackground": @NO,
-		@"colorPrimaryLabel": @YES,
-		@"colorSecondaryLabel": @NO,
-
-		@"border": @"none",
-		@"borderWidth": @2,
-
-		@"roundedCorners": @"stock",
-		@"customCornerRadius": @13,
+		@"styleLockscreen": @"modern",
+		@"indicatorClassicLockscreen": @"icon",
+		@"indicatorModernLockscreen": @"icon",
+		@"indicatorModernSizeLockscreen": @32,
+		@"colorHeaderLockscreen": @NO,
+		@"hideBackgroundLockscreen": @NO,
+		@"colorBackgroundLockscreen": @NO,
+		@"colorPrimaryLabelLockscreen": @YES,
+		@"colorSecondaryLabelLockscreen": @NO,
+		@"borderLockscreen": @"none",
+		@"borderWidthLockscreen": @2,
+		@"roundedCornersLockscreen": @"stock",
+		@"customCornerRadiusLockscreen": @13,
 	}];
 
 	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)testRegular, CFSTR("com.initwithframe.velvet/testRegular"), NULL, CFNotificationSuspensionBehaviorCoalesce);

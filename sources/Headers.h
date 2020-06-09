@@ -162,4 +162,5 @@
 
 static float getCornerRadius();
 static float getIndicatorOffset();
+static NSString *getPreferencesKeyFor(NSString *key);
 static void createTestNotifications();

@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+	
+		<dict>
+			<key>cell</key>							<string>PSGroupCell</string>
+			<key>label</key>						<string>Style</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSegmentCell</string>
+			<key>default</key>						<string>modern</string>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>styleBanner</string>
+			<key>id</key>							<string>styleBanner</string>
+			<key>set</key>							<string>setStyle:specifier:</string>
+			<key>validTitles</key>					<array>
+														<string>Classic</string>
+														<string>Modern</string>
+													</array>
+			<key>validValues</key>					<array>
+														<string>classic</string>
+														<string>modern</string>
+													</array>
+		</dict>
+
+		<dict>
+			<key>cell</key>							<string>PSLinkListCell</string>
+			<key>detail</key>						<string>VelvetListItemsController</string>
+			<key>default</key>						<string>icon</string>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>indicatorClassicBanner</string>
+			<key>id</key>							<string>indicatorClassicBanner</string>
+			<key>label</key>						<string>Indicator</string>
+			<key>validTitles</key>					<array>
+														<string>App Icon</string>
+														<string>Triangle</string>
+														<string>Dot</string>
+														<string>None</string>
+													</array>
+			<key>validValues</key>					<array>
+														<string>icon</string>
+														<string>triangle</string>
+														<string>dot</string>
+														<string>none</string>
+													</array>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSwitchCell</string>
+			<key>default</key>						<false/>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>colorHeaderBanner</string>
+			<key>id</key>							<string>colorHeaderBanner</string>
+			<key>label</key>						<string>Color Header</string>
+			<key>cellClass</key>					<string>VelvetToggle</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>							<string>PSLinkListCell</string>
+			<key>detail</key>						<string>VelvetListItemsController</string>
+			<key>default</key>						<string>icon</string>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>indicatorModernBanner</string>
+			<key>id</key>							<string>indicatorModernBanner</string>
+			<key>set</key>							<string>setIndicatorModern:specifier:</string>
+			<key>label</key>						<string>Indicator</string>
+			<key>validTitles</key>					<array>
+														<string>App Icon</string>
+														<string>Triangle</string>
+														<string>Dot</string>
+														<string>Line</string>
+														<string>None</string>
+													</array>
+			<key>validValues</key>					<array>
+														<string>icon</string>
+														<string>triangle</string>
+														<string>dot</string>
+														<string>line</string>
+														<string>none</string>
+													</array>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSLinkListCell</string>
+			<key>detail</key>						<string>VelvetListItemsController</string>
+			<key>default</key>						<real>32</real>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>indicatorModernSizeBanner</string>
+			<key>id</key>							<string>indicatorModernSizeBanner</string>
+			<key>label</key>						<string>Indicator Size</string>
+			<key>validTitles</key>					<array>
+														<string>Small</string>
+														<string>Medium</string>
+														<string>Large</string>
+														<string>Huge</string>
+													</array>
+			<key>validValues</key>					<array>
+														<real>24</real>
+														<real>32</real>
+														<real>40</real>
+														<real>48</real>
+													</array>
+		</dict>
+
+		<dict>
+			<key>cell</key>							<string>PSGroupCell</string>
+			<key>label</key>						<string>Background Options</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSwitchCell</string>
+			<key>default</key>						<false/>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>hideBackgroundBanner</string>
+			<key>label</key>						<string>Hide Background</string>
+			<key>cellClass</key>					<string>VelvetToggle</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSwitchCell</string>
+			<key>default</key>						<false/>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>colorBackgroundBanner</string>
+			<key>label</key>						<string>Color Background</string>
+			<key>cellClass</key>					<string>VelvetToggle</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>							<string>PSGroupCell</string>
+			<key>label</key>						<string>Label Options</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSwitchCell</string>
+			<key>default</key>						<false/>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>colorPrimaryLabelBanner</string>
+			<key>label</key>						<string>Color Title</string>
+			<key>cellClass</key>					<string>VelvetToggle</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSwitchCell</string>
+			<key>default</key>						<false/>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>colorSecondaryLabelBanner</string>
+			<key>label</key>						<string>Color Message</string>
+			<key>cellClass</key>					<string>VelvetToggle</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>							<string>PSGroupCell</string>
+			<key>label</key>						<string>Border Options</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSLinkListCell</string>
+			<key>detail</key>						<string>VelvetListItemsController</string>
+			<key>default</key>						<string>none</string>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>borderBanner</string>
+			<key>id</key>							<string>borderBanner</string>
+			<key>label</key>						<string>Color Border</string>
+			<key>set</key>							<string>setBorder:specifier:</string>
+			<key>validTitles</key>					<array>
+														<string>None</string>
+														<string>All</string>
+														<string>Top</string>
+														<string>Right</string>
+														<string>Bottom</string>
+														<string>Left</string>
+													</array>
+			<key>validValues</key>					<array>
+														<string>none</string>
+														<string>all</string>
+														<string>top</string>
+														<string>right</string>
+														<string>bottom</string>
+														<string>left</string>
+													</array>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSliderCell</string>
+			<key>cellClass</key>					<string>VelvetSlider</string>
+			<key>min</key>							<integer>1</integer>
+			<key>max</key>							<integer>5</integer>
+			<key>isSegmented</key>					<true/>
+			<key>segmentCount</key>					<integer>4</integer>
+			<key>showValue</key>					<true/>
+			<key>default</key>						<integer>2</integer>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>borderWidthBanner</string>
+			<key>id</key>							<string>borderWidthBanner</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>							<string>PSGroupCell</string>
+			<key>label</key>						<string>Rounded Corners</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSegmentCell</string>
+			<key>default</key>						<string>stock</string>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>roundedCornersBanner</string>
+			<key>id</key>							<string>roundedCornersBanner</string>
+			<key>set</key>							<string>setRoundedCorners:specifier:</string>
+			<key>validTitles</key>					<array>
+														<string>None</string>
+														<string>Stock</string>
+														<!-- <string>Round</string> -->
+														<string>Custom</string>
+													</array>
+			<key>validValues</key>					<array>
+														<string>none</string>
+														<string>stock</string>
+														<!-- <string>round</string> -->
+														<string>custom</string>
+													</array>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSliderCell</string>
+			<key>cellClass</key>					<string>VelvetSlider</string>
+			<key>min</key>							<real>0</real>
+			<key>max</key>							<real>30</real>
+			<key>showValue</key>					<true/>
+			<key>default</key>						<real>13</real>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>customCornerRadiusBanner</string>
+			<key>id</key>							<string>customCornerRadiusBanner</string>
+		</dict>
+
+	</array>
+	<key>title</key>
+	<string>Banner</string>
+</dict>
+</plist>
