@@ -455,7 +455,7 @@ UIColor *velvetArtworkColor;
 		CGRect thumbFrame = thumbnail.frame;
 		thumbFrame.origin.x = thumbFrame.origin.x - labelWidth;
 		thumbnail.frame = thumbFrame;
-		if (thumbnail.alpha == 0 && [[preferences valueForKey:getPreferencesKeyFor(@"style")] isEqual:@"modern"]) {
+		if (thumbnail.alpha == 0 && isLockscreen && [[preferences valueForKey:getPreferencesKeyFor(@"style")] isEqual:@"modern"]) {
 			labelWidth -= thumbnail.frame.size.width;
 		}
 	}
