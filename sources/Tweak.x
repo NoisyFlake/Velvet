@@ -189,7 +189,7 @@ UIColor *velvetArtworkColor;
 	view.colorIndicator.layer.cornerRadius = 0;
 	view.colorIndicator.layer.mask = nil;
 	view.velvetBackground.layer.borderWidth = 0;
-	
+
 	UIImageView *thumbnail = [view.notificationContentView safeValueForKey:@"_thumbnailImageView"];
 	if (thumbnail) thumbnail.alpha = 1;
 
@@ -449,19 +449,22 @@ UIColor *velvetArtworkColor;
 
 	CGFloat labelWidth = getIndicatorOffset();
 
-	primaryLabelFrame.size.width = self.primaryLabel.frame.size.width - labelWidth;
-	secondaryLabelFrame.size.width = self.secondaryLabel.frame.size.width - labelWidth;
-
-	self.primaryLabel.frame = primaryLabelFrame;
-	self.secondaryLabel.frame = secondaryLabelFrame;
-
 	// Moves the image preview to the correct place
 	UIImageView *thumbnail = [self safeValueForKey:@"_thumbnailImageView"];
 	if (thumbnail) {
 		CGRect thumbFrame = thumbnail.frame;
 		thumbFrame.origin.x = thumbFrame.origin.x - labelWidth;
 		thumbnail.frame = thumbFrame;
+		if (thumbnail.alpha == 0 && [[preferences valueForKey:getPreferencesKeyFor(@"style")] isEqual:@"modern"]) {
+			labelWidth -= thumbnail.frame.size.width;
+		}
 	}
+
+	primaryLabelFrame.size.width = self.primaryLabel.frame.size.width - labelWidth;
+	secondaryLabelFrame.size.width = self.secondaryLabel.frame.size.width - labelWidth;
+
+	self.primaryLabel.frame = primaryLabelFrame;
+	self.secondaryLabel.frame = secondaryLabelFrame;
 }
 %end
 
