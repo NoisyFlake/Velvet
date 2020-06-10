@@ -189,6 +189,9 @@ UIColor *velvetArtworkColor;
 	view.colorIndicator.layer.cornerRadius = 0;
 	view.colorIndicator.layer.mask = nil;
 	view.velvetBackground.layer.borderWidth = 0;
+	
+	UIImageView *thumbnail = [view.notificationContentView safeValueForKey:@"_thumbnailImageView"];
+	if (thumbnail) thumbnail.alpha = 1;
 
 	if ([[preferences valueForKey:getPreferencesKeyFor(@"style")] isEqual:@"modern"]) {
 		[self velvetHideHeader:YES];
@@ -391,7 +394,7 @@ UIColor *velvetArtworkColor;
 				UIGraphicsEndImageContext();
 
 				icon = thumb;
-				// TODO: Remove thumbnail
+				thumbnail.alpha = 0;
 			}
 		}
 	}
@@ -429,9 +432,7 @@ UIColor *velvetArtworkColor;
 	if ([[preferences valueForKey:getPreferencesKeyFor(@"style")] isEqual:@"modern"]) {
 		frame.origin.y = frame.origin.y - 14;
 		frame.origin.x = frame.origin.x + getIndicatorOffset();
-	}
-
-	if ([[preferences valueForKey:getPreferencesKeyFor(@"style")] isEqual:@"classic"] && [preferences boolForKey:getPreferencesKeyFor(@"colorHeader")]) {
+	} else if ([[preferences valueForKey:getPreferencesKeyFor(@"style")] isEqual:@"classic"] && [preferences boolForKey:getPreferencesKeyFor(@"colorHeader")]) {
 		frame.origin.y = frame.origin.y + 10;
 	}
 
