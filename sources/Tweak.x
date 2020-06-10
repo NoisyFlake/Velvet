@@ -379,6 +379,21 @@ UIColor *velvetArtworkColor;
 	if (!icon) {
 		// Fallback to the default 20x20 icon
 		icon = self.viewForPreview.icons[0];
+
+		if (!icon) {
+			// Fallback to thumbnail image if still no icon present (DND banner for example)
+			NCNotificationContentView *contentView = self.viewForPreview.notificationContentView;
+			UIImageView *thumbnail = [contentView safeValueForKey:@"_thumbnailImageView"];
+			if (thumbnail) {
+				UIGraphicsBeginImageContextWithOptions(thumbnail.bounds.size, thumbnail.opaque, 0.0);
+				[thumbnail.layer renderInContext:UIGraphicsGetCurrentContext()];
+				UIImage *thumb = UIGraphicsGetImageFromCurrentImageContext();
+				UIGraphicsEndImageContext();
+
+				icon = thumb;
+				// TODO: Remove thumbnail
+			}
+		}
 	}
 
 	return icon;
