@@ -6,6 +6,24 @@
 
 	UIBarButtonItem *testButton = [[UIBarButtonItem alloc] initWithTitle:@"Test" style:UIBarButtonItemStylePlain target:self action:@selector(testNotification)];
 	self.navigationItem.rightBarButtonItem = testButton;
+	[self setupHeader];
+}
+
+- (void)setupHeader {
+	UIImage *image = [[UIImage alloc] initWithContentsOfFile: @"/Library/PreferenceBundles/Velvet.bundle/Images/previewBanner.png"];
+
+    UIView *header = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width - 30, image.size.height / 2)];
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 5, self.view.bounds.size.width - 30, image.size.height / 2)];
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
+
+    [imageView setImage:image];
+
+    [header addSubview:imageView];
+
+	// Ugly workaround for devices where it whould overlap the selector
+	header.layer.zPosition = -1;
+
+    [self.table setTableHeaderView:header];
 }
 
 - (NSArray *)specifiers {
