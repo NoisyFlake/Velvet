@@ -364,6 +364,8 @@ UIColor *velvetArtworkColor;
 		bundleId = self.notificationRequest.sectionIdentifier;
 	}
 
+	if ([bundleId isEqual:@"com.apple.donotdisturb"]) return nil;
+
 	UIImage *icon = [self getIconForBundleId:bundleId];
 	return [icon velvetDominantColor];
 }
@@ -448,7 +450,9 @@ UIColor *velvetArtworkColor;
 		CGRect thumbFrame = thumbnail.frame;
 		thumbFrame.origin.x = thumbFrame.origin.x - labelWidth;
 		thumbnail.frame = thumbFrame;
-		if (thumbnail.alpha == 0 && isLockscreen(self) && [[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"modern"]) {
+
+		NCNotificationShortLookViewController *controller = [self.superview.superview _viewControllerForAncestor];
+		if ([controller.notificationRequest.sectionIdentifier isEqual:@"com.apple.donotdisturb"] && [[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"modern"]) {
 			labelWidth -= thumbnail.frame.size.width;
 		}
 	}
