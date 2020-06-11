@@ -338,7 +338,9 @@ UIColor *velvetArtworkColor;
 
 		NCNotificationListCell *frontCell = [listView _visibleViewAtIndex:0];
 		for (UIView *subview in listView.subviews) {
-			if (subview != frontCell && [subview isKindOfClass:%c(NCNotificationListCell)]) subview.hidden = listView.grouped && hidden;
+			if ([subview isKindOfClass:%c(NCNotificationListCell)]) {
+				subview.hidden = subview != frontCell && listView.grouped && hidden;
+			}
 		}
 	}
 }
