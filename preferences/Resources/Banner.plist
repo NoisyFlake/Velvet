@@ -111,14 +111,6 @@
 			<key>cell</key>							<string>PSSwitchCell</string>
 			<key>default</key>						<false/>
 			<key>defaults</key>						<string>com.initwithframe.velvet</string>
-			<key>key</key>							<string>hideBackgroundBanner</string>
-			<key>label</key>						<string>Hide Background</string>
-			<key>cellClass</key>					<string>VelvetToggle</string>
-		</dict>
-		<dict>
-			<key>cell</key>							<string>PSSwitchCell</string>
-			<key>default</key>						<false/>
-			<key>defaults</key>						<string>com.initwithframe.velvet</string>
 			<key>key</key>							<string>colorBackgroundBanner</string>
 			<key>label</key>						<string>Color Background</string>
 			<key>cellClass</key>					<string>VelvetToggle</string>
