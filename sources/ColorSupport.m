@@ -73,7 +73,7 @@
 
     free(rawData);
 
-    if (imageColors.count < 2) return [UIColor redColor];
+    if (imageColors.count < 2) return [UIColor clearColor];
 
     NSArray *sorted = [[NSArray arrayWithArray:imageColors] sortedArrayUsingDescriptors:@[[[NSSortDescriptor alloc] initWithKey:@"d" ascending:false]]];
 
