@@ -51,6 +51,9 @@
 @interface VelvetLockscreenController : VelvetBaseController
 @end
 
+@interface VelvetMediaplayerController : VelvetBaseController
+@end
+
 @interface VelvetBannerController : VelvetBaseController
 @end
 

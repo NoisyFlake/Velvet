@@ -66,25 +66,25 @@ UIColor *velvetArtworkColor;
 	velvetArtworkBorder.hidden = YES;
 	velvetArtworkBackground.layer.borderWidth = 0;
 
-	if ([preferences boolForKey:getPreferencesKeyFor(@"hideBackground", self)]) {
+	if ([preferences boolForKey:@"hideBackgroundMediaplayer"]) {
 		backgroundMaterialView.alpha = 0;
 	} else {
 		backgroundMaterialView.alpha = 1;
 	}
 
-	int borderWidth = [preferences integerForKey:@"borderWidth"];
-	if ([[preferences valueForKey:@"border"] isEqual:@"all"]) {
+	int borderWidth = [preferences integerForKey:@"borderWidthMediaplayer"];
+	if ([[preferences valueForKey:@"borderMediaplayer"] isEqual:@"all"]) {
 		velvetArtworkBackground.layer.borderWidth = borderWidth;
-	} else if ([[preferences valueForKey:@"border"] isEqual:@"top"]) {
+	} else if ([[preferences valueForKey:@"borderMediaplayer"] isEqual:@"top"]) {
 		velvetArtworkBorder.hidden = NO;
 		velvetArtworkBorder.frame = CGRectMake(0, 0, self.superview.frame.size.width, borderWidth);
-	} else if ([[preferences valueForKey:@"border"] isEqual:@"right"]) {
+	} else if ([[preferences valueForKey:@"borderMediaplayer"] isEqual:@"right"]) {
 		velvetArtworkBorder.hidden = NO;
 		velvetArtworkBorder.frame = CGRectMake(self.superview.frame.size.width - borderWidth, 0, borderWidth, self.superview.frame.size.height);
-	} else if ([[preferences valueForKey:@"border"] isEqual:@"bottom"]) {
+	} else if ([[preferences valueForKey:@"borderMediaplayer"] isEqual:@"bottom"]) {
 		velvetArtworkBorder.hidden = NO;
 		velvetArtworkBorder.frame = CGRectMake(0, self.superview.frame.size.height - borderWidth, self.superview.frame.size.width, borderWidth);
-	} else if ([[preferences valueForKey:@"border"] isEqual:@"left"]) {
+	} else if ([[preferences valueForKey:@"borderMediaplayer"] isEqual:@"left"]) {
 		velvetArtworkBorder.hidden = NO;
 		velvetArtworkBorder.frame = CGRectMake(0, 0, borderWidth, self.superview.frame.size.height);
 	}
@@ -101,7 +101,7 @@ UIColor *velvetArtworkColor;
 			// Needed to recolor when track changes without lockscreen media controls changing
 			velvetArtworkBorder.backgroundColor = velvetArtworkColor;
 			velvetArtworkBackground.layer.borderColor = velvetArtworkColor.CGColor;
-			velvetArtworkBackground.backgroundColor = [preferences boolForKey:@"colorBackground"] ? [velvetArtworkColor colorWithAlphaComponent:0.6] : nil;
+			velvetArtworkBackground.backgroundColor = [preferences boolForKey:@"colorBackgroundMediaplayer"] ? [velvetArtworkColor colorWithAlphaComponent:0.6] : nil;
 		}
 	});
 }
@@ -123,7 +123,7 @@ UIColor *velvetArtworkColor;
 			// Needed to recolor when track changes without lockscreen media controls changing
 			velvetArtworkBorder.backgroundColor = velvetArtworkColor;
 			velvetArtworkBackground.layer.borderColor = velvetArtworkColor.CGColor;
-			velvetArtworkBackground.backgroundColor = [preferences boolForKey:@"colorBackground"] ? [velvetArtworkColor colorWithAlphaComponent:0.6] : nil;
+			velvetArtworkBackground.backgroundColor = [preferences boolForKey:@"colorBackgroundMediaPlayer"] ? [velvetArtworkColor colorWithAlphaComponent:0.6] : nil;
 		}
 	});
 }
@@ -489,15 +489,27 @@ UIColor *velvetArtworkColor;
 %end
 
 static float getCornerRadius(UIView *view) {
-	if ([[preferences valueForKey:getPreferencesKeyFor(@"roundedCorners", view)] isEqual:@"none"]) {
-		return 0;
-	} else if ([[preferences valueForKey:getPreferencesKeyFor(@"roundedCorners", view)] isEqual:@"round"]) {
-		return -1;
-	} else if ([[preferences valueForKey:getPreferencesKeyFor(@"roundedCorners", view)] isEqual:@"custom"]) {
-		return [preferences floatForKey:getPreferencesKeyFor(@"customCornerRadius", view)];
-	}
+	if ([view isKindOfClass:%c(CSMediaControlsView)]) {
+		if ([[preferences valueForKey:@"roundedCornersMediaplayer"] isEqual:@"none"]) {
+			return 0;
+		} else if ([[preferences valueForKey:@"roundedCornersMediaplayer"] isEqual:@"round"]) {
+			return -1;
+		} else if ([[preferences valueForKey:@"roundedCornersMediaplayer"] isEqual:@"custom"]) {
+			return [preferences floatForKey:@"customCornerRadiusMediaplayer"];
+		}
 
-	return 13; // stock
+		return 13; // stock
+	} else {
+		if ([[preferences valueForKey:getPreferencesKeyFor(@"roundedCorners", view)] isEqual:@"none"]) {
+			return 0;
+		} else if ([[preferences valueForKey:getPreferencesKeyFor(@"roundedCorners", view)] isEqual:@"round"]) {
+			return -1;
+		} else if ([[preferences valueForKey:getPreferencesKeyFor(@"roundedCorners", view)] isEqual:@"custom"]) {
+			return [preferences floatForKey:getPreferencesKeyFor(@"customCornerRadius", view)];
+		}
+
+		return 13; // stock
+	}
 }
 
 static float getIndicatorOffset(UIView *view) {
@@ -628,6 +640,13 @@ static void testLockscreen() {
 		@"borderWidthLockscreen": @2,
 		@"roundedCornersLockscreen": @"stock",
 		@"customCornerRadiusLockscreen": @13,
+
+		@"hideBackgroundMediaplayer": @NO,
+		@"colorBackgroundMediaplayer": @NO,
+		@"borderMediaplayer": @"none",
+		@"borderWidthMediaplayer": @2,
+		@"roundedCornersMediaplayer": @"stock",
+		@"customCornerRadiusMediaplayer": @13,
 	}];
 
 	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)testRegular, CFSTR("com.initwithframe.velvet/testRegular"), NULL, CFNotificationSuspensionBehaviorCoalesce);
