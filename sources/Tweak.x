@@ -36,9 +36,6 @@ UIColor *velvetArtworkColor;
 
 %hook CSMediaControlsView
 - (void)didMoveToWindow {
-	CGRect superviewFrame = self.superview.frame;
-	velvetArtworkBackground.frame = superviewFrame;
-
 	PLPlatterView *platterView = (PLPlatterView *)self.superview.superview;
 	MTMaterialView *backgroundMaterialView = platterView.backgroundMaterialView;
 
@@ -59,13 +56,15 @@ UIColor *velvetArtworkColor;
 		[velvetArtworkBackground insertSubview:velvetArtworkBorder atIndex:1];
 	}
 
+	velvetArtworkBackground.frame = self.superview.frame;
+
 	platterView.layer.cornerRadius = cornerRadius;
 	backgroundMaterialView.layer.cornerRadius = cornerRadius;
 	velvetArtworkBackground.layer.cornerRadius = cornerRadius;
-
+	
 	velvetArtworkBorder.hidden = YES;
 	velvetArtworkBackground.layer.borderWidth = 0;
-
+	
 	if ([preferences boolForKey:@"hideBackgroundMediaplayer"]) {
 		backgroundMaterialView.alpha = 0;
 	} else {
@@ -123,7 +122,7 @@ UIColor *velvetArtworkColor;
 			// Needed to recolor when track changes without lockscreen media controls changing
 			velvetArtworkBorder.backgroundColor = velvetArtworkColor;
 			velvetArtworkBackground.layer.borderColor = velvetArtworkColor.CGColor;
-			velvetArtworkBackground.backgroundColor = [preferences boolForKey:@"colorBackgroundMediaPlayer"] ? [velvetArtworkColor colorWithAlphaComponent:0.6] : nil;
+			velvetArtworkBackground.backgroundColor = [preferences boolForKey:@"colorBackgroundMediaplayer"] ? [velvetArtworkColor colorWithAlphaComponent:0.6] : nil;
 		}
 	});
 }
