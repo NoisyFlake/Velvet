@@ -15,24 +15,7 @@ UIColor *velvetArtworkColor;
 @implementation VelvetBackgroundView
 @end
 
-%hook NCNotificationShortLookView
-%property (retain, nonatomic) VelvetIndicatorView * colorIndicator;
-%property (retain, nonatomic) UIView * velvetBorder;
-%property (retain, nonatomic) VelvetBackgroundView * velvetBackground;
-%property (retain, nonatomic) UIImageView * imageIndicator;
-- (void)layoutSubviews {
-	%orig;
-	CGRect frame = self.frame;
-	self.velvetBackground.frame = frame;
-}
-- (CGSize)sizeThatFitsContentWithSize:(CGSize)arg1 {
-    CGSize orig = %orig;
-	if ([[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"classic"] && [preferences boolForKey:getPreferencesKeyFor(@"colorHeader", self)]) {
-    	orig.height += 10;
-	}
-    return orig;
-}
-%end
+// ====================== MEDIAPLAYER HOOKS ====================== //
 
 %hook CSMediaControlsView
 - (void)didMoveToWindow {
@@ -88,21 +71,7 @@ UIColor *velvetArtworkColor;
 		velvetArtworkBorder.frame = CGRectMake(0, 0, borderWidth, self.superview.frame.size.height);
 	}
 
-	MRMediaRemoteGetNowPlayingInfo(dispatch_get_main_queue(), ^(CFDictionaryRef information) {
-        NSDictionary *dict = (__bridge NSDictionary *)(information);
-		if(!dict) return;
-
-        NSData *artworkData = [dict objectForKey:(__bridge NSString *)kMRMediaRemoteNowPlayingInfoArtworkData];
-        __block UIImage *artwork = [UIImage imageWithData:artworkData];
-		velvetArtworkColor = [artwork velvetDominantColor];
-
-		if (velvetArtworkColor != nil) {
-			// Needed to recolor when track changes without lockscreen media controls changing
-			velvetArtworkBorder.backgroundColor = velvetArtworkColor;
-			velvetArtworkBackground.layer.borderColor = velvetArtworkColor.CGColor;
-			velvetArtworkBackground.backgroundColor = [preferences boolForKey:@"colorBackgroundMediaplayer"] ? [velvetArtworkColor colorWithAlphaComponent:0.6] : nil;
-		}
-	});
+	updateMediaplayerColors();
 }
 %end
 
@@ -110,21 +79,28 @@ UIColor *velvetArtworkColor;
 - (void)_mediaRemoteNowPlayingInfoDidChange:(id)arg1 {
 	%orig;
 
-	MRMediaRemoteGetNowPlayingInfo(dispatch_get_main_queue(), ^(CFDictionaryRef information) {
-        NSDictionary *dict = (__bridge NSDictionary *)(information);
-		if(!dict) return;
+	updateMediaplayerColors();
+}
+%end
 
-        NSData *artworkData = [dict objectForKey:(__bridge NSString *)kMRMediaRemoteNowPlayingInfoArtworkData];
-        __block UIImage *artwork = [UIImage imageWithData:artworkData];
-		velvetArtworkColor = [artwork velvetDominantColor];
+// ====================== NOTIFICATION HOOKS ====================== //
 
-		if (velvetArtworkColor != nil) {
-			// Needed to recolor when track changes without lockscreen media controls changing
-			velvetArtworkBorder.backgroundColor = velvetArtworkColor;
-			velvetArtworkBackground.layer.borderColor = velvetArtworkColor.CGColor;
-			velvetArtworkBackground.backgroundColor = [preferences boolForKey:@"colorBackgroundMediaplayer"] ? [velvetArtworkColor colorWithAlphaComponent:0.6] : nil;
-		}
-	});
+%hook NCNotificationShortLookView
+%property (retain, nonatomic) VelvetIndicatorView * colorIndicator;
+%property (retain, nonatomic) UIView * velvetBorder;
+%property (retain, nonatomic) VelvetBackgroundView * velvetBackground;
+%property (retain, nonatomic) UIImageView * imageIndicator;
+- (void)layoutSubviews {
+	%orig;
+	CGRect frame = self.frame;
+	self.velvetBackground.frame = frame;
+}
+- (CGSize)sizeThatFitsContentWithSize:(CGSize)arg1 {
+    CGSize orig = %orig;
+	if ([[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"classic"] && [preferences boolForKey:getPreferencesKeyFor(@"colorHeader", self)]) {
+    	orig.height += 10;
+	}
+    return orig;
 }
 %end
 
@@ -487,6 +463,26 @@ UIColor *velvetArtworkColor;
 
 %end
 
+// ====================== STATIC HELPER METHODS ====================== //
+
+static void updateMediaplayerColors() {
+	MRMediaRemoteGetNowPlayingInfo(dispatch_get_main_queue(), ^(CFDictionaryRef information) {
+        NSDictionary *dict = (__bridge NSDictionary *)(information);
+		if(!dict) return;
+
+        NSData *artworkData = [dict objectForKey:(__bridge NSString *)kMRMediaRemoteNowPlayingInfoArtworkData];
+        __block UIImage *artwork = [UIImage imageWithData:artworkData];
+		velvetArtworkColor = [artwork velvetDominantColor];
+
+		if (velvetArtworkColor != nil) {
+			// Needed to recolor when track changes without lockscreen media controls changing
+			velvetArtworkBorder.backgroundColor = velvetArtworkColor;
+			velvetArtworkBackground.layer.borderColor = velvetArtworkColor.CGColor;
+			velvetArtworkBackground.backgroundColor = [preferences boolForKey:@"colorBackgroundMediaplayer"] ? [velvetArtworkColor colorWithAlphaComponent:0.6] : nil;
+		}
+	});
+}
+
 static float getCornerRadius(UIView *view) {
 	if ([view isKindOfClass:%c(CSMediaControlsView)]) {
 		if ([[preferences valueForKey:@"roundedCornersMediaplayer"] isEqual:@"none"]) {
@@ -546,6 +542,8 @@ static NSString *getPreferencesKeyFor(NSString *key, UIView *view) {
 	return [NSString stringWithFormat:@"%@%@", key, isLockscreen(view) ? @"Lockscreen" : @"Banner"];
 }
 
+// ====================== NOTIFICATION TESTING ====================== //
+
 static void createTestNotifications(int amount) {
 	NSMutableDictionary *installedApps = [[NSMutableDictionary alloc] init];
 
@@ -602,6 +600,8 @@ static void testLockscreen() {
 		createTestNotifications(5);
 	});
 }
+
+// ====================== INITIALIZING ====================== //
 
 %ctor {
 	// The following line can be enabled to reset all settings to the default

@@ -160,8 +160,12 @@
 @interface CSMediaControlsView : CSCoverSheetViewBase
 @end
 
+static void updateMediaplayerColors()
 static float getCornerRadius(UIView *view);
 static float getIndicatorOffset(UIView *view);
-static NSString *getPreferencesKeyFor(NSString *key, UIView *view);
 static BOOL isLockscreen(UIView *view);
-static void createTestNotifications();
+static NSString *getPreferencesKeyFor(NSString *key, UIView *view);
+
+static void createTestNotifications(int amount);
+static void testRegular();
+static void testLockscreen();
