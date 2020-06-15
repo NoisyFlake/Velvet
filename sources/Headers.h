@@ -160,7 +160,7 @@
 @interface CSMediaControlsView : CSCoverSheetViewBase
 @end
 
-static void updateMediaplayerColors()
+static void updateMediaplayerColors();
 static float getCornerRadius(UIView *view);
 static float getIndicatorOffset(UIView *view);
 static BOOL isLockscreen(UIView *view);
