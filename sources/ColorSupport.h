@@ -5,6 +5,7 @@
 @interface UIImage (Velvet)
 - (UIColor *)velvetDominantColor;
 - (int)colourDistance:(RGBPixel *)a andB:(RGBPixel *)b;
+- (UIColor *)velvetAverageColor;
 @end
 
 @interface UIColor (Velvet)

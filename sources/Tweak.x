@@ -472,7 +472,7 @@ static void updateMediaplayerColors() {
 
         NSData *artworkData = [dict objectForKey:(__bridge NSString *)kMRMediaRemoteNowPlayingInfoArtworkData];
         __block UIImage *artwork = [UIImage imageWithData:artworkData];
-		velvetArtworkColor = [artwork velvetDominantColor];
+		velvetArtworkColor = [artwork velvetAverageColor];
 
 		if (velvetArtworkColor != nil) {
 			// Needed to recolor when track changes without lockscreen media controls changing
