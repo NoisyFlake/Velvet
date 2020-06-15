@@ -19,6 +19,8 @@ UIColor *velvetArtworkColor;
 
 %hook CSMediaControlsView
 - (void)didMoveToWindow {
+	%orig;
+	
 	PLPlatterView *platterView = (PLPlatterView *)self.superview.superview;
 	MTMaterialView *backgroundMaterialView = platterView.backgroundMaterialView;
 
