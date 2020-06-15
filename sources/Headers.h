@@ -160,11 +160,20 @@
 @interface CSMediaControlsView : CSCoverSheetViewBase
 @end
 
+@interface CFWPrefsManager : NSObject
+@property(nonatomic, assign, getter=isLockScreenEnabled) BOOL lockScreenEnabled;
+@property(nonatomic, assign) BOOL lockScreenFullScreenEnabled;
++ (instancetype)sharedInstance;
+@end
+
 static void updateMediaplayerColors();
 static float getCornerRadius(UIView *view);
 static float getIndicatorOffset(UIView *view);
 static BOOL isLockscreen(UIView *view);
 static NSString *getPreferencesKeyFor(NSString *key, UIView *view);
+static BOOL colorFlowLockscreenColoringEnabled();
+static BOOL colorFlowLockscreenResizingEnabled();
+static void colorMediaplayerWithColorFlow(UIColor *color);
 
 static void createTestNotifications(int amount);
 static void testRegular();

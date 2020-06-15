@@ -4,6 +4,7 @@
 
 NSUserDefaults *preferences;
 BOOL isTesting;
+BOOL colorFlowInstalled;
 
 VelvetBackgroundView *velvetArtworkBackground;
 UIView *velvetArtworkBorder;
@@ -20,7 +21,9 @@ UIColor *velvetArtworkColor;
 %hook CSMediaControlsView
 - (void)didMoveToWindow {
 	%orig;
-	
+
+	if (colorFlowLockscreenResizingEnabled()) return;
+
 	PLPlatterView *platterView = (PLPlatterView *)self.superview.superview;
 	MTMaterialView *backgroundMaterialView = platterView.backgroundMaterialView;
 
@@ -44,12 +47,16 @@ UIColor *velvetArtworkColor;
 	velvetArtworkBackground.frame = self.superview.frame;
 
 	platterView.layer.cornerRadius = cornerRadius;
+	platterView.layer.continuousCorners = YES;
+	platterView.clipsToBounds = YES;
+
 	backgroundMaterialView.layer.cornerRadius = cornerRadius;
+	backgroundMaterialView.layer.continuousCorners = YES;
 	velvetArtworkBackground.layer.cornerRadius = cornerRadius;
-	
+
 	velvetArtworkBorder.hidden = YES;
 	velvetArtworkBackground.layer.borderWidth = 0;
-	
+
 	if ([preferences boolForKey:@"hideBackgroundMediaplayer"]) {
 		backgroundMaterialView.alpha = 0;
 	} else {
@@ -73,6 +80,7 @@ UIColor *velvetArtworkColor;
 		velvetArtworkBorder.frame = CGRectMake(0, 0, borderWidth, self.superview.frame.size.height);
 	}
 
+	if (colorFlowLockscreenColoringEnabled()) return;
 	updateMediaplayerColors();
 }
 %end
@@ -81,6 +89,7 @@ UIColor *velvetArtworkColor;
 - (void)_mediaRemoteNowPlayingInfoDidChange:(id)arg1 {
 	%orig;
 
+	if (colorFlowLockscreenColoringEnabled()) return;
 	updateMediaplayerColors();
 }
 %end
@@ -465,6 +474,23 @@ UIColor *velvetArtworkColor;
 
 %end
 
+// ====================== COLORFLOW SUPPORT ====================== //
+%hook CSCoverSheetViewController
+%new
+- (void)velvetColorBorderWithThirdParty:(NSNotification *)notification {
+	NSDictionary *userInfo = [notification userInfo];
+	colorMediaplayerWithThirdParty(userInfo[@"SecondaryColor"]);
+}
+
+- (void)loadView {
+	%orig;
+	if (colorFlowInstalled) {
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(velvetColorBorderWithThirdParty:) name:@"ColorFlowLockScreenColorizationNotification" object:nil];
+	}
+}
+%end
+
+
 // ====================== STATIC HELPER METHODS ====================== //
 
 static void updateMediaplayerColors() {
@@ -483,6 +509,10 @@ static void updateMediaplayerColors() {
 			velvetArtworkBackground.backgroundColor = [preferences boolForKey:@"colorBackgroundMediaplayer"] ? [velvetArtworkColor colorWithAlphaComponent:0.6] : nil;
 		}
 	});
+}
+
+static void colorMediaplayerWithThirdParty(UIColor *color) {
+	velvetArtworkBackground.layer.borderColor = color.CGColor;
 }
 
 static float getCornerRadius(UIView *view) {
@@ -542,6 +572,14 @@ static BOOL isLockscreen(UIView *view) {
 
 static NSString *getPreferencesKeyFor(NSString *key, UIView *view) {
 	return [NSString stringWithFormat:@"%@%@", key, isLockscreen(view) ? @"Lockscreen" : @"Banner"];
+}
+
+static BOOL colorFlowLockscreenColoringEnabled() {
+	return [[%c(CFWPrefsManager) sharedInstance] isLockScreenEnabled] ? YES : NO;
+}
+
+static BOOL colorFlowLockscreenResizingEnabled() {
+	return [[%c(CFWPrefsManager) sharedInstance] lockScreenFullScreenEnabled] ? YES : NO;
 }
 
 // ====================== NOTIFICATION TESTING ====================== //
@@ -608,6 +646,7 @@ static void testLockscreen() {
 %ctor {
 	// The following line can be enabled to reset all settings to the default
 	// [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:@"com.initwithframe.velvet"];
+ 	colorFlowInstalled = [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/ColorFlow5.dylib"] ? YES : NO;
 
 	preferences = [[NSUserDefaults alloc] initWithSuiteName:@"com.initwithframe.velvet"];
 
