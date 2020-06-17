@@ -173,7 +173,7 @@ static BOOL isLockscreen(UIView *view);
 static NSString *getPreferencesKeyFor(NSString *key, UIView *view);
 static BOOL colorFlowLockscreenColoringEnabled();
 static BOOL colorFlowLockscreenResizingEnabled();
-static void colorMediaplayerWithColorFlow(UIColor *color);
+static void colorMediaplayerWithThirdParty(UIColor *color);
 
 static void createTestNotifications(int amount);
 static void testRegular();
