@@ -126,7 +126,7 @@
 		</dict>
 		<dict>
 			<key>cell</key>							<string>PSSwitchCell</string>
-			<key>default</key>						<false/>
+			<key>default</key>						<true/>
 			<key>defaults</key>						<string>com.initwithframe.velvet</string>
 			<key>key</key>							<string>colorPrimaryLabelLockscreen</string>
 			<key>label</key>						<string>Color Title</string>
