@@ -185,7 +185,7 @@ UIColor *velvetArtworkColor;
 			shadowView.hidden = YES;
 			view.layer.shadowOffset = CGSizeMake(0, 3);
     		view.layer.shadowRadius = 5;
-        	view.layer.shadowOpacity = 0.15;
+        	view.layer.shadowOpacity = 0.075;
 		} else {
 			shadowView.hidden = NO;
 		}
