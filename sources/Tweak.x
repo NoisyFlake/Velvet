@@ -171,6 +171,7 @@ UIColor *velvetArtworkColor;
 	view.colorIndicator.layer.cornerRadius = 0;
 	view.colorIndicator.layer.mask = nil;
 	view.velvetBackground.layer.borderWidth = 0;
+	view.layer.shadowRadius = 0;
 
 	UIImageView *thumbnail = [view.notificationContentView safeValueForKey:@"_thumbnailImageView"];
 	if (thumbnail) thumbnail.alpha = 1;
@@ -180,11 +181,15 @@ UIColor *velvetArtworkColor;
 
 	PLShadowView *shadowView = [self.viewForPreview valueForKey:@"_shadowView"];
 	if (shadowView) {
-		shadowView.layer.cornerRadius = cornerRadius;
-		shadowView.hidden = YES;
-		NSLog(@"shadowView: %f", shadowView.layer.cornerRadius);
+		if (cornerRadius > 13) {
+			shadowView.hidden = YES;
+			view.layer.shadowOffset = CGSizeMake(0, 3);
+    		view.layer.shadowRadius = 5;
+        	view.layer.shadowOpacity = 0.15;
+		} else {
+			shadowView.hidden = NO;
+		}
 	}
-	
 
 	if ([[preferences valueForKey:getPreferencesKeyFor(@"style", view)] isEqual:@"modern"]) {
 		[self velvetHideHeader:YES];
