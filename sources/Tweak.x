@@ -175,6 +175,9 @@ UIColor *velvetArtworkColor;
 	UIImageView *thumbnail = [view.notificationContentView safeValueForKey:@"_thumbnailImageView"];
 	if (thumbnail) thumbnail.alpha = 1;
 
+	PLPlatterHeaderContentView *header = [self.viewForPreview valueForKey:@"_headerContentView"];
+	if (header) header.backgroundColor = nil;
+
 	if ([[preferences valueForKey:getPreferencesKeyFor(@"style", view)] isEqual:@"modern"]) {
 		[self velvetHideHeader:YES];
 
@@ -221,15 +224,11 @@ UIColor *velvetArtworkColor;
 	} else if ([[preferences valueForKey:getPreferencesKeyFor(@"style", view)] isEqual:@"classic"]) {
 		[self velvetHideHeader:NO];
 
-		PLPlatterHeaderContentView *header = [self.viewForPreview valueForKey:@"_headerContentView"];
-
 		if ([preferences boolForKey:getPreferencesKeyFor(@"colorHeader", view)]) {
 			header.backgroundColor = [dominantColor colorWithAlphaComponent:0.8];
 
 			// Move the header to the velvetBackground view so that it gets automatically cut off with higher cornerRadius settings
 			[view.velvetBackground insertSubview:header atIndex:1];
-		} else {
-			header.backgroundColor = nil;
 		}
 
 		// Hide the icon
@@ -694,34 +693,31 @@ static void testLockscreen() {
 
 	%init;
 
-	// dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 5.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void) {
+	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 4.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void) {
 
-		// [[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Home"
-        //                                                    message:@"Would you like to turn the lights on?"
-        //                                                    bundleID:@"com.apple.Home"];
+		[[%c(JBBulletinManager) sharedInstance]
+        showBulletinWithTitle:@"Home"
+        message:@"Would you like to turn the lights on?"
+        bundleID:@"com.apple.Home"];
 
-		// [[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Instagram"
-        //                                                    message:@"Somebody liked your post."
-        //                                                    bundleID:@"com.burbn.instagram"];
+		[[%c(JBBulletinManager) sharedInstance]
+			showBulletinWithTitle:@"iTunes Store"
+			message:@"Your favourite artist released a new track!"
+			bundleID:@"com.apple.MobileStore"];
 
-		// [[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"iTunes Store"
-        //                                                    message:@"Your favourite artist released a new track! ngl this is long"
-        //                                                    bundleID:@"com.apple.MobileStore"];
+		[[%c(JBBulletinManager) sharedInstance]
+			showBulletinWithTitle:@"Twitter"
+			message:@"By @NoisyFlake & @HiMyNameIsUbik"
+			bundleID:@"com.atebits.Tweetie2"];
 
-		// [[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Twitter"
-        //                                                    message:@"I wonder if this ever will be released."
-        //                                                    bundleID:@"com.atebits.Tweetie2"];
+		[[%c(JBBulletinManager) sharedInstance]
+			showBulletinWithTitle:@"Tim Cook"
+			message:@"ETA?!"
+			bundleID:@"com.apple.MobileSMS"];
 
-		// [[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"YouTube"
-        //                                                    message:@"PewDiePie uploaded a new video."
-        //                                                    bundleID:@"com.google.ios.youtube"];
-
-		// [[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Bill Gates"
-        //                                                    message:@"ETA?!"
-        //                                                    bundleID:@"com.apple.MobileSMS"];
-
-		// [[%c(JBBulletinManager) sharedInstance] showBulletinWithTitle:@"Bill Gates"
-        //                                                    message:@"Are you still working on that new tweak?"
-        //                                                    bundleID:@"com.apple.MobileSMS"];
-	// });
+		[[%c(JBBulletinManager) sharedInstance]
+			showBulletinWithTitle:@"Tim Cook"
+			message:@"This looks even better than iOS 14!"
+			bundleID:@"com.apple.MobileSMS"];
+	});
 }
