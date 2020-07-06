@@ -154,6 +154,9 @@
 @interface CSCoverSheetViewBase : SBFTouchPassThroughView
 @end
 
+@interface PLShadowView : UIImageView 
+@end
+
 @interface PLPlatterCustomContentView : UIView
 @end
 

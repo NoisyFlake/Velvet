@@ -178,6 +178,14 @@ UIColor *velvetArtworkColor;
 	PLPlatterHeaderContentView *header = [self.viewForPreview valueForKey:@"_headerContentView"];
 	if (header) header.backgroundColor = nil;
 
+	PLShadowView *shadowView = [self.viewForPreview valueForKey:@"_shadowView"];
+	if (shadowView) {
+		shadowView.layer.cornerRadius = cornerRadius;
+		shadowView.hidden = YES;
+		NSLog(@"shadowView: %f", shadowView.layer.cornerRadius);
+	}
+	
+
 	if ([[preferences valueForKey:getPreferencesKeyFor(@"style", view)] isEqual:@"modern"]) {
 		[self velvetHideHeader:YES];
 
