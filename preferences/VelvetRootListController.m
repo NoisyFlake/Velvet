@@ -47,6 +47,24 @@
 		});
 }
 
+- (void)resetSettings {
+	UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Reset Settings"
+									message: @"Are you sure you want to reset all settings to the default value?"
+									preferredStyle:UIAlertControllerStyleAlert];
+
+	[alert addAction:[UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action) {
+		[[NSUserDefaults standardUserDefaults] removePersistentDomainForName:@"com.initwithframe.velvet"];
+
+		UIAlertController *success = [UIAlertController alertControllerWithTitle: @"Success" message: @"All settings were reset." preferredStyle:UIAlertControllerStyleAlert];
+		[success addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
+		[self presentViewController:success animated:YES completion:nil];
+	}]];
+
+	[alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+
+	[self presentViewController:alert animated:YES completion:nil];
+}
+
 - (NSArray *)specifiers {
 	if (!_specifiers) {
 		NSMutableArray *mutableSpecifiers = [[self loadSpecifiersFromPlistName:@"Root" target:self] mutableCopy];

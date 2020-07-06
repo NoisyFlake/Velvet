@@ -644,8 +644,6 @@ static void testLockscreen() {
 // ====================== INITIALIZING ====================== //
 
 %ctor {
-	// The following line can be enabled to reset all settings to the default
-	// [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:@"com.initwithframe.velvet"];
  	colorFlowInstalled = [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/ColorFlow5.dylib"] ? YES : NO;
 
 	preferences = [[NSUserDefaults alloc] initWithSuiteName:@"com.initwithframe.velvet"];
