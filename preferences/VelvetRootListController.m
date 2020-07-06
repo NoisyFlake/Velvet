@@ -40,7 +40,7 @@
 				// Update specifier on the main queue
 				if ([outputString length] > 0) {
 					PSSpecifier *spec = [self specifierForID:@"footerVersion"];
-					[spec setProperty:[NSString stringWithFormat:@"Velvet %@ - initWithFrame", outputString] forKey:@"footerText"];
+					[spec setProperty:[NSString stringWithFormat:@"Velvet %@", outputString] forKey:@"footerText"];
 					[self reloadSpecifierID:@"footerVersion" animated:NO];
 				}
 			});
