@@ -706,31 +706,31 @@ static void testLockscreen() {
 
 	%init;
 
-	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 4.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void) {
+	// dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 4.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void) {
 
-		[[%c(JBBulletinManager) sharedInstance]
-        showBulletinWithTitle:@"Home"
-        message:@"Would you like to turn the lights on?"
-        bundleID:@"com.apple.Home"];
+	// 	[[%c(JBBulletinManager) sharedInstance]
+    //     showBulletinWithTitle:@"Home"
+    //     message:@"Would you like to turn the lights on?"
+    //     bundleID:@"com.apple.Home"];
 
-		[[%c(JBBulletinManager) sharedInstance]
-			showBulletinWithTitle:@"iTunes Store"
-			message:@"Your favourite artist released a new track!"
-			bundleID:@"com.apple.MobileStore"];
+	// 	[[%c(JBBulletinManager) sharedInstance]
+	// 		showBulletinWithTitle:@"iTunes Store"
+	// 		message:@"Your favourite artist released a new track!"
+	// 		bundleID:@"com.apple.MobileStore"];
 
-		[[%c(JBBulletinManager) sharedInstance]
-			showBulletinWithTitle:@"Twitter"
-			message:@"By @NoisyFlake & @HiMyNameIsUbik"
-			bundleID:@"com.atebits.Tweetie2"];
+	// 	[[%c(JBBulletinManager) sharedInstance]
+	// 		showBulletinWithTitle:@"Twitter"
+	// 		message:@"By @NoisyFlake & @HiMyNameIsUbik"
+	// 		bundleID:@"com.atebits.Tweetie2"];
 
-		[[%c(JBBulletinManager) sharedInstance]
-			showBulletinWithTitle:@"Tim Cook"
-			message:@"ETA?!"
-			bundleID:@"com.apple.MobileSMS"];
+	// 	[[%c(JBBulletinManager) sharedInstance]
+	// 		showBulletinWithTitle:@"Tim Cook"
+	// 		message:@"ETA?!"
+	// 		bundleID:@"com.apple.MobileSMS"];
 
-		[[%c(JBBulletinManager) sharedInstance]
-			showBulletinWithTitle:@"Tim Cook"
-			message:@"This looks even better than iOS 14!"
-			bundleID:@"com.apple.MobileSMS"];
-	});
+	// 	[[%c(JBBulletinManager) sharedInstance]
+	// 		showBulletinWithTitle:@"Tim Cook"
+	// 		message:@"This looks even better than iOS 14!"
+	// 		bundleID:@"com.apple.MobileSMS"];
+	// });
 }
