@@ -440,6 +440,7 @@ UIColor *velvetArtworkColor;
 	%orig;
 
 	CGRect primaryLabelFrame = self.primaryLabel.frame;
+	CGRect primarySubtitleLabelFrame = self.primarySubtitleLabel.frame;
 	CGRect secondaryLabelFrame = self.secondaryLabel.frame;
 
 	CGFloat labelWidth = getIndicatorOffset(self);
@@ -459,8 +460,10 @@ UIColor *velvetArtworkColor;
 
 	primaryLabelFrame.size.width = self.primaryLabel.frame.size.width - labelWidth;
 	secondaryLabelFrame.size.width = self.secondaryLabel.frame.size.width - labelWidth;
+	primarySubtitleLabelFrame.size.width = self.primarySubtitleLabel.frame.size.width - labelWidth;
 
 	self.primaryLabel.frame = primaryLabelFrame;
+	self.primarySubtitleLabel.frame = primarySubtitleLabelFrame;
 	self.secondaryLabel.frame = secondaryLabelFrame;
 }
 %end
