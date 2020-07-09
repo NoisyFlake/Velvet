@@ -213,6 +213,20 @@
 			<key>id</key>							<string>customCornerRadiusBanner</string>
 		</dict>
 
+		<dict>
+			<key>cell</key>							<string>PSGroupCell</string>
+			<key>label</key>						<string>Disable for Banner Notifications</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSwitchCell</string>
+			<key>default</key>						<false/>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>disableBanners</string>
+			<key>id</key>							<string>disableBanners</string>
+			<key>label</key>						<string>Disable</string>
+			<key>cellClass</key>					<string>VelvetToggle</string>
+		</dict>
+
 	</array>
 	<key>title</key>
 	<string>Banner</string>

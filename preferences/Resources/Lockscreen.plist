@@ -4,7 +4,7 @@
 <dict>
 	<key>items</key>
 	<array>
-		
+
 		<dict>
 			<key>cell</key>							<string>PSSegmentCell</string>
 			<key>default</key>						<string>modern</string>
@@ -219,6 +219,20 @@
 			<key>defaults</key>						<string>com.initwithframe.velvet</string>
 			<key>key</key>							<string>customCornerRadiusLockscreen</string>
 			<key>id</key>							<string>customCornerRadiusLockscreen</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>							<string>PSGroupCell</string>
+			<key>label</key>						<string>Disable for Lockscreen Notifications</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSwitchCell</string>
+			<key>default</key>						<false/>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>disableLockscreen</string>
+			<key>id</key>							<string>disableLockscreen</string>
+			<key>label</key>						<string>Disable</string>
+			<key>cellClass</key>					<string>VelvetToggle</string>
 		</dict>
 
 	</array>

@@ -18,6 +18,8 @@ UIColor *velvetArtworkColor;
 
 // ====================== MEDIAPLAYER HOOKS ====================== //
 
+%group Mediaplayer
+
 %hook CSMediaControlsView
 - (void)didMoveToWindow {
 	%orig;
@@ -94,8 +96,27 @@ UIColor *velvetArtworkColor;
 }
 %end
 
+// ====================== COLORFLOW SUPPORT ====================== //
+%hook CSCoverSheetViewController
+%new
+- (void)velvetColorBorderWithThirdParty:(NSNotification *)notification {
+	NSDictionary *userInfo = [notification userInfo];
+	colorMediaplayerWithThirdParty(userInfo[@"SecondaryColor"]);
+}
+
+- (void)loadView {
+	%orig;
+	if (colorFlowInstalled) {
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(velvetColorBorderWithThirdParty:) name:@"ColorFlowLockScreenColorizationNotification" object:nil];
+	}
+}
+%end
+
+%end
+
 // ====================== NOTIFICATION HOOKS ====================== //
 
+%group Notifications
 %hook NCNotificationShortLookView
 %property (retain, nonatomic) VelvetIndicatorView * colorIndicator;
 %property (retain, nonatomic) UIView * velvetBorder;
@@ -103,11 +124,19 @@ UIColor *velvetArtworkColor;
 %property (retain, nonatomic) UIImageView * imageIndicator;
 - (void)layoutSubviews {
 	%orig;
+
+	// Check if lockscreen or banner option is disabled
+	if ((isLockscreen(self) && isLockscreenDisabled()) || (!isLockscreen(self) && isBannersDisabled())) return;
+
 	CGRect frame = self.frame;
 	self.velvetBackground.frame = frame;
 }
 - (CGSize)sizeThatFitsContentWithSize:(CGSize)arg1 {
+	// Check if lockscreen or banner option is disabled
+	if ((isLockscreen(self) && isLockscreenDisabled()) || (!isLockscreen(self) && isBannersDisabled())) return %orig;
+
     CGSize orig = %orig;
+
 	if ([[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"classic"] && [preferences boolForKey:getPreferencesKeyFor(@"colorHeader", self)]) {
     	orig.height += 10;
 	}
@@ -120,6 +149,9 @@ UIColor *velvetArtworkColor;
 	%orig;
 
 	NCNotificationShortLookView *view = self.viewForPreview;
+
+	// Check if lockscreen or banner option is disabled
+	if ((isLockscreen(view) && isLockscreenDisabled()) || (!isLockscreen(view) && isBannersDisabled())) return;
 
 	// Notification view is not yet fully initialized
 	if (view.frame.size.width == 0) return;
@@ -400,6 +432,10 @@ UIColor *velvetArtworkColor;
 
 %hook BSUIDefaultDateLabel
 -(void)setFrame:(CGRect)frame {
+	// MARK: Y no work if enabled but notif classic style?! (╯°□°）╯︵ ┻━┻
+	// Check if lockscreen or banner option is disabled
+	// if ((isLockscreen(self) && isLockscreenDisabled()) || (!isLockscreen(self) && isBannersDisabled())) %orig; return;
+
 	// Move the dateLabel into the corner to make room for the centered notification text
 	if ([[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"modern"]) {
 		if (self.superview.frame.size.width > 0) {
@@ -413,12 +449,18 @@ UIColor *velvetArtworkColor;
 
 %hook PLPlatterHeaderContentView
 - (CGFloat)_iconTrailingPadding {
+	// Check if lockscreen or banner option is disabled
+	if ((isLockscreen(self) && isLockscreenDisabled()) || (!isLockscreen(self) && isBannersDisabled())) return %orig;
+
 	return [[preferences valueForKey:getPreferencesKeyFor(@"indicatorClassic", self)] isEqual:@"none"] ? -18 : %orig;
 }
 %end
 
 %hook PLTitledPlatterView
 - (CGRect)_mainContentFrame {
+	// Check if lockscreen or banner option is disabled
+	if ((isLockscreen(self) && isLockscreenDisabled()) || (!isLockscreen(self) && isBannersDisabled())) return %orig;
+
 	// needed because else the frame of it cuts of the content after adjustment
 	self.customContentView.clipsToBounds = NO;
 
@@ -438,6 +480,9 @@ UIColor *velvetArtworkColor;
 %hook NCNotificationContentView
 - (void)layoutSubviews {
 	%orig;
+
+	// Check if lockscreen or banner option is disabled
+	if ((isLockscreen(self) && isLockscreenDisabled()) || (!isLockscreen(self) && isBannersDisabled())) return;
 
 	CGRect primaryLabelFrame = self.primaryLabel.frame;
 	CGRect primarySubtitleLabelFrame = self.primarySubtitleLabel.frame;
@@ -471,6 +516,9 @@ UIColor *velvetArtworkColor;
 // This is the view that occasionally asks "Do you want to keep receiving notifications from this app?"
 %hook NCAuxiliaryOptionsView
 -(void)layoutSubviews {
+	// Check if lockscreen or banner option is disabled
+	if ((isLockscreen(self) && isLockscreenDisabled()) || (!isLockscreen(self) && isBannersDisabled())) %orig; return;
+
 	CGRect auxFrame = self.frame;
 
 	if (auxFrame.size.width <= 0) return;
@@ -488,26 +536,11 @@ UIColor *velvetArtworkColor;
 }
 
 %end
-
-// ====================== COLORFLOW SUPPORT ====================== //
-%hook CSCoverSheetViewController
-%new
-- (void)velvetColorBorderWithThirdParty:(NSNotification *)notification {
-	NSDictionary *userInfo = [notification userInfo];
-	colorMediaplayerWithThirdParty(userInfo[@"SecondaryColor"]);
-}
-
-- (void)loadView {
-	%orig;
-	if (colorFlowInstalled) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(velvetColorBorderWithThirdParty:) name:@"ColorFlowLockScreenColorizationNotification" object:nil];
-	}
-}
 %end
-
 
 // ====================== STATIC HELPER METHODS ====================== //
 
+%group Velvet
 static void updateMediaplayerColors() {
 	MRMediaRemoteGetNowPlayingInfo(dispatch_get_main_queue(), ^(CFDictionaryRef information) {
         NSDictionary *dict = (__bridge NSDictionary *)(information);
@@ -589,6 +622,14 @@ static NSString *getPreferencesKeyFor(NSString *key, UIView *view) {
 	return [NSString stringWithFormat:@"%@%@", key, isLockscreen(view) ? @"Lockscreen" : @"Banner"];
 }
 
+static BOOL isLockscreenDisabled() {
+	return [preferences boolForKey:@"disableLockscreen"];
+}
+
+static BOOL isBannersDisabled() {
+	return [preferences boolForKey:@"disableBanners"];
+}
+
 static BOOL colorFlowLockscreenColoringEnabled() {
 	return [[%c(CFWPrefsManager) sharedInstance] isLockScreenEnabled] ? YES : NO;
 }
@@ -656,6 +697,7 @@ static void testLockscreen() {
 	});
 }
 
+%end
 // ====================== INITIALIZING ====================== //
 
 %ctor {
@@ -665,6 +707,9 @@ static void testLockscreen() {
 
 	[preferences registerDefaults:@{
 		@"enabled": @YES,
+		@"disableBanners" : @NO,
+		@"disableLockscreen" : @NO,
+		@"disableMediaplayer" : @NO,
 
 		@"styleBanner": @"modern",
 		@"indicatorClassicBanner": @"icon",
@@ -707,7 +752,9 @@ static void testLockscreen() {
 
 	if (![preferences boolForKey:@"enabled"]) return;
 
-	%init;
+	%init(Velvet);
+	%init(Notifications);
+	if (![preferences boolForKey:@"disableMediaplayer"]) %init(Mediaplayer);
 
 	// dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 4.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void) {
 

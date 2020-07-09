@@ -154,7 +154,7 @@
 @interface CSCoverSheetViewBase : SBFTouchPassThroughView
 @end
 
-@interface PLShadowView : UIImageView 
+@interface PLShadowView : UIImageView
 @end
 
 @interface PLPlatterCustomContentView : UIView
@@ -174,6 +174,8 @@ static float getCornerRadius(UIView *view);
 static float getIndicatorOffset(UIView *view);
 static BOOL isLockscreen(UIView *view);
 static NSString *getPreferencesKeyFor(NSString *key, UIView *view);
+static BOOL isLockscreenDisabled();
+static BOOL isBannersDisabled();
 static BOOL colorFlowLockscreenColoringEnabled();
 static BOOL colorFlowLockscreenResizingEnabled();
 static void colorMediaplayerWithThirdParty(UIColor *color);
