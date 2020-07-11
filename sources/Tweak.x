@@ -226,7 +226,16 @@ UIColor *velvetArtworkColor;
 
 			float size = [preferences integerForKey:getPreferencesKeyFor(@"indicatorModernSize", view)];
 			view.imageIndicator.frame = CGRectMake(20, (view.frame.size.height - size)/2, size, size);
-			view.imageIndicator.image = [self getIconForBundleId:self.notificationRequest.sectionIdentifier];
+
+			if ([self.notificationRequest.sectionIdentifier isEqual:@"com.apple.donotdisturb"]) {
+				view.imageIndicator.image = [UIImage systemImageNamed:@"moon.fill"];
+				view.imageIndicator.tintColor = UIColor.labelColor;
+				thumbnail.alpha = 0;
+			} else {
+				view.imageIndicator.image = [self getIconForBundleId:self.notificationRequest.sectionIdentifier];
+			}
+			
+			
 		} else if ([[preferences valueForKey:getPreferencesKeyFor(@"indicatorModern", view)] isEqual:@"dot"]) {
 			view.colorIndicator.hidden = NO;
 
@@ -404,21 +413,6 @@ UIColor *velvetArtworkColor;
 	if (!icon) {
 		// Fallback to the default 20x20 icon
 		icon = self.viewForPreview.icons[0];
-
-		if (!icon) {
-			// Fallback to thumbnail image if still no icon present (DND banner for example)
-			NCNotificationContentView *contentView = self.viewForPreview.notificationContentView;
-			UIImageView *thumbnail = [contentView safeValueForKey:@"_thumbnailImageView"];
-			if (thumbnail) {
-				UIGraphicsBeginImageContextWithOptions(thumbnail.bounds.size, thumbnail.opaque, 0.0);
-				[thumbnail.layer renderInContext:UIGraphicsGetCurrentContext()];
-				UIImage *thumb = UIGraphicsGetImageFromCurrentImageContext();
-				UIGraphicsEndImageContext();
-
-				icon = thumb;
-				thumbnail.alpha = 0;
-			}
-		}
 	}
 
 	return icon;
