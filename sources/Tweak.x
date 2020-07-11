@@ -509,7 +509,10 @@ UIColor *velvetArtworkColor;
 // This is the view that occasionally asks "Do you want to keep receiving notifications from this app?"
 %hook NCAuxiliaryOptionsView
 -(void)layoutSubviews {
-	ifDisabled(self) %orig; return;
+	ifDisabled(self) {
+		%orig; 
+		return;
+	}
 
 	CGRect auxFrame = self.frame;
 
@@ -523,6 +526,7 @@ UIColor *velvetArtworkColor;
 
 	UIView *overlayView = [self safeValueForKey:@"_overlayView"];
 	overlayView.layer.cornerRadius = cornerRadius;
+	overlayView.backgroundColor = nil;
 
 	%orig;
 }
