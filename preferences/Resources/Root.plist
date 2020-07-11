@@ -16,33 +16,72 @@
 
 		<dict>
 			<key>cell</key>                         <string>PSGroupCell</string>
-			<key>label</key>						<string>Preferences</string>
+			<key>label</key>						<string>Banner Notifications</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSwitchCell</string>
+			<key>default</key>						<true/>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>enableBanners</string>
+			<key>id</key>							<string>enableBanners</string>
+			<key>label</key>						<string>Enabled</string>
+			<key>cellClass</key>					<string>VelvetToggle</string>
+			<key>set</key>							<string>setWithRespring:specifier:</string>
 		</dict>
 		<dict>
 			<key>cell</key>							<string>PSLinkCell</string>
 			<key>isController</key>					<true/>
 			<key>detail</key>						<string>VelvetBannerController</string>
 			<key>icon</key>							<string>icons/banner</string>
-			<key>label</key>						<string>Banner</string>
+			<key>label</key>						<string>Banner Settings</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>                         <string>PSGroupCell</string>
+			<key>label</key>						<string>Lockscreen Notifications</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSwitchCell</string>
+			<key>default</key>						<true/>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>enableLockscreen</string>
+			<key>id</key>							<string>enableLockscreen</string>
+			<key>label</key>						<string>Enabled</string>
+			<key>cellClass</key>					<string>VelvetToggle</string>
+			<key>set</key>							<string>setWithRespring:specifier:</string>
 		</dict>
 		<dict>
 			<key>cell</key>							<string>PSLinkCell</string>
 			<key>isController</key>					<true/>
 			<key>detail</key>						<string>VelvetLockscreenController</string>
 			<key>icon</key>							<string>icons/lockscreen</string>
-			<key>label</key>						<string>Lockscreen</string>
+			<key>label</key>						<string>Lockscreen Settings</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>                         <string>PSGroupCell</string>
+			<key>label</key>						<string>Media Player</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSwitchCell</string>
+			<key>default</key>						<true/>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>enableMediaplayer</string>
+			<key>id</key>							<string>enableMediaplayer</string>
+			<key>label</key>						<string>Enabled</string>
+			<key>cellClass</key>					<string>VelvetToggle</string>
+			<key>set</key>							<string>setWithRespring:specifier:</string>
 		</dict>
 		<dict>
 			<key>cell</key>							<string>PSLinkCell</string>
 			<key>isController</key>					<true/>
 			<key>detail</key>						<string>VelvetMediaplayerController</string>
 			<key>icon</key>							<string>icons/mediaplayer</string>
-			<key>label</key>						<string>Media Player</string>
+			<key>label</key>						<string>Media Player Settings</string>
 		</dict>
 
 		<dict>
 			<key>cell</key>                         <string>PSGroupCell</string>
-			<key>label</key>						<string>Miscellaneous</string>
 		</dict>
 		<dict>
 			<key>cell</key>							<string>PSButtonCell</string>

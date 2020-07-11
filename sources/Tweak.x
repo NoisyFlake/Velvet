@@ -22,7 +22,7 @@ UIColor *velvetArtworkColor;
 - (void)didMoveToWindow {
 	%orig;
 
-	if ([preferences boolForKey:@"disableMediaplayer"] || colorFlowLockscreenResizingEnabled()) return;
+	if (![preferences boolForKey:@"enableMediaplayer"] || colorFlowLockscreenResizingEnabled()) return;
 
 	PLPlatterView *platterView = (PLPlatterView *)self.superview.superview;
 	MTMaterialView *backgroundMaterialView = platterView.backgroundMaterialView;
@@ -89,7 +89,7 @@ UIColor *velvetArtworkColor;
 - (void)_mediaRemoteNowPlayingInfoDidChange:(id)arg1 {
 	%orig;
 
-	if ([preferences boolForKey:@"disableMediaplayer"] || colorFlowLockscreenColoringEnabled()) return;
+	if (![preferences boolForKey:@"enableMediaplayer"] || colorFlowLockscreenColoringEnabled()) return;
 	updateMediaplayerColors();
 }
 %end
@@ -105,7 +105,7 @@ UIColor *velvetArtworkColor;
 - (void)loadView {
 	%orig;
 
-	if ([preferences boolForKey:@"disableMediaplayer"]) return;
+	if (![preferences boolForKey:@"enableMediaplayer"]) return;
 
 	if (colorFlowInstalled) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(velvetColorBorderWithThirdParty:) name:@"ColorFlowLockScreenColorizationNotification" object:nil];
@@ -612,14 +612,6 @@ static NSString *getPreferencesKeyFor(NSString *key, UIView *view) {
 	return [NSString stringWithFormat:@"%@%@", key, isLockscreen(view) ? @"Lockscreen" : @"Banner"];
 }
 
-static BOOL isLockscreenDisabled() {
-	return [preferences boolForKey:@"disableLockscreen"];
-}
-
-static BOOL isBannersDisabled() {
-	return [preferences boolForKey:@"disableBanners"];
-}
-
 static BOOL colorFlowLockscreenColoringEnabled() {
 	return [[%c(CFWPrefsManager) sharedInstance] isLockScreenEnabled] ? YES : NO;
 }
@@ -695,9 +687,9 @@ static void testLockscreen() {
 
 	[preferences registerDefaults:@{
 		@"enabled": @YES,
-		@"disableBanners" : @NO,
-		@"disableLockscreen" : @NO,
-		@"disableMediaplayer" : @NO,
+		@"enableBanners" : @YES,
+		@"enableLockscreen" : @YES,
+		@"enableMediaplayer" : @YES,
 
 		@"styleBanner": @"modern",
 		@"indicatorClassicBanner": @"icon",

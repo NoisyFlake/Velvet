@@ -4,7 +4,7 @@
 #define NSLog(fmt, ...)
 #endif
 
-#define ifDisabled(view) if ((isLockscreen(view) && isLockscreenDisabled()) || (!isLockscreen(view) && isBannersDisabled()))
+#define ifDisabled(view) if ((isLockscreen(view) && ![preferences boolForKey:@"enableLockscreen"]) || (!isLockscreen(view) && ![preferences boolForKey:@"enableBanners"]))
 
 @interface NSUserDefaults (Private)
 - (instancetype)_initWithSuiteName:(NSString *)suiteName container:(NSURL *)container;
@@ -176,8 +176,6 @@ static float getCornerRadius(UIView *view);
 static float getIndicatorOffset(UIView *view);
 static BOOL isLockscreen(UIView *view);
 static NSString *getPreferencesKeyFor(NSString *key, UIView *view);
-static BOOL isLockscreenDisabled();
-static BOOL isBannersDisabled();
 static BOOL colorFlowLockscreenColoringEnabled();
 static BOOL colorFlowLockscreenResizingEnabled();
 static void colorMediaplayerWithThirdParty(UIColor *color);
