@@ -408,7 +408,24 @@ UIColor *velvetArtworkColor;
 
 %new
 -(UIImage *)getIconForBundleId:(NSString *)bundleId {
-	UIImage *icon = [UIImage _applicationIconImageForBundleIdentifier:bundleId format:2 scale:[UIScreen mainScreen].scale];
+	UIImage *icon = nil;
+	
+	if (bundleId != nil) {
+		// icon = [UIImage _applicationIconImageForBundleIdentifier:bundleId format:2 scale:[UIScreen mainScreen].scale];
+		SBIconController *iconController = [%c(SBIconController) sharedInstance];
+		SBIcon *sbIcon = [iconController.model expectedIconForDisplayIdentifier:bundleId];
+		
+		struct CGSize imageSize;
+		imageSize.height = 60;
+		imageSize.width = 60;
+		
+		struct SBIconImageInfo imageInfo;
+		imageInfo.size  = imageSize;
+		imageInfo.scale = [UIScreen mainScreen].scale;
+		imageInfo.continuousCornerRadius = 13; // This actually doesn't do anything
+		
+		icon = [sbIcon generateIconImageWithInfo:imageInfo];
+	}
 
 	if (!icon) {
 		// Fallback to the default 20x20 icon

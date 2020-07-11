@@ -171,6 +171,7 @@
 + (instancetype)sharedInstance;
 @end
 
+
 @interface SBApplication : NSObject
 @property (nonatomic,readonly) NSString * displayName;
 @end
@@ -178,6 +179,29 @@
 @interface SBApplicationController : NSObject
 +(id)sharedInstance;
 -(id)applicationWithBundleIdentifier:(id)arg1;
+@end
+
+struct SBIconImageInfo {
+    struct CGSize size;
+    double scale;
+    double continuousCornerRadius;
+};
+
+@interface SBIcon : NSObject
+-(id)generateIconImageWithInfo:(struct SBIconImageInfo)info;
+-(id)unmaskedIconImageWithInfo:(struct SBIconImageInfo)arg1 ;
+@end
+
+@interface SBHIconModel : NSObject
+@end
+
+@interface SBIconModel : SBHIconModel
+-(id)expectedIconForDisplayIdentifier:(id)arg1;
+@end
+
+@interface SBIconController : UIViewController
+@property (nonatomic,retain) SBIconModel * model;
++(id)sharedInstance;
 @end
 
 static void updateMediaplayerColors();
