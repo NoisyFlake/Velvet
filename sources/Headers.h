@@ -4,6 +4,8 @@
 #define NSLog(fmt, ...)
 #endif
 
+#define ifDisabled(view) if ((isLockscreen(view) && isLockscreenDisabled()) || (!isLockscreen(view) && isBannersDisabled()))
+
 @interface NSUserDefaults (Private)
 - (instancetype)_initWithSuiteName:(NSString *)suiteName container:(NSURL *)container;
 @end

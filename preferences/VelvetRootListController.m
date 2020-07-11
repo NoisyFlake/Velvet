@@ -40,7 +40,7 @@
 				// Update specifier on the main queue
 				if ([outputString length] > 0) {
 					PSSpecifier *spec = [self specifierForID:@"footerVersion"];
-					[spec setProperty:[NSString stringWithFormat:@"Velvet %@", outputString] forKey:@"footerText"];
+					[spec setProperty:[NSString stringWithFormat:@"Version %@", outputString] forKey:@"footerText"];
 					[self reloadSpecifierID:@"footerVersion" animated:NO];
 				}
 			});
@@ -63,6 +63,30 @@
 	[alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
 
 	[self presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)noisyflake {
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"tweetbot:"]]) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"tweetbot:///user_profile/NoisyFlake"] options:@{} completionHandler:nil];
+    } else if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitterrific:"]]) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"twitterrific:///profile?screen_name=NoisyFlake"] options:@{} completionHandler:nil];
+    } else if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter:"]]) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"twitter://user?screen_name=NoisyFlake"] options:@{} completionHandler:nil];
+    } else {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://www.twitter.com/NoisyFlake"] options:@{} completionHandler:nil];
+    }
+}
+
+- (void)ubik {
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"tweetbot:"]]) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"tweetbot:///user_profile/himynameisubik"] options:@{} completionHandler:nil];
+    } else if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitterrific:"]]) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"twitterrific:///profile?screen_name=himynameisubik"] options:@{} completionHandler:nil];
+    } else if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter:"]]) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"twitter://user?screen_name=himynameisubik"] options:@{} completionHandler:nil];
+    } else {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://www.twitter.com/himynameisubik"] options:@{} completionHandler:nil];
+    }
 }
 
 - (NSArray *)specifiers {

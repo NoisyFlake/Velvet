@@ -225,6 +225,7 @@
 			<key>id</key>							<string>disableBanners</string>
 			<key>label</key>						<string>Disable</string>
 			<key>cellClass</key>					<string>VelvetToggle</string>
+			<key>set</key>							<string>setWithRespring:specifier:</string>
 		</dict>
 
 	</array>

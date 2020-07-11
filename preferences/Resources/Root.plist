@@ -16,7 +16,7 @@
 
 		<dict>
 			<key>cell</key>                         <string>PSGroupCell</string>
-			<key>label</key>						<string>Configuration</string>
+			<key>label</key>						<string>Preferences</string>
 		</dict>
 		<dict>
 			<key>cell</key>							<string>PSLinkCell</string>
@@ -42,13 +42,30 @@
 
 		<dict>
 			<key>cell</key>                         <string>PSGroupCell</string>
-			<key>label</key>						<string>Settings</string>
+			<key>label</key>						<string>Miscellaneous</string>
 		</dict>
 		<dict>
 			<key>cell</key>							<string>PSButtonCell</string>
 			<key>cellClass</key>					<string>VelvetButton</string>
 			<key>action</key>						<string>resetSettings</string>
 			<key>label</key>						<string>Reset Settings</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>                         <string>PSGroupCell</string>
+			<key>label</key>						<string>Developers</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSButtonCell</string>
+			<key>cellClass</key>					<string>VelvetButton</string>
+			<key>action</key>						<string>noisyflake</string>
+			<key>label</key>						<string>@NoisyFlake</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSButtonCell</string>
+			<key>cellClass</key>					<string>VelvetButton</string>
+			<key>action</key>						<string>ubik</string>
+			<key>label</key>						<string>@HiMyNameIsUbik</string>
 		</dict>
 
 		<dict>
