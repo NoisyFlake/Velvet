@@ -466,6 +466,29 @@ UIColor *velvetArtworkColor;
 %end
 
 %hook NCNotificationContentView
+-(void)setPrimaryText:(NSString *)arg1 {
+
+	ifDisabled(self) {
+		%orig;
+		return;
+	}
+
+	if ([preferences boolForKey:getPreferencesKeyFor(@"nameAsTitle", self)]) {
+	
+		NSString *bundleId = ((NCNotificationShortLookViewController *)self._viewControllerForAncestor).notificationRequest.sectionIdentifier;
+
+		if (arg1 == nil && ![bundleId isEqual:@"com.apple.donotdisturb"]) {
+			SBApplication *app = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:bundleId];
+			if (app && app.displayName) {
+				arg1 = app.displayName;
+			}
+		}
+
+	}
+
+	%orig(arg1);
+}
+
 - (void)layoutSubviews {
 	%orig;
 
@@ -698,6 +721,7 @@ static void testLockscreen() {
 		@"colorBackgroundBanner": @NO,
 		@"colorPrimaryLabelBanner": @YES,
 		@"colorSecondaryLabelBanner": @NO,
+		@"nameAsTitleBanner": @NO,
 		@"borderBanner": @"none",
 		@"borderWidthBanner": @2,
 		@"roundedCornersBanner": @"stock",
@@ -712,6 +736,7 @@ static void testLockscreen() {
 		@"colorBackgroundLockscreen": @NO,
 		@"colorPrimaryLabelLockscreen": @YES,
 		@"colorSecondaryLabelLockscreen": @NO,
+		@"nameAsTitleLockscreen": @NO,
 		@"borderLockscreen": @"none",
 		@"borderWidthLockscreen": @2,
 		@"roundedCornersLockscreen": @"stock",

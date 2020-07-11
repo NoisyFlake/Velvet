@@ -171,6 +171,15 @@
 + (instancetype)sharedInstance;
 @end
 
+@interface SBApplication : NSObject
+@property (nonatomic,readonly) NSString * displayName;
+@end
+
+@interface SBApplicationController : NSObject
++(id)sharedInstance;
+-(id)applicationWithBundleIdentifier:(id)arg1;
+@end
+
 static void updateMediaplayerColors();
 static float getCornerRadius(UIView *view);
 static float getIndicatorOffset(UIView *view);
