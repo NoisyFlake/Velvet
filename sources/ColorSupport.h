@@ -2,13 +2,13 @@
 @property int r, g, b, d;
 @end
 
-@interface UIImage (Velvet)
+@interface UIImage (VelvetColorSupport)
 - (UIColor *)velvetDominantColor;
 - (int)colourDistance:(RGBPixel *)a andB:(RGBPixel *)b;
 - (UIColor *)velvetAverageColor;
 @end
 
-@interface UIColor (Velvet)
+@interface UIColor (VelvetColorSupport)
 - (CGFloat)velvetColorBrightness;
 + (UIColor *)colorFromHexString:(NSString *)hexString;
 @end
