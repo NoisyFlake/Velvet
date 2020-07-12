@@ -204,6 +204,14 @@ struct SBIconImageInfo {
 +(id)sharedInstance;
 @end
 
+@interface UIImage (Velvet)
++(id)systemImageNamed:(id)arg1;
+@end
+
+@interface UIColor (Velvet)
++(id)labelColor;
+@end
+
 static void updateMediaplayerColors();
 static float getCornerRadius(UIView *view);
 static float getIndicatorOffset(UIView *view);
