@@ -10,6 +10,8 @@ VelvetBackgroundView *velvetArtworkBackground;
 UIView *velvetArtworkBorder;
 UIColor *velvetArtworkColor;
 
+NSMutableDictionary *colorCache;
+
 @implementation VelvetIndicatorView
 @end
 
@@ -403,7 +405,16 @@ UIColor *velvetArtworkColor;
 	if ([bundleId isEqual:@"com.apple.donotdisturb"]) return nil;
 
 	UIImage *icon = [self getIconForBundleId:bundleId];
-	return [icon velvetDominantColor];
+
+	NSString *iconIdentifier = [UIImagePNGRepresentation(icon) base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+	UIColor *color = colorCache[iconIdentifier];
+
+	if (color == nil) {
+		color = [icon velvetDominantColor];
+		[colorCache setObject:color forKey:iconIdentifier];
+	}
+
+	return color;
 }
 
 %new
@@ -775,6 +786,8 @@ static void testLockscreen() {
 	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)testLockscreen, CFSTR("com.initwithframe.velvet/testLockscreen"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 
 	if (![preferences boolForKey:@"enabled"]) return;
+
+	colorCache = [[NSMutableDictionary alloc] init];
 
 	%init;
 
