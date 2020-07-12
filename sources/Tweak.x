@@ -491,10 +491,15 @@ UIColor *velvetArtworkColor;
 	}
 
 	if ([preferences boolForKey:getPreferencesKeyFor(@"nameAsTitle", self)]) {
-	
-		NSString *bundleId = ((NCNotificationShortLookViewController *)self._viewControllerForAncestor).notificationRequest.sectionIdentifier;
+		
+		NCNotificationShortLookViewController *controller = self._viewControllerForAncestor;
+		NSString *bundleId = nil;
 
-		if (arg1 == nil && ![bundleId isEqual:@"com.apple.donotdisturb"]) {
+		if ([controller isKindOfClass:%c(NCNotificationShortLookViewController)]) {
+			bundleId = controller.notificationRequest.sectionIdentifier;
+		}
+
+		if (arg1 == nil && bundleId != nil && ![bundleId isEqual:@"com.apple.donotdisturb"]) {
 			SBApplication *app = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:bundleId];
 			if (app && app.displayName) {
 				arg1 = app.displayName;
@@ -524,8 +529,8 @@ UIColor *velvetArtworkColor;
 		thumbFrame.origin.x = thumbFrame.origin.x - labelWidth;
 		thumbnail.frame = thumbFrame;
 
-		NCNotificationShortLookViewController *controller = [self.superview.superview _viewControllerForAncestor];
-		if ([controller.notificationRequest.sectionIdentifier isEqual:@"com.apple.donotdisturb"] && [[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"modern"]) {
+		NCNotificationShortLookViewController *controller = self._viewControllerForAncestor;
+		if ([controller isKindOfClass:%c(NCNotificationShortLookViewController)] && [controller.notificationRequest.sectionIdentifier isEqual:@"com.apple.donotdisturb"] && [[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"modern"]) {
 			labelWidth -= thumbnail.frame.size.width;
 		}
 	}
@@ -642,7 +647,6 @@ static BOOL isLockscreen(UIView *view) {
 		return ((NCNotificationViewController *)[view _viewControllerForAncestor]).associatedView ? YES : NO;
 	}
 
-	NSLog(@"Warning: Checking isLockscreen of a view that doesn't belong to a notification: %@", view);
 	return NO;
 }
 
