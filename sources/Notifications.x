@@ -1,121 +1,12 @@
-#import <MediaRemote/MediaRemote.h>
 #import "Headers.h"
+#import "Notifications.h"
+#import "VelvetPrefs.h"
 #import "ColorSupport.h"
 
-NSUserDefaults *preferences;
+BOOL showCustomMessages = NO;
 BOOL isTesting;
-BOOL colorFlowInstalled;
-
-VelvetBackgroundView *velvetArtworkBackground;
-UIView *velvetArtworkBorder;
-UIColor *velvetArtworkColor;
 
 NSMutableDictionary *colorCache;
-
-@implementation VelvetIndicatorView
-@end
-
-@implementation VelvetBackgroundView
-@end
-
-// ====================== MEDIAPLAYER HOOKS ====================== //
-
-%hook CSMediaControlsView
-- (void)didMoveToWindow {
-	%orig;
-
-	if (![preferences boolForKey:@"enableMediaplayer"] || colorFlowLockscreenResizingEnabled()) return;
-
-	PLPlatterView *platterView = (PLPlatterView *)self.superview.superview;
-	MTMaterialView *backgroundMaterialView = platterView.backgroundMaterialView;
-
-	float cornerRadius = getCornerRadius(self);
-	if (cornerRadius < 0) cornerRadius = self.frame.size.height / 2;
-
-	if (velvetArtworkBackground == nil) {
-		velvetArtworkBackground = [[VelvetBackgroundView alloc] initWithFrame:CGRectZero];
-		velvetArtworkBackground.layer.continuousCorners = YES;
-		velvetArtworkBackground.clipsToBounds = YES;
-
-		[self insertSubview:velvetArtworkBackground atIndex:0];
-	}
-
-	if (velvetArtworkBorder == nil) {
-		velvetArtworkBorder = [[UIView alloc] initWithFrame:CGRectZero];
-
-		[velvetArtworkBackground insertSubview:velvetArtworkBorder atIndex:1];
-	}
-
-	velvetArtworkBackground.frame = self.superview.frame;
-
-	platterView.layer.cornerRadius = cornerRadius;
-	platterView.layer.continuousCorners = YES;
-	platterView.clipsToBounds = YES;
-
-	backgroundMaterialView.layer.cornerRadius = cornerRadius;
-	backgroundMaterialView.layer.continuousCorners = YES;
-	velvetArtworkBackground.layer.cornerRadius = cornerRadius;
-
-	velvetArtworkBorder.hidden = YES;
-	velvetArtworkBackground.layer.borderWidth = 0;
-
-	if ([preferences boolForKey:@"hideBackgroundMediaplayer"]) {
-		backgroundMaterialView.alpha = 0;
-	} else {
-		backgroundMaterialView.alpha = 1;
-	}
-
-	int borderWidth = [preferences integerForKey:@"borderWidthMediaplayer"];
-	if ([[preferences valueForKey:@"borderMediaplayer"] isEqual:@"all"]) {
-		velvetArtworkBackground.layer.borderWidth = borderWidth;
-	} else if ([[preferences valueForKey:@"borderMediaplayer"] isEqual:@"top"]) {
-		velvetArtworkBorder.hidden = NO;
-		velvetArtworkBorder.frame = CGRectMake(0, 0, self.superview.frame.size.width, borderWidth);
-	} else if ([[preferences valueForKey:@"borderMediaplayer"] isEqual:@"right"]) {
-		velvetArtworkBorder.hidden = NO;
-		velvetArtworkBorder.frame = CGRectMake(self.superview.frame.size.width - borderWidth, 0, borderWidth, self.superview.frame.size.height);
-	} else if ([[preferences valueForKey:@"borderMediaplayer"] isEqual:@"bottom"]) {
-		velvetArtworkBorder.hidden = NO;
-		velvetArtworkBorder.frame = CGRectMake(0, self.superview.frame.size.height - borderWidth, self.superview.frame.size.width, borderWidth);
-	} else if ([[preferences valueForKey:@"borderMediaplayer"] isEqual:@"left"]) {
-		velvetArtworkBorder.hidden = NO;
-		velvetArtworkBorder.frame = CGRectMake(0, 0, borderWidth, self.superview.frame.size.height);
-	}
-
-	if (colorFlowLockscreenColoringEnabled()) return;
-	updateMediaplayerColors();
-}
-%end
-
-%hook SBMediaController
-- (void)_mediaRemoteNowPlayingInfoDidChange:(id)arg1 {
-	%orig;
-
-	if (![preferences boolForKey:@"enableMediaplayer"] || colorFlowLockscreenColoringEnabled()) return;
-	updateMediaplayerColors();
-}
-%end
-
-// ====================== COLORFLOW SUPPORT ====================== //
-%hook CSCoverSheetViewController
-%new
-- (void)velvetColorBorderWithThirdParty:(NSNotification *)notification {
-	NSDictionary *userInfo = [notification userInfo];
-	colorMediaplayerWithThirdParty(userInfo[@"SecondaryColor"]);
-}
-
-- (void)loadView {
-	%orig;
-
-	if (![preferences boolForKey:@"enableMediaplayer"]) return;
-
-	if (colorFlowInstalled) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(velvetColorBorderWithThirdParty:) name:@"ColorFlowLockScreenColorizationNotification" object:nil];
-	}
-}
-%end
-
-// ====================== NOTIFICATION HOOKS ====================== //
 
 %hook NCNotificationShortLookView
 %property (retain, nonatomic) VelvetIndicatorView * colorIndicator;
@@ -585,50 +476,16 @@ NSMutableDictionary *colorCache;
 
 // ====================== STATIC HELPER METHODS ====================== //
 
-static void updateMediaplayerColors() {
-	MRMediaRemoteGetNowPlayingInfo(dispatch_get_main_queue(), ^(CFDictionaryRef information) {
-        NSDictionary *dict = (__bridge NSDictionary *)(information);
-		if(!dict) return;
-
-        NSData *artworkData = [dict objectForKey:(__bridge NSString *)kMRMediaRemoteNowPlayingInfoArtworkData];
-        __block UIImage *artwork = [UIImage imageWithData:artworkData];
-		velvetArtworkColor = [artwork velvetAverageColor];
-
-		if (velvetArtworkColor != nil) {
-			// Needed to recolor when track changes without lockscreen media controls changing
-			velvetArtworkBorder.backgroundColor = velvetArtworkColor;
-			velvetArtworkBackground.layer.borderColor = velvetArtworkColor.CGColor;
-			velvetArtworkBackground.backgroundColor = [preferences boolForKey:@"colorBackgroundMediaplayer"] ? [velvetArtworkColor colorWithAlphaComponent:0.6] : nil;
-		}
-	});
-}
-
-static void colorMediaplayerWithThirdParty(UIColor *color) {
-	velvetArtworkBackground.layer.borderColor = color.CGColor;
-}
-
 static float getCornerRadius(UIView *view) {
-	if ([view isKindOfClass:%c(CSMediaControlsView)]) {
-		if ([[preferences valueForKey:@"roundedCornersMediaplayer"] isEqual:@"none"]) {
-			return 0;
-		} else if ([[preferences valueForKey:@"roundedCornersMediaplayer"] isEqual:@"round"]) {
-			return -1;
-		} else if ([[preferences valueForKey:@"roundedCornersMediaplayer"] isEqual:@"custom"]) {
-			return [preferences floatForKey:@"customCornerRadiusMediaplayer"];
-		}
-
-		return 13; // stock
-	} else {
-		if ([[preferences valueForKey:getPreferencesKeyFor(@"roundedCorners", view)] isEqual:@"none"]) {
-			return 0;
-		} else if ([[preferences valueForKey:getPreferencesKeyFor(@"roundedCorners", view)] isEqual:@"round"]) {
-			return -1;
-		} else if ([[preferences valueForKey:getPreferencesKeyFor(@"roundedCorners", view)] isEqual:@"custom"]) {
-			return [preferences floatForKey:getPreferencesKeyFor(@"customCornerRadius", view)];
-		}
-
-		return 13; // stock
+	if ([[preferences valueForKey:getPreferencesKeyFor(@"roundedCorners", view)] isEqual:@"none"]) {
+		return 0;
+	} else if ([[preferences valueForKey:getPreferencesKeyFor(@"roundedCorners", view)] isEqual:@"round"]) {
+		return -1;
+	} else if ([[preferences valueForKey:getPreferencesKeyFor(@"roundedCorners", view)] isEqual:@"custom"]) {
+		return [preferences floatForKey:getPreferencesKeyFor(@"customCornerRadius", view)];
 	}
+
+	return 13; // stock
 }
 
 static float getIndicatorOffset(UIView *view) {
@@ -663,14 +520,6 @@ static BOOL isLockscreen(UIView *view) {
 
 static NSString *getPreferencesKeyFor(NSString *key, UIView *view) {
 	return [NSString stringWithFormat:@"%@%@", key, isLockscreen(view) ? @"Lockscreen" : @"Banner"];
-}
-
-static BOOL colorFlowLockscreenColoringEnabled() {
-	return [[%c(CFWPrefsManager) sharedInstance] isLockScreenEnabled] ? YES : NO;
-}
-
-static BOOL colorFlowLockscreenResizingEnabled() {
-	return [[%c(CFWPrefsManager) sharedInstance] lockScreenFullScreenEnabled] ? YES : NO;
 }
 
 // ====================== NOTIFICATION TESTING ====================== //
@@ -731,91 +580,47 @@ static void testLockscreen() {
 		createTestNotifications(5);
 	});
 }
-// ====================== INITIALIZING ====================== //
+
+static void testCustom() {
+	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 4.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void) {
+
+		[[%c(JBBulletinManager) sharedInstance]
+        showBulletinWithTitle:@"Home"
+        message:@"Would you like to turn the lights on?"
+        bundleID:@"com.apple.Home"];
+
+		[[%c(JBBulletinManager) sharedInstance]
+			showBulletinWithTitle:@"iTunes Store"
+			message:@"Your favourite artist released a new track!"
+			bundleID:@"com.apple.MobileStore"];
+
+		[[%c(JBBulletinManager) sharedInstance]
+			showBulletinWithTitle:@"Twitter"
+			message:@"By @NoisyFlake & @HiMyNameIsUbik"
+			bundleID:@"com.atebits.Tweetie2"];
+
+		[[%c(JBBulletinManager) sharedInstance]
+			showBulletinWithTitle:@"Tim Cook"
+			message:@"ETA?!"
+			bundleID:@"com.apple.MobileSMS"];
+
+		[[%c(JBBulletinManager) sharedInstance]
+			showBulletinWithTitle:@"Tim Cook"
+			message:@"This looks even better than iOS 14!"
+			bundleID:@"com.apple.MobileSMS"];
+	});
+}
 
 %ctor {
- 	colorFlowInstalled = [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/ColorFlow5.dylib"] ? YES : NO;
+	preferences = [VelvetPrefs sharedInstance];
 
-	preferences = [[NSUserDefaults alloc] initWithSuiteName:@"com.initwithframe.velvet"];
+	if ([preferences boolForKey:@"enabled"]) {
+		CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)testRegular, CFSTR("com.initwithframe.velvet/testRegular"), NULL, CFNotificationSuspensionBehaviorCoalesce);
+		CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)testLockscreen, CFSTR("com.initwithframe.velvet/testLockscreen"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 
-	[preferences registerDefaults:@{
-		@"enabled": @YES,
-		@"enableBanners" : @YES,
-		@"enableLockscreen" : @YES,
-		@"enableMediaplayer" : @YES,
-
-		@"styleBanner": @"modern",
-		@"indicatorClassicBanner": @"icon",
-		@"indicatorModernBanner": @"icon",
-		@"indicatorModernSizeBanner": @32,
-		@"colorHeaderBanner": @NO,
-		@"hideBackgroundBanner": @NO,
-		@"colorBackgroundBanner": @NO,
-		@"colorPrimaryLabelBanner": @YES,
-		@"colorSecondaryLabelBanner": @NO,
-		@"nameAsTitleBanner": @NO,
-		@"borderBanner": @"none",
-		@"borderWidthBanner": @2,
-		@"roundedCornersBanner": @"stock",
-		@"customCornerRadiusBanner": @13,
-
-		@"styleLockscreen": @"modern",
-		@"indicatorClassicLockscreen": @"icon",
-		@"indicatorModernLockscreen": @"icon",
-		@"indicatorModernSizeLockscreen": @32,
-		@"colorHeaderLockscreen": @NO,
-		@"hideBackgroundLockscreen": @NO,
-		@"colorBackgroundLockscreen": @NO,
-		@"colorPrimaryLabelLockscreen": @YES,
-		@"colorSecondaryLabelLockscreen": @NO,
-		@"nameAsTitleLockscreen": @NO,
-		@"borderLockscreen": @"none",
-		@"borderWidthLockscreen": @2,
-		@"roundedCornersLockscreen": @"stock",
-		@"customCornerRadiusLockscreen": @13,
-
-		@"hideBackgroundMediaplayer": @NO,
-		@"colorBackgroundMediaplayer": @NO,
-		@"borderMediaplayer": @"none",
-		@"borderWidthMediaplayer": @2,
-		@"roundedCornersMediaplayer": @"stock",
-		@"customCornerRadiusMediaplayer": @13,
-	}];
-
-	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)testRegular, CFSTR("com.initwithframe.velvet/testRegular"), NULL, CFNotificationSuspensionBehaviorCoalesce);
-	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)testLockscreen, CFSTR("com.initwithframe.velvet/testLockscreen"), NULL, CFNotificationSuspensionBehaviorCoalesce);
-
-	if (![preferences boolForKey:@"enabled"]) return;
-
-	colorCache = [[NSMutableDictionary alloc] init];
-
-	%init;
-
-	// dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 4.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void) {
-
-	// 	[[%c(JBBulletinManager) sharedInstance]
-    //     showBulletinWithTitle:@"Home"
-    //     message:@"Would you like to turn the lights on?"
-    //     bundleID:@"com.apple.Home"];
-
-	// 	[[%c(JBBulletinManager) sharedInstance]
-	// 		showBulletinWithTitle:@"iTunes Store"
-	// 		message:@"Your favourite artist released a new track!"
-	// 		bundleID:@"com.apple.MobileStore"];
-
-	// 	[[%c(JBBulletinManager) sharedInstance]
-	// 		showBulletinWithTitle:@"Twitter"
-	// 		message:@"By @NoisyFlake & @HiMyNameIsUbik"
-	// 		bundleID:@"com.atebits.Tweetie2"];
-
-	// 	[[%c(JBBulletinManager) sharedInstance]
-	// 		showBulletinWithTitle:@"Tim Cook"
-	// 		message:@"ETA?!"
-	// 		bundleID:@"com.apple.MobileSMS"];
-
-	// 	[[%c(JBBulletinManager) sharedInstance]
-	// 		showBulletinWithTitle:@"Tim Cook"
-	// 		message:@"This looks even better than iOS 14!"
-	// 		bundleID:@"com.apple.MobileSMS"];
-	// });
+		colorCache = [[NSMutableDictionary alloc] init];
+		%init;
+	
+		if (showCustomMessages) testCustom();
+	}
 }
