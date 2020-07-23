@@ -73,7 +73,7 @@
 
     // This will actually just move the subview to the correct position, since it might have been inserted too early before content was loaded
     [view insertSubview:view.velvetBackground atIndex:1];
-    [view insertSubview:view.velvetFullBorder atIndex:5];
+    [view insertSubview:view.velvetFullBorder atIndex:([preferences boolForKey:@"colorHeaderWidget"] ? 1 : 5)];
 
     if (icon) {
         NSString *iconIdentifier = [UIImagePNGRepresentation(icon) base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
@@ -135,22 +135,12 @@
 %property (retain, nonatomic) UIView * velvetFullBorder;
 %property (retain, nonatomic) VelvetBackgroundView * velvetBackground;
 
--(CGSize)sizeThatFitsContentWithSize:(CGSize)arg1 {
-    CGSize orig = %orig;
-
-    if ([((WGWidgetListItemViewController *)self._viewControllerForAncestor).widgetIdentifier isEqual:@"com.apple.shortcuts.Today-Extension"] && [preferences boolForKey:@"colorHeaderWidget"]) {
-        orig.height += 10;
-    }
-
-    return orig;
-}
-
 -(void)_layoutContentView {
     %orig;
 
-    if ([((WGWidgetListItemViewController *)self._viewControllerForAncestor).widgetIdentifier isEqual:@"com.apple.shortcuts.Today-Extension"] && [preferences boolForKey:@"colorHeaderWidget"]) {
+    if ([preferences boolForKey:@"colorHeaderWidget"]) {
         CGRect frame = self.contentView.frame;
-        frame.origin.y += 8;
+        frame.origin.y += 4;
         self.contentView.frame = frame;
     }
 }
