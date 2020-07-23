@@ -6,8 +6,6 @@
 BOOL showCustomMessages = NO;
 BOOL isTesting;
 
-NSMutableDictionary *colorCache;
-
 %hook NCNotificationShortLookView
 %property (retain, nonatomic) VelvetIndicatorView * colorIndicator;
 %property (retain, nonatomic) UIView * velvetBorder;
@@ -618,7 +616,7 @@ static void testCustom() {
 		CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)testRegular, CFSTR("com.initwithframe.velvet/testRegular"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 		CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)testLockscreen, CFSTR("com.initwithframe.velvet/testLockscreen"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 
-		colorCache = [[NSMutableDictionary alloc] init];
+		colorCache = [VelvetPrefs colorCache];
 		%init;
 	
 		if (showCustomMessages) testCustom();

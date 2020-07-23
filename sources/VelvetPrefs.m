@@ -14,6 +14,17 @@
     return sharedInstance;
 }
 
++ (NSMutableDictionary *)colorCache {
+    static NSMutableDictionary *colorCache = nil;
+    static dispatch_once_t onceToken;
+
+    dispatch_once(&onceToken, ^{
+        colorCache = [[NSMutableDictionary alloc] init];
+    });
+
+    return colorCache;
+}
+
 - (instancetype)initWithSuiteName:(NSString *)suitename {
     VelvetPrefs *prefs = [super initWithSuiteName:suitename];
 

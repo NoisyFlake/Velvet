@@ -76,7 +76,13 @@
     [view insertSubview:view.velvetFullBorder atIndex:5];
 
     if (icon) {
-        UIColor *dominantColor = [icon velvetDominantColor];
+        NSString *iconIdentifier = [UIImagePNGRepresentation(icon) base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+        UIColor *dominantColor = colorCache[iconIdentifier];
+
+        if (dominantColor == nil) {
+            dominantColor = [icon velvetDominantColor];
+            [colorCache setObject:dominantColor forKey:iconIdentifier];
+        }
 
         headerBackground.backgroundColor = [preferences boolForKey:@"colorHeaderWidget"] ? [dominantColor colorWithAlphaComponent:0.8] : nil;
         view.velvetBackground.backgroundColor = [preferences boolForKey:@"colorBackgroundWidget"] ? [dominantColor colorWithAlphaComponent:0.6] : nil;
@@ -166,6 +172,7 @@ static float getCornerRadius() {
     preferences = [VelvetPrefs sharedInstance];
 
     if ([preferences boolForKey:@"enabled"] && [preferences boolForKey:@"enableWidgets"]) {
+        colorCache = [VelvetPrefs colorCache];
         %init;
     }
 }
