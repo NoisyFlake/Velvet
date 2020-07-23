@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+
+		<dict>
+			<key>cell</key>							<string>PSSwitchCell</string>
+			<key>default</key>						<false/>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>colorHeaderWidget</string>
+			<key>label</key>						<string>Color Header</string>
+			<key>cellClass</key>					<string>VelvetToggle</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>							<string>PSGroupCell</string>
+			<key>label</key>						<string>Background Options</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSwitchCell</string>
+			<key>default</key>						<false/>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>hideBackgroundWidget</string>
+			<key>label</key>						<string>Hide Background</string>
+			<key>cellClass</key>					<string>VelvetToggle</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSwitchCell</string>
+			<key>default</key>						<false/>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>colorBackgroundWidget</string>
+			<key>label</key>						<string>Color Background</string>
+			<key>cellClass</key>					<string>VelvetToggle</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>							<string>PSGroupCell</string>
+			<key>label</key>						<string>Border Options</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSLinkListCell</string>
+			<key>detail</key>						<string>VelvetListItemsController</string>
+			<key>default</key>						<string>none</string>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>borderWidget</string>
+			<key>id</key>							<string>borderWidget</string>
+			<key>label</key>						<string>Color Border</string>
+			<key>set</key>							<string>setBorder:specifier:</string>
+			<key>validTitles</key>					<array>
+														<string>None</string>
+														<string>All</string>
+														<string>Top</string>
+														<string>Right</string>
+														<string>Bottom</string>
+														<string>Left</string>
+													</array>
+			<key>validValues</key>					<array>
+														<string>none</string>
+														<string>all</string>
+														<string>top</string>
+														<string>right</string>
+														<string>bottom</string>
+														<string>left</string>
+													</array>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSliderCell</string>
+			<key>cellClass</key>					<string>VelvetSlider</string>
+			<key>min</key>							<integer>1</integer>
+			<key>max</key>							<integer>5</integer>
+			<key>isSegmented</key>					<true/>
+			<key>segmentCount</key>					<integer>4</integer>
+			<key>showValue</key>					<true/>
+			<key>default</key>						<integer>2</integer>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>borderWidthWidget</string>
+			<key>id</key>							<string>borderWidthWidget</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>							<string>PSGroupCell</string>
+			<key>label</key>						<string>Rounded Corners</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSegmentCell</string>
+			<key>default</key>						<string>stock</string>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>roundedCornersWidget</string>
+			<key>id</key>							<string>roundedCornersWidget</string>
+			<key>set</key>							<string>setRoundedCorners:specifier:</string>
+			<key>validTitles</key>					<array>
+														<string>None</string>
+														<string>Stock</string>
+														<!-- <string>Round</string> -->
+														<string>Custom</string>
+													</array>
+			<key>validValues</key>					<array>
+														<string>none</string>
+														<string>stock</string>
+														<!-- <string>round</string> -->
+														<string>custom</string>
+													</array>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSliderCell</string>
+			<key>cellClass</key>					<string>VelvetSlider</string>
+			<key>min</key>							<real>0</real>
+			<key>max</key>							<real>30</real>
+			<key>showValue</key>					<true/>
+			<key>default</key>						<real>13</real>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>customCornerRadiusWidget</string>
+			<key>id</key>							<string>customCornerRadiusWidget</string>
+		</dict>
+
+	</array>
+	<key>title</key>
+	<string>Widgets</string>
+</dict>
+</plist>

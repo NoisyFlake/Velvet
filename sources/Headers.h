@@ -12,6 +12,10 @@
 +(id)_applicationIconImageForBundleIdentifier:(id)arg1 format:(int)arg2 scale:(double)arg3 ;
 @end
 
+@interface NSNotificationCenter (Velvet)
+- (void)addUniqueObserver:(id)observer selector:(SEL)selector name:(NSString *)name object:(id)object;
+@end
+
 @interface UIView (Velvet)
 -(id)_viewControllerForAncestor;
 @end
@@ -36,6 +40,7 @@
 @property (getter=_titleLabel,nonatomic,readonly) UILabel * titleLabel;
 @property (nonatomic,readonly) NSArray * iconButtons;
 @property (nonatomic,readonly) UIButton * utilityButton;
+@property (nonatomic,copy) NSArray * icons;
 @end
 
 @interface PLPlatterView : UIView

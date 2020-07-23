@@ -22,6 +22,7 @@
         @"enableBanners" : @YES,
         @"enableLockscreen" : @YES,
         @"enableMediaplayer" : @YES,
+        @"enableWidgets" : @YES,
 
         @"styleBanner": @"modern",
         @"indicatorClassicBanner": @"icon",
@@ -59,6 +60,14 @@
         @"borderWidthMediaplayer": @2,
         @"roundedCornersMediaplayer": @"stock",
         @"customCornerRadiusMediaplayer": @13,
+
+        @"colorHeaderWidget": @NO,
+        @"hideBackgroundWidget": @NO,
+        @"colorBackgroundWidget": @NO,
+        @"borderWidget": @"none",
+        @"borderWidthWidget": @2,
+        @"roundedCornersWidget": @"stock",
+        @"customCornerRadiusWidget": @13
     }];
 
     return prefs;
