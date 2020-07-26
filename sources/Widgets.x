@@ -56,8 +56,6 @@
 		view.velvetBorder = velvetBorder;
 	}
 
-    
-
     MTMaterialView *headerBackground = [view safeValueForKey:@"_headerBackgroundView"];
     MTMaterialView *background = [view safeValueForKey:@"_backgroundView"];
 

@@ -239,6 +239,11 @@ BOOL isTesting;
 		view.velvetBorder.frame = CGRectMake(0, 0, borderWidth, view.frame.size.height);
 	}
 
+	if ([self.notificationRequest.sectionIdentifier containsString:@"com.laughingquoll.maple"]) {
+		view.colorIndicator.hidden = YES;
+		view.imageIndicator.hidden = YES;
+	}
+
 }
 
 %new
