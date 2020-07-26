@@ -119,7 +119,7 @@ BOOL isTesting;
 			view.imageIndicator.frame = CGRectMake(20, (view.frame.size.height - size)/2, size, size);
 
 			if ([self.notificationRequest.sectionIdentifier isEqual:@"com.apple.donotdisturb"]) {
-				view.imageIndicator.image = [UIImage systemImageNamed:@"moon.fill"];
+				view.imageIndicator.image = [UIImage systemImageNamed:self.notificationRequest.content.attachmentImage.imageAsset.assetName];
 				view.imageIndicator.tintColor = UIColor.labelColor;
 				thumbnail.alpha = 0;
 			} else {

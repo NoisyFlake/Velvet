@@ -39,8 +39,17 @@
 @interface _NCNotificationShortLookScrollView : UIScrollView
 @end
 
+@interface UIImageAsset (Private)
+@property (nonatomic,copy,readonly) NSString* assetName;
+@end
+
+@interface NCNotificationContent : NSObject
+@property (nonatomic,retain) UIImage * attachmentImage;
+@end
+
 @interface NCNotificationRequest : NSObject
 @property (nonatomic,copy,readonly) NSString* sectionIdentifier;
+@property (nonatomic,retain) NCNotificationContent * content;
 @end
 
 @interface NCNotificationViewController : UIViewController
