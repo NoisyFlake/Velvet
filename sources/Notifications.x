@@ -303,7 +303,7 @@ BOOL isTesting;
 	NSString *iconIdentifier = [UIImagePNGRepresentation(icon) base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
 	UIColor *color = colorCache[iconIdentifier];
 
-	if (color == nil) {
+	if (iconIdentifier != nil && color == nil) {
 		color = [icon velvetDominantColor];
 		[colorCache setObject:color forKey:iconIdentifier];
 	}
