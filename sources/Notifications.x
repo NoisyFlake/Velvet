@@ -398,9 +398,7 @@ BOOL isTesting;
 
 	if ([[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"modern"]) {
 		frame.origin.y = frame.origin.y - 14;
-		if (isRTL()) {
-			// frame.origin.x = frame.origin.x - getIndicatorOffset(self);
-		} else {
+		if (!isRTL()) {
 			frame.origin.x = frame.origin.x + getIndicatorOffset(self);
 		}
 	} else if ([[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"classic"] && [preferences boolForKey:getPreferencesKeyFor(@"colorHeader", self)]) {
@@ -448,6 +446,7 @@ BOOL isTesting;
 	CGRect primaryLabelFrame = self.primaryLabel.frame;
 	CGRect primarySubtitleLabelFrame = self.primarySubtitleLabel.frame;
 	CGRect secondaryLabelFrame = self.secondaryLabel.frame;
+	CGRect summaryLabelFrame = self.summaryLabel.frame;
 
 	CGFloat labelWidth = getIndicatorOffset(self);
 
@@ -467,10 +466,12 @@ BOOL isTesting;
 	primaryLabelFrame.size.width = self.primaryLabel.frame.size.width - labelWidth;
 	secondaryLabelFrame.size.width = self.secondaryLabel.frame.size.width - labelWidth;
 	primarySubtitleLabelFrame.size.width = self.primarySubtitleLabel.frame.size.width - labelWidth;
+	summaryLabelFrame.size.width = self.summaryLabel.frame.size.width - labelWidth;
 
 	self.primaryLabel.frame = primaryLabelFrame;
 	self.primarySubtitleLabel.frame = primarySubtitleLabelFrame;
 	self.secondaryLabel.frame = secondaryLabelFrame;
+	self.summaryLabel.frame = summaryLabelFrame;
 }
 %end
 
