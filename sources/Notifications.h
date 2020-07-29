@@ -87,3 +87,4 @@ static NSString *getPreferencesKeyFor(NSString *key, UIView *view);
 static void createTestNotifications(int amount);
 static void testRegular();
 static void testLockscreen();
+static BOOL isRTL();
