@@ -20,9 +20,7 @@ BOOL colorFlowInstalled;
 	MTMaterialView *backgroundMaterialView = platterView.backgroundMaterialView;
 
 	PLPlatterCustomContentView *platterCustomContentView = (PLPlatterCustomContentView *)self.superview;
-			if (platterCustomContentView) {
-platterCustomContentView.clipsToBounds = NO; // np, gern geschehen.
-		}
+	if (platterCustomContentView) platterCustomContentView.clipsToBounds = NO;
 
 	float cornerRadius = getCornerRadius();
 	if (cornerRadius < 0) cornerRadius = self.frame.size.height / 2;
