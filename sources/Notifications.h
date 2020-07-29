@@ -79,9 +79,6 @@
 @interface PLShadowView : UIImageView
 @end
 
-@interface PLPlatterCustomContentView : UIView
-@end
-
 static float getCornerRadius(UIView *view);
 static float getIndicatorOffset(UIView *view);
 static BOOL isLockscreen(UIView *view);

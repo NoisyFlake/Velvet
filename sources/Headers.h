@@ -33,6 +33,9 @@
 @interface VelvetIndicatorView : UIView
 @end
 
+@interface PLPlatterCustomContentView : UIView
+@end
+
 @interface PLPlatterHeaderContentView : UIView {
 	UIButton* _utilityButton;
 }

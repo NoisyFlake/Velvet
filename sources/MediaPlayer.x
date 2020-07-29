@@ -19,6 +19,11 @@ BOOL colorFlowInstalled;
 	PLPlatterView *platterView = (PLPlatterView *)self.superview.superview;
 	MTMaterialView *backgroundMaterialView = platterView.backgroundMaterialView;
 
+	PLPlatterCustomContentView *platterCustomContentView = (PLPlatterCustomContentView *)self.superview;
+			if (platterCustomContentView) {
+platterCustomContentView.clipsToBounds = NO; // np, gern geschehen.
+		}
+
 	float cornerRadius = getCornerRadius();
 	if (cornerRadius < 0) cornerRadius = self.frame.size.height / 2;
 
@@ -154,7 +159,7 @@ static BOOL colorFlowLockscreenResizingEnabled() {
 }
 
 %ctor {
- 	
+
 	preferences = [VelvetPrefs sharedInstance];
 
 	if ([preferences boolForKey:@"enabled"]) {
