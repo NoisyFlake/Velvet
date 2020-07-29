@@ -42,6 +42,7 @@
 		UIView *velvetFullBorder = [[UIView alloc] initWithFrame:CGRectZero];
         velvetFullBorder.layer.continuousCorners = YES;
         velvetFullBorder.clipsToBounds = YES;
+        velvetFullBorder.userInteractionEnabled = NO;
 
 		[view insertSubview:velvetFullBorder atIndex:3];
 		view.velvetFullBorder = velvetFullBorder;
