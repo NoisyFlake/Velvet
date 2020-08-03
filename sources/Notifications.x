@@ -116,7 +116,12 @@ BOOL isTesting;
 			view.imageIndicator.hidden = NO;
 
 			float size = [preferences integerForKey:getPreferencesKeyFor(@"indicatorModernSize", view)];
-			view.imageIndicator.frame = CGRectMake(20, (view.frame.size.height - size)/2, size, size);
+
+			if (isRTL()) {
+				view.imageIndicator.frame = CGRectMake(view.frame.size.width - size - 20, (view.frame.size.height - size)/2, size, size);
+			} else {
+				view.imageIndicator.frame = CGRectMake(20, (view.frame.size.height - size)/2, size, size);
+			}
 
 			if ([self.notificationRequest.sectionIdentifier isEqual:@"com.apple.donotdisturb"]) {
 				view.imageIndicator.image = [UIImage systemImageNamed:self.notificationRequest.content.attachmentImage.imageAsset.assetName];
@@ -125,19 +130,30 @@ BOOL isTesting;
 			} else {
 				view.imageIndicator.image = [self getIconForBundleId:self.notificationRequest.sectionIdentifier];
 			}
-			
-			
+
+
 		} else if ([[preferences valueForKey:getPreferencesKeyFor(@"indicatorModern", view)] isEqual:@"dot"]) {
 			view.colorIndicator.hidden = NO;
 
 			float size = [preferences integerForKey:getPreferencesKeyFor(@"indicatorModernSize", view)] / 2;
-			view.colorIndicator.frame = CGRectMake(20, (view.frame.size.height - size)/2, size, size);
+
+			if (isRTL()) {
+				view.colorIndicator.frame = CGRectMake(view.frame.size.width - size - 20, (view.frame.size.height - size)/2, size, size);
+			} else {
+				view.colorIndicator.frame = CGRectMake(20, (view.frame.size.height - size)/2, size, size);
+			}
+
 			view.colorIndicator.layer.cornerRadius = size/2;
 		} else if ([[preferences valueForKey:getPreferencesKeyFor(@"indicatorModern", view)] isEqual:@"triangle"]) {
 			view.colorIndicator.hidden = NO;
 
 			float size = [preferences integerForKey:getPreferencesKeyFor(@"indicatorModernSize", view)] / 2;
-			view.colorIndicator.frame = CGRectMake(20, (view.frame.size.height - size)/2, size, size);
+
+			if (isRTL()) {
+				view.colorIndicator.frame = CGRectMake(view.frame.size.width - size - 20, (view.frame.size.height - size)/2, size, size);
+			} else {
+				view.colorIndicator.frame = CGRectMake(20, (view.frame.size.height - size)/2, size, size);
+			}
 
 			// Build a triangular path
 			UIBezierPath *path = [UIBezierPath new];
@@ -157,7 +173,11 @@ BOOL isTesting;
 			view.colorIndicator.hidden = NO;
 
 			float width = 3;
-			view.colorIndicator.frame = CGRectMake(20, 20, width, view.frame.size.height-40);
+			if (isRTL()) {
+				view.colorIndicator.frame = CGRectMake(view.frame.size.width - width - 20, 20, width, view.frame.size.height-40);
+			} else {
+				view.colorIndicator.frame = CGRectMake(20, 20, width, view.frame.size.height-40);
+			}
 			view.colorIndicator.layer.cornerRadius = width/2;
 			view.colorIndicator.layer.continuousCorners = YES;
 		}
@@ -343,21 +363,21 @@ BOOL isTesting;
 %new
 -(UIImage *)getIconForBundleId:(NSString *)bundleId {
 	UIImage *icon = nil;
-	
+
 	if (bundleId != nil) {
 		// icon = [UIImage _applicationIconImageForBundleIdentifier:bundleId format:2 scale:[UIScreen mainScreen].scale];
 		SBIconController *iconController = [%c(SBIconController) sharedInstance];
 		SBIcon *sbIcon = [iconController.model expectedIconForDisplayIdentifier:bundleId];
-		
+
 		struct CGSize imageSize;
 		imageSize.height = 60;
 		imageSize.width = 60;
-		
+
 		struct SBIconImageInfo imageInfo;
 		imageInfo.size  = imageSize;
 		imageInfo.scale = [UIScreen mainScreen].scale;
 		imageInfo.continuousCornerRadius = 13; // This actually doesn't do anything
-		
+
 		icon = [sbIcon generateIconImageWithInfo:imageInfo];
 	}
 
@@ -373,7 +393,7 @@ BOOL isTesting;
 %hook BSUIDefaultDateLabel
 -(void)setFrame:(CGRect)frame {
 	ifDisabled(self) {
-		%orig; 
+		%orig;
 		return;
 	}
 
@@ -407,7 +427,9 @@ BOOL isTesting;
 
 	if ([[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"modern"]) {
 		frame.origin.y = frame.origin.y - 14;
-		frame.origin.x = frame.origin.x + getIndicatorOffset(self);
+		if (!isRTL()) {
+			frame.origin.x = frame.origin.x + getIndicatorOffset(self);
+		}
 	} else if ([[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"classic"] && ![[preferences valueForKey:getPreferencesKeyFor(@"colorHeader", self)] isEqual:@"none"]) {
 		frame.origin.y = frame.origin.y + 10;
 	}
@@ -425,7 +447,7 @@ BOOL isTesting;
 	}
 
 	if ([preferences boolForKey:getPreferencesKeyFor(@"nameAsTitle", self)]) {
-		
+
 		NCNotificationShortLookViewController *controller = self._viewControllerForAncestor;
 		NSString *bundleId = nil;
 
@@ -453,6 +475,7 @@ BOOL isTesting;
 	CGRect primaryLabelFrame = self.primaryLabel.frame;
 	CGRect primarySubtitleLabelFrame = self.primarySubtitleLabel.frame;
 	CGRect secondaryLabelFrame = self.secondaryLabel.frame;
+	CGRect summaryLabelFrame = self.summaryLabel.frame;
 
 	CGFloat labelWidth = getIndicatorOffset(self);
 
@@ -472,10 +495,12 @@ BOOL isTesting;
 	primaryLabelFrame.size.width = self.primaryLabel.frame.size.width - labelWidth;
 	secondaryLabelFrame.size.width = self.secondaryLabel.frame.size.width - labelWidth;
 	primarySubtitleLabelFrame.size.width = self.primarySubtitleLabel.frame.size.width - labelWidth;
+	summaryLabelFrame.size.width = self.summaryLabel.frame.size.width - labelWidth;
 
 	self.primaryLabel.frame = primaryLabelFrame;
 	self.primarySubtitleLabel.frame = primarySubtitleLabelFrame;
 	self.secondaryLabel.frame = secondaryLabelFrame;
+	self.summaryLabel.frame = summaryLabelFrame;
 }
 %end
 
@@ -483,7 +508,7 @@ BOOL isTesting;
 %hook NCAuxiliaryOptionsView
 -(void)layoutSubviews {
 	ifDisabled(self) {
-		%orig; 
+		%orig;
 		return;
 	}
 
@@ -650,6 +675,10 @@ static void testCustom() {
 	});
 }
 
+static BOOL isRTL() {
+	return [UIApplication sharedApplication].userInterfaceLayoutDirection == UIUserInterfaceLayoutDirectionRightToLeft;
+}
+
 %ctor {
 	preferences = [VelvetPrefs sharedInstance];
 
@@ -659,7 +688,7 @@ static void testCustom() {
 
 		colorCache = [VelvetPrefs colorCache];
 		%init;
-	
+
 		if (showCustomMessages) testCustom();
 	}
 }

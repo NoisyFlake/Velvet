@@ -6,10 +6,14 @@
 @interface BSUIDefaultDateLabel : UILabel
 @end
 
+@interface BSUIEmojiLabelView : UIView
+@end
+
 @interface NCNotificationContentView : UIView
 @property (setter=_setPrimaryLabel:,getter=_primaryLabel,nonatomic,retain) UILabel * primaryLabel;
 @property (setter=_setPrimarySubtitleLabel:,getter=_primarySubtitleLabel,nonatomic,retain) UILabel * primarySubtitleLabel;
 @property (getter=_secondaryLabel,nonatomic,readonly) UILabel * secondaryLabel;
+@property (setter=_setSummaryLabel:,getter=_summaryLabel,nonatomic,retain) BSUIEmojiLabelView * summaryLabel;
 @end
 
 @interface NCNotificationShortLookView : PLTitledPlatterView
@@ -88,3 +92,4 @@ static NSString *getColorFor(NSString *key, UIView *view);
 static void createTestNotifications(int amount);
 static void testRegular();
 static void testLockscreen();
+static BOOL isRTL();
