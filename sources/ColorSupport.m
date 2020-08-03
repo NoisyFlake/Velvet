@@ -133,15 +133,34 @@
     return ((componentColors[0] * 299) + (componentColors[1] * 587) + (componentColors[2] * 114)) / 1000;
 }
 // Returns UIColor from hex string
-+ (UIColor *)colorFromHexString:(NSString *)hexString {
-	if([hexString rangeOfString:@"#"].location != 0 || hexString.length != 7) {
-			return [UIColor colorWithRed:0 green:0 blue:0 alpha:1.0];
-	} else {
-		unsigned rgbValue = 0;
-		NSScanner *scanner = [NSScanner scannerWithString:hexString];
-		[scanner setScanLocation:1];
-		[scanner scanHexInt:&rgbValue];
-		return [UIColor colorWithRed:((rgbValue & 0xFF0000) >> 16)/255.0 green:((rgbValue & 0xFF00) >> 8)/255.0 blue:(rgbValue & 0xFF)/255.0 alpha:1.0];
-	}
++ (UIColor *)velvetColorFromHexString:(NSString *)string {
+	if(string == nil || string.length == 0 || [string rangeOfString:@"#"].location != 0) {
+        return nil;
+    }
+
+    CGFloat alpha = 1.0;
+    NSUInteger location = [string rangeOfString:@":"].location;
+    NSString *hexString;
+
+    if(location != NSNotFound) {
+        alpha = [[string substringFromIndex:(location + 1)] floatValue];
+        hexString = [string substringWithRange:NSMakeRange(0, location)];
+    } else {
+        hexString = [string copy];
+    }
+
+    unsigned rgbValue = 0;
+    NSScanner *scanner = [NSScanner scannerWithString:string];
+
+    if([hexString rangeOfString:@"#"].location == 0) {
+        [scanner setScanLocation:1];
+    }
+
+    [scanner scanHexInt:&rgbValue];
+
+    return [UIColor colorWithRed:((rgbValue & 0xFF0000) >> 16) / 255.0
+                    green:((rgbValue & 0xFF00) >> 8) / 255.0
+                    blue:(rgbValue & 0xFF) / 255.0
+                    alpha:alpha];
 }
 @end

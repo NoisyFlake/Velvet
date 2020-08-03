@@ -83,6 +83,7 @@ static float getCornerRadius(UIView *view);
 static float getIndicatorOffset(UIView *view);
 static BOOL isLockscreen(UIView *view);
 static NSString *getPreferencesKeyFor(NSString *key, UIView *view);
+static NSString *getColorFor(NSString *key, UIView *view);
 
 static void createTestNotifications(int amount);
 static void testRegular();

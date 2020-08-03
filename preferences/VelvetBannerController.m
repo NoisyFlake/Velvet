@@ -37,16 +37,30 @@
 
 			if ([[[self preferences] valueForKey:@"styleBanner"] isEqual:@"classic"]) {
 				if ([spec.properties[@"key"] isEqual:@"indicatorModernBanner"]) [mutableSpecifiers removeObject:spec];
+				if ([spec.properties[@"key"] isEqual:@"indicatorModernColorBanner"]) [mutableSpecifiers removeObject:spec];
 				if ([spec.properties[@"key"] isEqual:@"indicatorModernSizeBanner"]) [mutableSpecifiers removeObject:spec];
+
+				if ([spec.properties[@"key"] isEqual:@"indicatorClassicColorBanner"] && ([[[self preferences] valueForKey:@"indicatorClassicBanner"] isEqual:@"none"] || [[[self preferences] valueForKey:@"indicatorClassicBanner"] isEqual:@"icon"])) [mutableSpecifiers removeObject:spec];
 			} else {
 				if ([spec.properties[@"key"] isEqual:@"indicatorClassicBanner"]) [mutableSpecifiers removeObject:spec];
+				if ([spec.properties[@"key"] isEqual:@"indicatorClassicColorBanner"]) [mutableSpecifiers removeObject:spec];
 				if ([spec.properties[@"key"] isEqual:@"colorHeaderBanner"]) [mutableSpecifiers removeObject:spec];
 
+				if ([spec.properties[@"key"] isEqual:@"indicatorModernColorBanner"]) {
+					NSLog(@"Velvet got color");
+					if ([[[self preferences] valueForKey:@"indicatorModernBanner"] isEqual:@"none"] || [[[self preferences] valueForKey:@"indicatorModernBanner"] isEqual:@"icon"]) {
+						NSLog(@"Velvet removing color");
+						[mutableSpecifiers removeObject:spec];
+					}
+				}
 				if ([spec.properties[@"key"] isEqual:@"indicatorModernSizeBanner"] && ([[[self preferences] valueForKey:@"indicatorModernBanner"] isEqual:@"none"] || [[[self preferences] valueForKey:@"indicatorModernBanner"] isEqual:@"line"])) [mutableSpecifiers removeObject:spec];
 			}
-
+			
+			if ([spec.properties[@"key"] isEqual:@"borderPositionBanner"]) {
+				if ([[[self preferences] valueForKey:@"borderColorBanner"] isEqual:@"none"] || ![[self preferences] valueForKey:@"borderColorBanner"]) [mutableSpecifiers removeObject:spec];
+			}
 			if ([spec.properties[@"key"] isEqual:@"borderWidthBanner"]) {
-				if ([[[self preferences] valueForKey:@"borderBanner"] isEqual:@"none"] || ![[self preferences] valueForKey:@"borderBanner"]) [mutableSpecifiers removeObject:spec];
+				if ([[[self preferences] valueForKey:@"borderColorBanner"] isEqual:@"none"] || ![[self preferences] valueForKey:@"borderColorBanner"]) [mutableSpecifiers removeObject:spec];
 			}
 		}
 
@@ -79,6 +93,7 @@
 
 	if ([value isEqual:@"classic"]) {
 		[self removeSpecifierID:@"indicatorModernBanner" animated:NO];
+		[self removeSpecifierID:@"indicatorModernColorBanner" animated:NO];
 		[self removeSpecifierID:@"indicatorModernSizeBanner" animated:YES];
 
 
@@ -88,6 +103,9 @@
 				if ([spec.properties[@"key"] isEqual:@"indicatorClassicBanner"]) {
 					[self insertSpecifier:spec afterSpecifierID:@"styleBanner" animated:NO];
 				}
+				if ([spec.properties[@"key"] isEqual:@"indicatorClassicColorBanner"] && !([[[self preferences] valueForKey:@"indicatorClassicBanner"] isEqual:@"none"] || [[[self preferences] valueForKey:@"indicatorClassicBanner"] isEqual:@"icon"])) {
+					[self insertSpecifier:spec afterSpecifierID:@"indicatorClassicBanner" animated:YES];
+				}
 				if ([spec.properties[@"key"] isEqual:@"colorHeaderBanner"]) {
 					[self insertSpecifier:spec afterSpecifierID:@"indicatorClassicBanner" animated:YES];
 				}
@@ -96,6 +114,7 @@
 
 	} else {
 		[self removeSpecifierID:@"indicatorClassicBanner" animated:NO];
+		[self removeSpecifierID:@"indicatorClassicColorBanner" animated:NO];
 		[self removeSpecifierID:@"colorHeaderBanner" animated:YES];
 
 		if ([self specifierForID:@"indicatorModernBanner"] == nil) {
@@ -103,6 +122,9 @@
 			for (PSSpecifier *spec in specifiers) {
 				if ([spec.properties[@"key"] isEqual:@"indicatorModernBanner"]) {
 					[self insertSpecifier:spec afterSpecifierID:@"styleBanner" animated:NO];
+				}
+				if ([spec.properties[@"key"] isEqual:@"indicatorModernColorBanner"] && !([[[self preferences] valueForKey:@"indicatorModernBanner"] isEqual:@"none"] || [[[self preferences] valueForKey:@"indicatorModernBanner"] isEqual:@"icon"])) {
+					[self insertSpecifier:spec afterSpecifierID:@"indicatorModernBanner" animated:YES];
 				}
 				if ([spec.properties[@"key"] isEqual:@"indicatorModernSizeBanner"] && !([[[self preferences] valueForKey:@"indicatorModernBanner"] isEqual:@"none"] || [[[self preferences] valueForKey:@"indicatorModernBanner"] isEqual:@"line"])) {
 					[self insertSpecifier:spec afterSpecifierID:@"indicatorModernBanner" animated:YES];
@@ -129,22 +151,57 @@
 	} else {
 		[self removeSpecifierID:@"indicatorModernSizeBanner" animated:YES];
 	}
+
+	if ([value isEqual:@"line"] || [value isEqual:@"dot"] || [value isEqual:@"triangle"]) {
+		if ([self specifierForID:@"indicatorModernColorBanner"] == nil) {
+			NSArray *specifiers = [self loadSpecifiersFromPlistName:@"Banner" target:self];
+			for (PSSpecifier *spec in specifiers) {
+				if ([spec.properties[@"key"] isEqual:@"indicatorModernColorBanner"]) {
+					[self insertSpecifier:spec afterSpecifierID:@"indicatorModernBanner" animated:YES];
+					break;
+				}
+			}
+		}
+	} else {
+		[self removeSpecifierID:@"indicatorModernColorBanner" animated:YES];
+	}
+}
+
+- (void)setIndicatorClassic:(id)value specifier:(PSSpecifier*)specifier {
+	[super setPreferenceValue:value specifier:specifier];
+
+	if ([value isEqual:@"line"] || [value isEqual:@"dot"] || [value isEqual:@"triangle"]) {
+		if ([self specifierForID:@"indicatorClassicColorBanner"] == nil) {
+			NSArray *specifiers = [self loadSpecifiersFromPlistName:@"Banner" target:self];
+			for (PSSpecifier *spec in specifiers) {
+				if ([spec.properties[@"key"] isEqual:@"indicatorClassicColorBanner"]) {
+					[self insertSpecifier:spec afterSpecifierID:@"indicatorClassicBanner" animated:YES];
+					break;
+				}
+			}
+		}
+	} else {
+		[self removeSpecifierID:@"indicatorClassicColorBanner" animated:YES];
+	}
 }
 
 - (void)setBorder:(id)value specifier:(PSSpecifier*)specifier {
 	[super setPreferenceValue:value specifier:specifier];
 
 	if (![value isEqual:@"none"]) {
-		if ([self specifierForID:@"borderWidthBanner"] == nil) {
+		if ([self specifierForID:@"borderPositionBanner"] == nil) {
 			NSArray *specifiers = [self loadSpecifiersFromPlistName:@"Banner" target:self];
 			for (PSSpecifier *spec in specifiers) {
+				if ([spec.properties[@"key"] isEqual:@"borderPositionBanner"]) {
+					[self insertSpecifier:spec afterSpecifierID:@"borderColorBanner" animated:YES];
+				}
 				if ([spec.properties[@"key"] isEqual:@"borderWidthBanner"]) {
-					[self insertSpecifier:spec afterSpecifierID:@"borderBanner" animated:YES];
-					break;
+					[self insertSpecifier:spec afterSpecifierID:@"borderPositionBanner" animated:YES];
 				}
 			}
 		}
 	} else {
+		[self removeSpecifierID:@"borderPositionBanner" animated:YES];
 		[self removeSpecifierID:@"borderWidthBanner" animated:YES];
 	}
 }

@@ -24,7 +24,7 @@ BOOL isTesting;
 
     CGSize orig = %orig;
 
-	if ([[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"classic"] && [preferences boolForKey:getPreferencesKeyFor(@"colorHeader", self)]) {
+	if ([[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"classic"] && ![[preferences valueForKey:getPreferencesKeyFor(@"colorHeader", self)] isEqual:@"none"]) {
     	orig.height += 10;
 	}
     return orig;
@@ -161,11 +161,16 @@ BOOL isTesting;
 			view.colorIndicator.layer.cornerRadius = width/2;
 			view.colorIndicator.layer.continuousCorners = YES;
 		}
+		
+		NSString *indicatorColor = getColorFor(@"indicatorModernColor", view);
+		if (indicatorColor) view.colorIndicator.backgroundColor = [indicatorColor isEqual:@"dominant"] ? dominantColor : [UIColor velvetColorFromHexString:indicatorColor];
+
 	} else if ([[preferences valueForKey:getPreferencesKeyFor(@"style", view)] isEqual:@"classic"]) {
 		[self velvetHideHeader:NO];
 
-		if ([preferences boolForKey:getPreferencesKeyFor(@"colorHeader", view)]) {
-			header.backgroundColor = [dominantColor colorWithAlphaComponent:0.8];
+		NSString *headerColor = getColorFor(@"colorHeader", view);
+		if (headerColor) {
+			header.backgroundColor = [headerColor isEqual:@"dominant"] ? [dominantColor colorWithAlphaComponent:0.8] : [UIColor velvetColorFromHexString:headerColor];
 
 			// Move the header to the velvetBackground view so that it gets automatically cut off with higher cornerRadius settings
 			[view.velvetBackground insertSubview:header atIndex:1];
@@ -203,40 +208,64 @@ BOOL isTesting;
 		} else if ([[preferences valueForKey:getPreferencesKeyFor(@"indicatorClassic", view)] isEqual:@"icon"]) {
 			((UIView *)header.iconButtons[0]).alpha = 1;
 		}
+
+		NSString *indicatorColor = getColorFor(@"indicatorClassicColor", view);
+		if (indicatorColor) view.colorIndicator.backgroundColor = [indicatorColor isEqual:@"dominant"] ? dominantColor : [UIColor velvetColorFromHexString:indicatorColor];
 	}
 
-	view.colorIndicator.backgroundColor = dominantColor;
-	view.velvetBorder.backgroundColor = dominantColor;
-
-	view.notificationContentView.primaryLabel.textColor = [preferences boolForKey:getPreferencesKeyFor(@"colorPrimaryLabel", view)] ? dominantColor : nil;
-	view.notificationContentView.secondaryLabel.textColor = [preferences boolForKey:getPreferencesKeyFor(@"colorSecondaryLabel", view)] ? dominantColor : nil;
-
-	view.velvetBackground.backgroundColor = [preferences boolForKey:getPreferencesKeyFor(@"colorBackground", view)] ? [dominantColor colorWithAlphaComponent:0.6] : nil;
-
-	if ([preferences boolForKey:getPreferencesKeyFor(@"hideBackground", view)]) {
-		view.backgroundMaterialView.alpha = 0;
-		[self velvetHideGroupedNotifications:YES];
+	NSString *titleColor = getColorFor(@"colorPrimaryLabel", view);
+	if (titleColor) {
+		view.notificationContentView.primaryLabel.textColor = [titleColor isEqual:@"dominant"] ? dominantColor : [UIColor velvetColorFromHexString:titleColor];
 	} else {
+		view.notificationContentView.primaryLabel.textColor = nil;
+	}
+
+	NSString *messageColor = getColorFor(@"colorSecondaryLabel", view);
+	if (messageColor) {
+		view.notificationContentView.secondaryLabel.textColor = [messageColor isEqual:@"dominant"] ? dominantColor : [UIColor velvetColorFromHexString:messageColor];
+	} else {
+		view.notificationContentView.secondaryLabel.textColor = nil;
+	}
+
+	NSString *backgroundColor = getColorFor(@"colorBackground", view);
+	if (backgroundColor) {
+		view.velvetBackground.backgroundColor = [backgroundColor isEqual:@"dominant"] ? [dominantColor colorWithAlphaComponent:0.6] : [UIColor velvetColorFromHexString:backgroundColor];
+
+		// Hide background
+		if ([backgroundColor containsString:@"0.00"]) {
+			view.backgroundMaterialView.alpha = 0;
+			[self velvetHideGroupedNotifications:YES];
+		} else {
+			view.backgroundMaterialView.alpha = 1;
+			[self velvetHideGroupedNotifications:NO];
+		}
+	} else {
+		view.velvetBackground.backgroundColor = nil;
 		view.backgroundMaterialView.alpha = 1;
 		[self velvetHideGroupedNotifications:NO];
 	}
 
-	int borderWidth = [preferences integerForKey:getPreferencesKeyFor(@"borderWidth", view)];
-	if ([[preferences valueForKey:getPreferencesKeyFor(@"border", view)] isEqual:@"all"]) {
-		view.velvetBackground.layer.borderColor = dominantColor.CGColor;
-		view.velvetBackground.layer.borderWidth = borderWidth;
-	} else if ([[preferences valueForKey:getPreferencesKeyFor(@"border", view)] isEqual:@"top"]) {
-		view.velvetBorder.hidden = NO;
-		view.velvetBorder.frame = CGRectMake(0, 0, view.frame.size.width, borderWidth);
-	} else if ([[preferences valueForKey:getPreferencesKeyFor(@"border", view)] isEqual:@"right"]) {
-		view.velvetBorder.hidden = NO;
-		view.velvetBorder.frame = CGRectMake(view.frame.size.width - borderWidth, 0, borderWidth, view.frame.size.height);
-	} else if ([[preferences valueForKey:getPreferencesKeyFor(@"border", view)] isEqual:@"bottom"]) {
-		view.velvetBorder.hidden = NO;
-		view.velvetBorder.frame = CGRectMake(0, view.frame.size.height - borderWidth, view.frame.size.width, borderWidth);
-	} else if ([[preferences valueForKey:getPreferencesKeyFor(@"border", view)] isEqual:@"left"]) {
-		view.velvetBorder.hidden = NO;
-		view.velvetBorder.frame = CGRectMake(0, 0, borderWidth, view.frame.size.height);
+	NSString *borderColor = getColorFor(@"borderColor", view);
+	view.velvetBorder.backgroundColor = [borderColor isEqual:@"dominant"] ? dominantColor : [UIColor velvetColorFromHexString:borderColor];
+
+	if (borderColor) {
+		int borderWidth = [preferences integerForKey:getPreferencesKeyFor(@"borderWidth", view)];
+		if ([[preferences valueForKey:getPreferencesKeyFor(@"borderPosition", view)] isEqual:@"all"]) {
+			view.velvetBackground.layer.borderColor = [borderColor isEqual:@"dominant"] ? dominantColor.CGColor : [UIColor velvetColorFromHexString:borderColor].CGColor;
+			view.velvetBackground.layer.borderWidth = borderWidth;
+		} else if ([[preferences valueForKey:getPreferencesKeyFor(@"borderPosition", view)] isEqual:@"top"]) {
+			view.velvetBorder.hidden = NO;
+			view.velvetBorder.frame = CGRectMake(0, 0, view.frame.size.width, borderWidth);
+		} else if ([[preferences valueForKey:getPreferencesKeyFor(@"borderPosition", view)] isEqual:@"right"]) {
+			view.velvetBorder.hidden = NO;
+			view.velvetBorder.frame = CGRectMake(view.frame.size.width - borderWidth, 0, borderWidth, view.frame.size.height);
+		} else if ([[preferences valueForKey:getPreferencesKeyFor(@"borderPosition", view)] isEqual:@"bottom"]) {
+			view.velvetBorder.hidden = NO;
+			view.velvetBorder.frame = CGRectMake(0, view.frame.size.height - borderWidth, view.frame.size.width, borderWidth);
+		} else if ([[preferences valueForKey:getPreferencesKeyFor(@"borderPosition", view)] isEqual:@"left"]) {
+			view.velvetBorder.hidden = NO;
+			view.velvetBorder.frame = CGRectMake(0, 0, borderWidth, view.frame.size.height);
+		}
 	}
 
 	if ([self.notificationRequest.sectionIdentifier containsString:@"com.laughingquoll.maple"]) {
@@ -379,7 +408,7 @@ BOOL isTesting;
 	if ([[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"modern"]) {
 		frame.origin.y = frame.origin.y - 14;
 		frame.origin.x = frame.origin.x + getIndicatorOffset(self);
-	} else if ([[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"classic"] && [preferences boolForKey:getPreferencesKeyFor(@"colorHeader", self)]) {
+	} else if ([[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"classic"] && ![[preferences valueForKey:getPreferencesKeyFor(@"colorHeader", self)] isEqual:@"none"]) {
 		frame.origin.y = frame.origin.y + 10;
 	}
 
@@ -523,6 +552,13 @@ static BOOL isLockscreen(UIView *view) {
 
 static NSString *getPreferencesKeyFor(NSString *key, UIView *view) {
 	return [NSString stringWithFormat:@"%@%@", key, isLockscreen(view) ? @"Lockscreen" : @"Banner"];
+}
+
+static NSString *getColorFor(NSString *key, UIView *view) {
+	NSString *value = [preferences valueForKey:getPreferencesKeyFor(key, view)];
+
+	if ([value isEqual:@"none"]) return nil;
+	return value;
 }
 
 // ====================== NOTIFICATION TESTING ====================== //

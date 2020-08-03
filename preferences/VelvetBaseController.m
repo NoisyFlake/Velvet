@@ -26,8 +26,8 @@
 	return (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"13.0")) ? 2 : [super tableViewStyle];
 }
 
--(NSUserDefaults *)preferences {
-	return [[NSUserDefaults alloc] initWithSuiteName:@"com.initwithframe.velvet"];
+-(VelvetPrefs *)preferences {
+	return [VelvetPrefs sharedInstance];
 }
 
 -(void)respring {

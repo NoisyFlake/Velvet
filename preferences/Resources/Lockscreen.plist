@@ -29,6 +29,7 @@
 			<key>defaults</key>						<string>com.initwithframe.velvet</string>
 			<key>key</key>							<string>indicatorClassicLockscreen</string>
 			<key>id</key>							<string>indicatorClassicLockscreen</string>
+			<key>set</key>							<string>setIndicatorClassic:specifier:</string>
 			<key>label</key>						<string>Indicator</string>
 			<key>validTitles</key>					<array>
 														<string>App Icon</string>
@@ -44,13 +45,22 @@
 													</array>
 		</dict>
 		<dict>
-			<key>cell</key>							<string>PSSwitchCell</string>
-			<key>default</key>						<false/>
+			<key>cell</key>							<string>PSLinkListCell</string>
+			<key>cellClass</key>					<string>VelvetColorListSelector</string>
+			<key>detail</key>						<string>VelvetColorListController</string>
 			<key>defaults</key>						<string>com.initwithframe.velvet</string>
-			<key>key</key>							<string>colorHeaderLockscreen</string>
+			<key>id</key>							<string>indicatorClassicColorLockscreen</string>
+			<key>key</key>							<string>indicatorClassicColorLockscreen</string>
+			<key>label</key>						<string>Indicator Color</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSLinkListCell</string>
+			<key>cellClass</key>					<string>VelvetColorListSelector</string>
+			<key>detail</key>						<string>VelvetColorListController</string>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
 			<key>id</key>							<string>colorHeaderLockscreen</string>
-			<key>label</key>						<string>Color Header</string>
-			<key>cellClass</key>					<string>VelvetToggle</string>
+			<key>key</key>							<string>colorHeaderLockscreen</string>
+			<key>label</key>						<string>Header Color</string>
 		</dict>
 
 		<dict>
@@ -79,6 +89,15 @@
 		</dict>
 		<dict>
 			<key>cell</key>							<string>PSLinkListCell</string>
+			<key>cellClass</key>					<string>VelvetColorListSelector</string>
+			<key>detail</key>						<string>VelvetColorListController</string>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>id</key>							<string>indicatorModernColorLockscreen</string>
+			<key>key</key>							<string>indicatorModernColorLockscreen</string>
+			<key>label</key>						<string>Indicator Color</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSLinkListCell</string>
 			<key>detail</key>						<string>VelvetListItemsController</string>
 			<key>default</key>						<real>32</real>
 			<key>defaults</key>						<string>com.initwithframe.velvet</string>
@@ -104,20 +123,12 @@
 			<key>label</key>						<string>Background Options</string>
 		</dict>
 		<dict>
-			<key>cell</key>							<string>PSSwitchCell</string>
-			<key>default</key>						<false/>
-			<key>defaults</key>						<string>com.initwithframe.velvet</string>
-			<key>key</key>							<string>hideBackgroundLockscreen</string>
-			<key>label</key>						<string>Hide Background</string>
-			<key>cellClass</key>					<string>VelvetToggle</string>
-		</dict>
-		<dict>
-			<key>cell</key>							<string>PSSwitchCell</string>
-			<key>default</key>						<false/>
+			<key>cell</key>							<string>PSLinkListCell</string>
+			<key>cellClass</key>					<string>VelvetColorListSelector</string>
+			<key>detail</key>						<string>VelvetColorListController</string>
 			<key>defaults</key>						<string>com.initwithframe.velvet</string>
 			<key>key</key>							<string>colorBackgroundLockscreen</string>
-			<key>label</key>						<string>Color Background</string>
-			<key>cellClass</key>					<string>VelvetToggle</string>
+			<key>label</key>						<string>Background Color</string>
 		</dict>
 
 		<dict>
@@ -126,20 +137,20 @@
 			<key>footerText</key>					<string>Displays the app name if there is no title.</string>
 		</dict>
 		<dict>
-			<key>cell</key>							<string>PSSwitchCell</string>
-			<key>default</key>						<true/>
+			<key>cell</key>							<string>PSLinkListCell</string>
+			<key>cellClass</key>					<string>VelvetColorListSelector</string>
+			<key>detail</key>						<string>VelvetColorListController</string>
 			<key>defaults</key>						<string>com.initwithframe.velvet</string>
 			<key>key</key>							<string>colorPrimaryLabelLockscreen</string>
-			<key>label</key>						<string>Color Title</string>
-			<key>cellClass</key>					<string>VelvetToggle</string>
+			<key>label</key>						<string>Title Color</string>
 		</dict>
 		<dict>
-			<key>cell</key>							<string>PSSwitchCell</string>
-			<key>default</key>						<false/>
+			<key>cell</key>							<string>PSLinkListCell</string>
+			<key>cellClass</key>					<string>VelvetColorListSelector</string>
+			<key>detail</key>						<string>VelvetColorListController</string>
 			<key>defaults</key>						<string>com.initwithframe.velvet</string>
 			<key>key</key>							<string>colorSecondaryLabelLockscreen</string>
-			<key>label</key>						<string>Color Message</string>
-			<key>cellClass</key>					<string>VelvetToggle</string>
+			<key>label</key>						<string>Message Color</string>
 		</dict>
 		<dict>
 			<key>cell</key>							<string>PSSwitchCell</string>
@@ -149,22 +160,30 @@
 			<key>label</key>						<string>App Name as Title</string>
 			<key>cellClass</key>					<string>VelvetToggle</string>
 		</dict>
-
+		
 		<dict>
 			<key>cell</key>							<string>PSGroupCell</string>
 			<key>label</key>						<string>Border Options</string>
 		</dict>
 		<dict>
 			<key>cell</key>							<string>PSLinkListCell</string>
-			<key>detail</key>						<string>VelvetListItemsController</string>
-			<key>default</key>						<string>none</string>
+			<key>cellClass</key>					<string>VelvetColorListSelector</string>
+			<key>detail</key>						<string>VelvetColorListController</string>
 			<key>defaults</key>						<string>com.initwithframe.velvet</string>
-			<key>key</key>							<string>borderLockscreen</string>
-			<key>id</key>							<string>borderLockscreen</string>
-			<key>label</key>						<string>Color Border</string>
+			<key>key</key>							<string>borderColorLockscreen</string>
+			<key>id</key>							<string>borderColorLockscreen</string>
 			<key>set</key>							<string>setBorder:specifier:</string>
+			<key>label</key>						<string>Border Color</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSLinkListCell</string>
+			<key>detail</key>						<string>VelvetListItemsController</string>
+			<key>default</key>						<string>all</string>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>borderPositionLockscreen</string>
+			<key>id</key>							<string>borderPositionLockscreen</string>
+			<key>label</key>						<string>Border Position</string>
 			<key>validTitles</key>					<array>
-														<string>None</string>
 														<string>All</string>
 														<string>Top</string>
 														<string>Right</string>
@@ -172,7 +191,6 @@
 														<string>Left</string>
 													</array>
 			<key>validValues</key>					<array>
-														<string>none</string>
 														<string>all</string>
 														<string>top</string>
 														<string>right</string>
@@ -180,6 +198,7 @@
 														<string>left</string>
 													</array>
 		</dict>
+		
 		<dict>
 			<key>cell</key>							<string>PSSliderCell</string>
 			<key>cellClass</key>					<string>VelvetSlider</string>
