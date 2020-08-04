@@ -6,6 +6,7 @@
 VelvetBackgroundView *velvetArtworkBackground;
 UIView *velvetArtworkBorder;
 UIColor *velvetArtworkColor;
+UIColor *velvetArtworkBorderColor;
 
 BOOL colorFlowInstalled;
 
@@ -15,6 +16,7 @@ BOOL colorFlowInstalled;
 	%orig;
 
 	if (![preferences boolForKey:@"enableMediaplayer"] || colorFlowLockscreenResizingEnabled()) return;
+	NSString *backgroundColor = [preferences valueForKey:@"backgroundColorMediaplayer"];
 
 	PLPlatterView *platterView = (PLPlatterView *)self.superview.superview;
 	MTMaterialView *backgroundMaterialView = platterView.backgroundMaterialView;
@@ -52,25 +54,25 @@ BOOL colorFlowInstalled;
 	velvetArtworkBorder.hidden = YES;
 	velvetArtworkBackground.layer.borderWidth = 0;
 
-	if ([preferences boolForKey:@"hideBackgroundMediaplayer"]) {
+	if ([backgroundColor containsString:@"0.00"]) {
 		backgroundMaterialView.alpha = 0;
 	} else {
 		backgroundMaterialView.alpha = 1;
 	}
 
 	int borderWidth = [preferences integerForKey:@"borderWidthMediaplayer"];
-	if ([[preferences valueForKey:@"borderMediaplayer"] isEqual:@"all"]) {
+	if ([[preferences valueForKey:@"borderPositionMediaplayer"] isEqual:@"all"]) {
 		velvetArtworkBackground.layer.borderWidth = borderWidth;
-	} else if ([[preferences valueForKey:@"borderMediaplayer"] isEqual:@"top"]) {
+	} else if ([[preferences valueForKey:@"borderPositionMediaplayer"] isEqual:@"top"]) {
 		velvetArtworkBorder.hidden = NO;
 		velvetArtworkBorder.frame = CGRectMake(0, 0, self.superview.frame.size.width, borderWidth);
-	} else if ([[preferences valueForKey:@"borderMediaplayer"] isEqual:@"right"]) {
+	} else if ([[preferences valueForKey:@"borderPositionMediaplayer"] isEqual:@"right"]) {
 		velvetArtworkBorder.hidden = NO;
 		velvetArtworkBorder.frame = CGRectMake(self.superview.frame.size.width - borderWidth, 0, borderWidth, self.superview.frame.size.height);
-	} else if ([[preferences valueForKey:@"borderMediaplayer"] isEqual:@"bottom"]) {
+	} else if ([[preferences valueForKey:@"borderPositionMediaplayer"] isEqual:@"bottom"]) {
 		velvetArtworkBorder.hidden = NO;
 		velvetArtworkBorder.frame = CGRectMake(0, self.superview.frame.size.height - borderWidth, self.superview.frame.size.width, borderWidth);
-	} else if ([[preferences valueForKey:@"borderMediaplayer"] isEqual:@"left"]) {
+	} else if ([[preferences valueForKey:@"borderPositionMediaplayer"] isEqual:@"left"]) {
 		velvetArtworkBorder.hidden = NO;
 		velvetArtworkBorder.frame = CGRectMake(0, 0, borderWidth, self.superview.frame.size.height);
 	}
@@ -133,13 +135,18 @@ static void updateMediaplayerColors() {
 
         NSData *artworkData = [dict objectForKey:(__bridge NSString *)kMRMediaRemoteNowPlayingInfoArtworkData];
         __block UIImage *artwork = [UIImage imageWithData:artworkData];
-		velvetArtworkColor = [artwork velvetAverageColor];
 
-		if (velvetArtworkColor != nil) {
+		NSString *backgroundColor = [preferences valueForKey:@"backgroundColorMediaplayer"];
+		velvetArtworkColor = [[preferences valueForKey:@"backgroundColorMediaplayer"] isEqual:@"dominant"] ? [artwork velvetAverageColor] : [UIColor velvetColorFromHexString:backgroundColor];
+
+		NSString *borderColor = [preferences valueForKey:@"borderColorMediaplayer"];
+		velvetArtworkBorderColor = [[preferences valueForKey:@"borderColorMediaplayer"] isEqual:@"dominant"] ? [artwork velvetAverageColor] : [UIColor velvetColorFromHexString:borderColor];
+
+		if (backgroundColor != nil) {
 			// Needed to recolor when track changes without lockscreen media controls changing
-			velvetArtworkBorder.backgroundColor = velvetArtworkColor;
-			velvetArtworkBackground.layer.borderColor = velvetArtworkColor.CGColor;
-			velvetArtworkBackground.backgroundColor = [preferences boolForKey:@"colorBackgroundMediaplayer"] ? [velvetArtworkColor colorWithAlphaComponent:0.6] : nil;
+			velvetArtworkBorder.backgroundColor = velvetArtworkBorderColor;
+			velvetArtworkBackground.layer.borderColor = velvetArtworkBorderColor.CGColor;
+			velvetArtworkBackground.backgroundColor = [[preferences valueForKey:@"backgroundColorMediaplayer"] isEqual:@"dominant"] ? [velvetArtworkColor colorWithAlphaComponent:0.6] : [UIColor velvetColorFromHexString:backgroundColor];
 		}
 	});
 }

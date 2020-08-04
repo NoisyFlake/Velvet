@@ -3,6 +3,12 @@
 #import <Preferences/PSSpecifier.h>
 #include "../sources/VelvetPrefs.h"
 
+#ifdef DEBUG
+#define NSLog(fmt, ...) NSLog((@"[Velvet] " fmt), ##__VA_ARGS__)
+#else
+#define NSLog(fmt, ...)
+#endif
+
 #define kVELVETCOLOR [UIColor colorWithRed: 0.46 green: 0.83 blue: 1.00 alpha: 1.00]
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 
@@ -99,4 +105,12 @@
 @interface VelvetColorPicker : SparkColourPickerCell
 @property (nonatomic, retain) UIView *colorPreview;
 @property (nonatomic, retain) UIColor *currentColor;
+@end
+
+@interface UIImage (Velvet)
++(id)systemImageNamed:(id)arg1;
+@end
+
+@interface UIColor (Velvet)
++(id)labelColor;
 @end

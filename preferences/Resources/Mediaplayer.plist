@@ -10,20 +10,13 @@
 			<key>label</key>						<string>Background Options</string>
 		</dict>
 		<dict>
-			<key>cell</key>							<string>PSSwitchCell</string>
-			<key>default</key>						<false/>
+			<key>cell</key>							<string>PSLinkListCell</string>
+			<key>cellClass</key>					<string>VelvetColorListSelector</string>
+			<key>detail</key>						<string>VelvetColorListController</string>
 			<key>defaults</key>						<string>com.initwithframe.velvet</string>
-			<key>key</key>							<string>hideBackgroundMediaplayer</string>
-			<key>label</key>						<string>Hide Background</string>
-			<key>cellClass</key>					<string>VelvetToggle</string>
-		</dict>
-		<dict>
-			<key>cell</key>							<string>PSSwitchCell</string>
-			<key>default</key>						<false/>
-			<key>defaults</key>						<string>com.initwithframe.velvet</string>
-			<key>key</key>							<string>colorBackgroundMediaplayer</string>
-			<key>label</key>						<string>Color Background</string>
-			<key>cellClass</key>					<string>VelvetToggle</string>
+			<key>id</key>							<string>backgroundColorMediaplayer</string>
+			<key>key</key>							<string>backgroundColorMediaplayer</string>
+			<key>label</key>						<string>Background Color</string>
 		</dict>
 
 		<dict>
@@ -32,15 +25,22 @@
 		</dict>
 		<dict>
 			<key>cell</key>							<string>PSLinkListCell</string>
-			<key>detail</key>						<string>VelvetListItemsController</string>
-			<key>default</key>						<string>none</string>
+			<key>cellClass</key>					<string>VelvetColorListSelector</string>
+			<key>detail</key>						<string>VelvetColorListController</string>
 			<key>defaults</key>						<string>com.initwithframe.velvet</string>
-			<key>key</key>							<string>borderMediaplayer</string>
-			<key>id</key>							<string>borderMediaplayer</string>
-			<key>label</key>						<string>Color Border</string>
-			<key>set</key>							<string>setBorder:specifier:</string>
+			<key>key</key>							<string>borderColorMediaplayer</string>
+			<key>id</key>							<string>borderColorMediaplayer</string>
+			<key>label</key>						<string>Border Color</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSLinkListCell</string>
+			<key>detail</key>						<string>VelvetListItemsController</string>
+			<key>default</key>						<string>all</string>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>borderPositionMediaplayer</string>
+			<key>id</key>							<string>borderPositionMediaplayer</string>
+			<key>label</key>						<string>Border Position</string>
 			<key>validTitles</key>					<array>
-														<string>None</string>
 														<string>All</string>
 														<string>Top</string>
 														<string>Right</string>
@@ -48,7 +48,6 @@
 														<string>Left</string>
 													</array>
 			<key>validValues</key>					<array>
-														<string>none</string>
 														<string>all</string>
 														<string>top</string>
 														<string>right</string>
@@ -56,6 +55,7 @@
 														<string>left</string>
 													</array>
 		</dict>
+
 		<dict>
 			<key>cell</key>							<string>PSSliderCell</string>
 			<key>cellClass</key>					<string>VelvetSlider</string>
