@@ -72,7 +72,7 @@
 
     // This will actually just move the subview to the correct position, since it might have been inserted too early before content was loaded
     [view insertSubview:view.velvetBackground atIndex:1];
-    [view insertSubview:view.velvetFullBorder atIndex:([preferences boolForKey:@"colorHeaderWidget"] ? 1 : 5)];
+    [view insertSubview:view.velvetFullBorder atIndex:5];
 
     if (icon) {
         NSString *iconIdentifier = [UIImagePNGRepresentation(icon) base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
@@ -83,38 +83,64 @@
             [colorCache setObject:dominantColor forKey:iconIdentifier];
         }
 
-        headerBackground.backgroundColor = [preferences boolForKey:@"colorHeaderWidget"] ? [dominantColor colorWithAlphaComponent:0.8] : nil;
-        view.velvetBackground.backgroundColor = [preferences boolForKey:@"colorBackgroundWidget"] ? [dominantColor colorWithAlphaComponent:0.6] : nil;
-        headerBackground.alpha = [preferences boolForKey:@"hideBackgroundWidget"] && ![preferences boolForKey:@"colorHeaderWidget"] ? 0 : 1;
-        background.alpha = [preferences boolForKey:@"hideBackgroundWidget"] ? 0 : 1;
-
-        // Fake coloring the entire thing when only background is enabled
-        if ([preferences boolForKey:@"colorBackgroundWidget"] && ![preferences boolForKey:@"colorHeaderWidget"]) {
-            headerBackground.backgroundColor = [dominantColor colorWithAlphaComponent:0.6];
+        NSString *headerColor = getColorFor(@"colorHeaderWidget");
+        if (headerColor) {
+            headerBackground.backgroundColor = [headerColor isEqual:@"dominant"] ? [dominantColor colorWithAlphaComponent:0.8] : [UIColor velvetColorFromHexString:headerColor];
+        } else {
+            headerBackground.backgroundColor = nil;
         }
 
-        view.velvetBorder.backgroundColor = [dominantColor colorWithAlphaComponent:0.8];
-        view.velvetFullBorder.layer.borderColor = [dominantColor colorWithAlphaComponent:0.8].CGColor;
+        NSString *backgroundColor = getColorFor(@"colorBackgroundWidget");
+        if (backgroundColor) {
+            view.velvetBackground.backgroundColor = [backgroundColor isEqual:@"dominant"] ? [dominantColor colorWithAlphaComponent:0.6] : [UIColor velvetColorFromHexString:backgroundColor];
+
+            // Fake coloring the entire thing when only background is enabled
+            if (!headerColor) {
+                headerBackground.backgroundColor = [backgroundColor isEqual:@"dominant"] ? [dominantColor colorWithAlphaComponent:0.6] : [UIColor velvetColorFromHexString:backgroundColor];
+            }
+
+            if ([backgroundColor containsString:@"0.00"]) {
+                background.alpha = 0;
+                if (!headerColor) {
+                    headerBackground.alpha = 0;
+                } else {
+                    headerBackground.alpha = 1;
+                }
+            } else {
+                background.alpha = 1;
+                headerBackground.alpha = 1;
+            }
+        } else {
+            view.velvetBackground.backgroundColor = nil;
+            background.alpha = 1;
+            headerBackground.alpha = 1;
+        }
 
         view.velvetBorder.hidden = YES;
         view.velvetFullBorder.layer.borderWidth = 0;
 
-        int borderWidth = [preferences integerForKey:@"borderWidthWidget"];
-        if ([[preferences valueForKey:@"borderWidget"] isEqual:@"all"]) {
-            view.velvetFullBorder.layer.borderColor = [dominantColor colorWithAlphaComponent:0.8].CGColor;
-            view.velvetFullBorder.layer.borderWidth = borderWidth;
-        } else if ([[preferences valueForKey:@"borderWidget"] isEqual:@"top"]) {
-            view.velvetBorder.hidden = NO;
-            view.velvetBorder.frame = CGRectMake(0, 0, view.frame.size.width, borderWidth);
-        } else if ([[preferences valueForKey:@"borderWidget"] isEqual:@"right"]) {
-            view.velvetBorder.hidden = NO;
-            view.velvetBorder.frame = CGRectMake(view.frame.size.width - borderWidth, 0, borderWidth, view.frame.size.height);
-        } else if ([[preferences valueForKey:@"borderWidget"] isEqual:@"bottom"]) {
-            view.velvetBorder.hidden = NO;
-            view.velvetBorder.frame = CGRectMake(0, view.frame.size.height - borderWidth, view.frame.size.width, borderWidth);
-        } else if ([[preferences valueForKey:@"borderWidget"] isEqual:@"left"]) {
-            view.velvetBorder.hidden = NO;
-            view.velvetBorder.frame = CGRectMake(0, 0, borderWidth, view.frame.size.height);
+        NSString *borderColor = getColorFor(@"borderColorWidget");
+        if (borderColor) {
+            view.velvetBorder.backgroundColor = [borderColor isEqual:@"dominant"] ? [dominantColor colorWithAlphaComponent:0.8] : [UIColor velvetColorFromHexString:borderColor];
+            view.velvetFullBorder.layer.borderColor = [borderColor isEqual:@"dominant"] ? [dominantColor colorWithAlphaComponent:0.8].CGColor : [UIColor velvetColorFromHexString:borderColor].CGColor;
+        
+            int borderWidth = [preferences integerForKey:@"borderWidthWidget"];
+            if ([[preferences valueForKey:@"borderPositionWidget"] isEqual:@"all"]) {
+                view.velvetFullBorder.layer.borderWidth = borderWidth;
+            } else if ([[preferences valueForKey:@"borderPositionWidget"] isEqual:@"top"]) {
+                view.velvetBorder.hidden = NO;
+                view.velvetBorder.frame = CGRectMake(0, 0, view.frame.size.width, borderWidth);
+            } else if ([[preferences valueForKey:@"borderPositionWidget"] isEqual:@"right"]) {
+                view.velvetBorder.hidden = NO;
+                view.velvetBorder.frame = CGRectMake(view.frame.size.width - borderWidth, 0, borderWidth, view.frame.size.height);
+            } else if ([[preferences valueForKey:@"borderPositionWidget"] isEqual:@"bottom"]) {
+                view.velvetBorder.hidden = NO;
+                view.velvetBorder.frame = CGRectMake(0, view.frame.size.height - borderWidth, view.frame.size.width, borderWidth);
+            } else if ([[preferences valueForKey:@"borderPositionWidget"] isEqual:@"left"]) {
+                view.velvetBorder.hidden = NO;
+                view.velvetBorder.frame = CGRectMake(0, 0, borderWidth, view.frame.size.height);
+            }
+
         }
         
     }
@@ -137,7 +163,7 @@
 -(void)_layoutContentView {
     %orig;
 
-    if ([preferences boolForKey:@"colorHeaderWidget"]) {
+    if (![[preferences valueForKey:@"colorHeaderWidget"] isEqual:@"none"]) {
         CGRect frame = self.contentView.frame;
         frame.origin.y += 4;
         self.contentView.frame = frame;
@@ -155,6 +181,13 @@ static float getCornerRadius() {
 	}
 
 	return 13; // stock
+}
+
+static NSString *getColorFor(NSString *key) {
+	NSString *value = [preferences valueForKey:key];
+
+	if ([value isEqual:@"none"]) return nil;
+	return value;
 }
 
 %ctor {

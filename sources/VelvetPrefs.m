@@ -47,6 +47,23 @@
     [self convertBoolToString:@"colorPrimaryLabelLockscreen"];
     [self convertBoolToString:@"colorSecondaryLabelLockscreen"];
 
+    [self convertBoolToString:@"colorHeaderWidget"];
+    [self convertBoolToString:@"colorBackgroundWidget"];
+
+    if ([[self objectForKey:@"hideBackgroundLockscreen"] isKindOfClass:objc_getClass("__NSCFBoolean")]) {
+        if ([self boolForKey:@"hideBackgroundLockscreen"]) {
+            [self setValue:@"#000000:0.00" forKey:@"colorBackgroundLockscreen"];
+            [self removeObjectForKey:@"hideBackgroundLockscreen"];
+        }
+    }
+
+    if ([[self objectForKey:@"hideBackgroundWidget"] isKindOfClass:objc_getClass("__NSCFBoolean")]) {
+        if ([self boolForKey:@"hideBackgroundWidget"]) {
+            [self setValue:@"#000000:0.00" forKey:@"colorBackgroundWidget"];
+            [self removeObjectForKey:@"hideBackgroundWidget"];
+        }
+    }
+
     if ([self valueForKey:@"borderBanner"] && ![[self valueForKey:@"borderBanner"] isEqual:@"none"]) {
         [self setValue:[self valueForKey:@"borderBanner"] forKey:@"borderPositionBanner"];
         [self setValue:@"dominant" forKey:@"borderColorBanner"];
@@ -57,6 +74,12 @@
         [self setValue:[self valueForKey:@"borderLockscreen"] forKey:@"borderPositionLockscreen"];
         [self setValue:@"dominant" forKey:@"borderColorLockscreen"];
         [self removeObjectForKey:@"borderLockscreen"];
+    }
+
+    if ([self valueForKey:@"borderWidget"] && ![[self valueForKey:@"borderWidget"] isEqual:@"none"]) {
+        [self setValue:[self valueForKey:@"borderWidget"] forKey:@"borderPositionWidget"];
+        [self setValue:@"dominant" forKey:@"borderColorWidget"];
+        [self removeObjectForKey:@"borderWidget"];
     }
 }
 
@@ -113,10 +136,10 @@
         @"roundedCornersMediaplayer": @"stock",
         @"customCornerRadiusMediaplayer": @13,
 
-        @"colorHeaderWidget": @NO,
-        @"hideBackgroundWidget": @NO,
-        @"colorBackgroundWidget": @NO,
-        @"borderWidget": @"none",
+        @"colorHeaderWidget": @"none",
+        @"colorBackgroundWidget": @"none",
+        @"borderColorWidget": @"none",
+        @"borderPositionWidget": @"all",
         @"borderWidthWidget": @2,
         @"roundedCornersWidget": @"stock",
         @"customCornerRadiusWidget": @13

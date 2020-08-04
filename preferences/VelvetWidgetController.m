@@ -10,8 +10,11 @@
 				if (![[[self preferences] valueForKey:@"roundedCornersWidget"] isEqual:@"custom"]) [mutableSpecifiers removeObject:spec];
 			}
 
+			if ([spec.properties[@"key"] isEqual:@"borderPositionWidget"]) {
+				if ([[[self preferences] valueForKey:@"borderColorWidget"] isEqual:@"none"] || ![[self preferences] valueForKey:@"borderColorWidget"]) [mutableSpecifiers removeObject:spec];
+			}
 			if ([spec.properties[@"key"] isEqual:@"borderWidthWidget"]) {
-				if ([[[self preferences] valueForKey:@"borderWidget"] isEqual:@"none"] || ![[self preferences] valueForKey:@"borderWidget"]) [mutableSpecifiers removeObject:spec];
+				if ([[[self preferences] valueForKey:@"borderColorWidget"] isEqual:@"none"] || ![[self preferences] valueForKey:@"borderColorWidget"]) [mutableSpecifiers removeObject:spec];
 			}
 		}
 
@@ -43,16 +46,19 @@
 	[super setPreferenceValue:value specifier:specifier];
 
 	if (![value isEqual:@"none"]) {
-		if ([self specifierForID:@"borderWidthWidget"] == nil) {
+		if ([self specifierForID:@"borderPositionWidget"] == nil) {
 			NSArray *specifiers = [self loadSpecifiersFromPlistName:@"Widget" target:self];
 			for (PSSpecifier *spec in specifiers) {
+				if ([spec.properties[@"key"] isEqual:@"borderPositionWidget"]) {
+					[self insertSpecifier:spec afterSpecifierID:@"borderColorWidget" animated:YES];
+				}
 				if ([spec.properties[@"key"] isEqual:@"borderWidthWidget"]) {
-					[self insertSpecifier:spec afterSpecifierID:@"borderWidget" animated:YES];
-					break;
+					[self insertSpecifier:spec afterSpecifierID:@"borderPositionWidget" animated:YES];
 				}
 			}
 		}
 	} else {
+		[self removeSpecifierID:@"borderPositionWidget" animated:YES];
 		[self removeSpecifierID:@"borderWidthWidget" animated:YES];
 	}
 }

@@ -26,3 +26,4 @@
 @end
 
 static float getCornerRadius();
+static NSString *getColorFor(NSString *key);
