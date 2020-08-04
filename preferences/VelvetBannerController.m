@@ -46,13 +46,7 @@
 				if ([spec.properties[@"key"] isEqual:@"indicatorClassicColorBanner"]) [mutableSpecifiers removeObject:spec];
 				if ([spec.properties[@"key"] isEqual:@"colorHeaderBanner"]) [mutableSpecifiers removeObject:spec];
 
-				if ([spec.properties[@"key"] isEqual:@"indicatorModernColorBanner"]) {
-					NSLog(@"Velvet got color");
-					if ([[[self preferences] valueForKey:@"indicatorModernBanner"] isEqual:@"none"] || [[[self preferences] valueForKey:@"indicatorModernBanner"] isEqual:@"icon"]) {
-						NSLog(@"Velvet removing color");
-						[mutableSpecifiers removeObject:spec];
-					}
-				}
+				if ([spec.properties[@"key"] isEqual:@"indicatorModernColorBanner"] && ([[[self preferences] valueForKey:@"indicatorModernBanner"] isEqual:@"none"] || [[[self preferences] valueForKey:@"indicatorModernBanner"] isEqual:@"icon"])) [mutableSpecifiers removeObject:spec];
 				if ([spec.properties[@"key"] isEqual:@"indicatorModernSizeBanner"] && ([[[self preferences] valueForKey:@"indicatorModernBanner"] isEqual:@"none"] || [[[self preferences] valueForKey:@"indicatorModernBanner"] isEqual:@"line"])) [mutableSpecifiers removeObject:spec];
 			}
 			

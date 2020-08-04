@@ -1,5 +1,6 @@
 #import "Headers.h"
 #import "VelvetPrefs.h"
+#include <objc/runtime.h>
 
 @implementation VelvetPrefs
 
@@ -25,8 +26,44 @@
     return colorCache;
 }
 
+- (void)convertBoolToString:(NSString *)key {
+    if ([[self objectForKey:key] isKindOfClass:objc_getClass("__NSCFBoolean")]) {
+        if ([self boolForKey:key]) {
+            [self setValue:@"dominant" forKey:key];
+        } else {
+            [self setValue:@"none" forKey:key];
+        }
+    }
+}
+
+- (void)mergeOldSettings {
+    [self convertBoolToString:@"colorBackgroundBanner"];
+    [self convertBoolToString:@"colorHeaderBanner"];
+    [self convertBoolToString:@"colorPrimaryLabelBanner"];
+    [self convertBoolToString:@"colorSecondaryLabelBanner"];
+
+    [self convertBoolToString:@"colorHeaderLockscreen"];
+    [self convertBoolToString:@"colorBackgroundLockscreen"];
+    [self convertBoolToString:@"colorPrimaryLabelLockscreen"];
+    [self convertBoolToString:@"colorSecondaryLabelLockscreen"];
+
+    if ([self valueForKey:@"borderBanner"] && ![[self valueForKey:@"borderBanner"] isEqual:@"none"]) {
+        [self setValue:[self valueForKey:@"borderBanner"] forKey:@"borderPositionBanner"];
+        [self setValue:@"dominant" forKey:@"borderColorBanner"];
+        [self removeObjectForKey:@"borderBanner"];
+    }
+
+    if ([self valueForKey:@"borderLockscreen"] && ![[self valueForKey:@"borderLockscreen"] isEqual:@"none"]) {
+        [self setValue:[self valueForKey:@"borderLockscreen"] forKey:@"borderPositionLockscreen"];
+        [self setValue:@"dominant" forKey:@"borderColorLockscreen"];
+        [self removeObjectForKey:@"borderLockscreen"];
+    }
+}
+
 - (instancetype)initWithSuiteName:(NSString *)suitename {
     VelvetPrefs *prefs = [super initWithSuiteName:suitename];
+
+    [prefs mergeOldSettings];
 
     [prefs registerDefaults:@{
         @"enabled": @YES,
