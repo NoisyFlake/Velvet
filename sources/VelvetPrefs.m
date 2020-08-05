@@ -50,6 +50,8 @@
     [self convertBoolToString:@"colorHeaderWidget"];
     [self convertBoolToString:@"colorBackgroundWidget"];
 
+    [self convertBoolToString:@"colorBackgroundMediaplayer"];
+
     if ([[self objectForKey:@"hideBackgroundLockscreen"] isKindOfClass:objc_getClass("__NSCFBoolean")]) {
         if ([self boolForKey:@"hideBackgroundLockscreen"]) {
             [self setValue:@"#000000:0.00" forKey:@"colorBackgroundLockscreen"];
@@ -80,6 +82,12 @@
         [self setValue:[self valueForKey:@"borderWidget"] forKey:@"borderPositionWidget"];
         [self setValue:@"dominant" forKey:@"borderColorWidget"];
         [self removeObjectForKey:@"borderWidget"];
+    }
+
+    if ([self valueForKey:@"borderMediaplayer"] && ![[self valueForKey:@"borderMediaplayer"] isEqual:@"none"]) {
+        [self setValue:[self valueForKey:@"borderMediaplayer"] forKey:@"borderPositionMediaplayer"];
+        [self setValue:@"dominant" forKey:@"borderColorMediaplayer"];
+        [self removeObjectForKey:@"borderMediaplayer"];
     }
 }
 
@@ -129,9 +137,9 @@
         @"roundedCornersLockscreen": @"stock",
         @"customCornerRadiusLockscreen": @13,
 
-        @"hideBackgroundMediaplayer": @NO,
-        @"colorBackgroundMediaplayer": @NO,
-        @"borderMediaplayer": @"none",
+        @"colorBackgroundMediaplayer": @"none",
+        @"borderColorMediaplayer": @"none",
+        @"borderPositionMediaplayer": @"all",
         @"borderWidthMediaplayer": @2,
         @"roundedCornersMediaplayer": @"stock",
         @"customCornerRadiusMediaplayer": @13,

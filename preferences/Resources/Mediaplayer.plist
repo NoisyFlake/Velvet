@@ -14,8 +14,8 @@
 			<key>cellClass</key>					<string>VelvetColorListSelector</string>
 			<key>detail</key>						<string>VelvetColorListController</string>
 			<key>defaults</key>						<string>com.initwithframe.velvet</string>
-			<key>id</key>							<string>backgroundColorMediaplayer</string>
-			<key>key</key>							<string>backgroundColorMediaplayer</string>
+			<key>id</key>							<string>colorBackgroundMediaplayer</string>
+			<key>key</key>							<string>colorBackgroundMediaplayer</string>
 			<key>label</key>						<string>Background Color</string>
 		</dict>
 

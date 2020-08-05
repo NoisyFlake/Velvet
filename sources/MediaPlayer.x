@@ -16,7 +16,7 @@ BOOL colorFlowInstalled;
 	%orig;
 
 	if (![preferences boolForKey:@"enableMediaplayer"] || colorFlowLockscreenResizingEnabled()) return;
-	NSString *backgroundColor = [preferences valueForKey:@"backgroundColorMediaplayer"];
+	NSString *backgroundColor = [preferences valueForKey:@"colorBackgroundMediaplayer"];
 
 	PLPlatterView *platterView = (PLPlatterView *)self.superview.superview;
 	MTMaterialView *backgroundMaterialView = platterView.backgroundMaterialView;
@@ -60,21 +60,23 @@ BOOL colorFlowInstalled;
 		backgroundMaterialView.alpha = 1;
 	}
 
-	int borderWidth = [preferences integerForKey:@"borderWidthMediaplayer"];
-	if ([[preferences valueForKey:@"borderPositionMediaplayer"] isEqual:@"all"]) {
-		velvetArtworkBackground.layer.borderWidth = borderWidth;
-	} else if ([[preferences valueForKey:@"borderPositionMediaplayer"] isEqual:@"top"]) {
-		velvetArtworkBorder.hidden = NO;
-		velvetArtworkBorder.frame = CGRectMake(0, 0, self.superview.frame.size.width, borderWidth);
-	} else if ([[preferences valueForKey:@"borderPositionMediaplayer"] isEqual:@"right"]) {
-		velvetArtworkBorder.hidden = NO;
-		velvetArtworkBorder.frame = CGRectMake(self.superview.frame.size.width - borderWidth, 0, borderWidth, self.superview.frame.size.height);
-	} else if ([[preferences valueForKey:@"borderPositionMediaplayer"] isEqual:@"bottom"]) {
-		velvetArtworkBorder.hidden = NO;
-		velvetArtworkBorder.frame = CGRectMake(0, self.superview.frame.size.height - borderWidth, self.superview.frame.size.width, borderWidth);
-	} else if ([[preferences valueForKey:@"borderPositionMediaplayer"] isEqual:@"left"]) {
-		velvetArtworkBorder.hidden = NO;
-		velvetArtworkBorder.frame = CGRectMake(0, 0, borderWidth, self.superview.frame.size.height);
+	if (![[preferences valueForKey:@"borderColorMediaplayer"] isEqual:@"none"]) {
+		int borderWidth = [preferences integerForKey:@"borderWidthMediaplayer"];
+		if ([[preferences valueForKey:@"borderPositionMediaplayer"] isEqual:@"all"]) {
+			velvetArtworkBackground.layer.borderWidth = borderWidth;
+		} else if ([[preferences valueForKey:@"borderPositionMediaplayer"] isEqual:@"top"]) {
+			velvetArtworkBorder.hidden = NO;
+			velvetArtworkBorder.frame = CGRectMake(0, 0, self.superview.frame.size.width, borderWidth);
+		} else if ([[preferences valueForKey:@"borderPositionMediaplayer"] isEqual:@"right"]) {
+			velvetArtworkBorder.hidden = NO;
+			velvetArtworkBorder.frame = CGRectMake(self.superview.frame.size.width - borderWidth, 0, borderWidth, self.superview.frame.size.height);
+		} else if ([[preferences valueForKey:@"borderPositionMediaplayer"] isEqual:@"bottom"]) {
+			velvetArtworkBorder.hidden = NO;
+			velvetArtworkBorder.frame = CGRectMake(0, self.superview.frame.size.height - borderWidth, self.superview.frame.size.width, borderWidth);
+		} else if ([[preferences valueForKey:@"borderPositionMediaplayer"] isEqual:@"left"]) {
+			velvetArtworkBorder.hidden = NO;
+			velvetArtworkBorder.frame = CGRectMake(0, 0, borderWidth, self.superview.frame.size.height);
+		}
 	}
 
 	if (colorFlowLockscreenColoringEnabled()) return;
@@ -136,8 +138,8 @@ static void updateMediaplayerColors() {
         NSData *artworkData = [dict objectForKey:(__bridge NSString *)kMRMediaRemoteNowPlayingInfoArtworkData];
         __block UIImage *artwork = [UIImage imageWithData:artworkData];
 
-		NSString *backgroundColor = [preferences valueForKey:@"backgroundColorMediaplayer"];
-		velvetArtworkColor = [[preferences valueForKey:@"backgroundColorMediaplayer"] isEqual:@"dominant"] ? [artwork velvetAverageColor] : [UIColor velvetColorFromHexString:backgroundColor];
+		NSString *backgroundColor = [preferences valueForKey:@"colorBackgroundMediaplayer"];
+		velvetArtworkColor = [[preferences valueForKey:@"colorBackgroundMediaplayer"] isEqual:@"dominant"] ? [artwork velvetAverageColor] : [UIColor velvetColorFromHexString:backgroundColor];
 
 		NSString *borderColor = [preferences valueForKey:@"borderColorMediaplayer"];
 		velvetArtworkBorderColor = [[preferences valueForKey:@"borderColorMediaplayer"] isEqual:@"dominant"] ? [artwork velvetAverageColor] : [UIColor velvetColorFromHexString:borderColor];
@@ -146,7 +148,7 @@ static void updateMediaplayerColors() {
 			// Needed to recolor when track changes without lockscreen media controls changing
 			velvetArtworkBorder.backgroundColor = velvetArtworkBorderColor;
 			velvetArtworkBackground.layer.borderColor = velvetArtworkBorderColor.CGColor;
-			velvetArtworkBackground.backgroundColor = [[preferences valueForKey:@"backgroundColorMediaplayer"] isEqual:@"dominant"] ? [velvetArtworkColor colorWithAlphaComponent:0.6] : [UIColor velvetColorFromHexString:backgroundColor];
+			velvetArtworkBackground.backgroundColor = [[preferences valueForKey:@"colorBackgroundMediaplayer"] isEqual:@"dominant"] ? [velvetArtworkColor colorWithAlphaComponent:0.6] : [UIColor velvetColorFromHexString:backgroundColor];
 		}
 	});
 }
