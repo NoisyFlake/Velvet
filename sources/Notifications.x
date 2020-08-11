@@ -490,7 +490,9 @@ BOOL isTesting;
 
 		NCNotificationShortLookViewController *controller = self._viewControllerForAncestor;
 		if ([controller isKindOfClass:%c(NCNotificationShortLookViewController)] && [controller.notificationRequest.sectionIdentifier isEqual:@"com.apple.donotdisturb"] && [[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"modern"]) {
-			labelWidth -= thumbnail.frame.size.width;
+			if (!isRTL()) {
+				labelWidth -= thumbnail.frame.size.width;
+			}
 		}
 	}
 
