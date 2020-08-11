@@ -483,7 +483,7 @@ BOOL isTesting;
 	UIImageView *thumbnail = [self safeValueForKey:@"_thumbnailImageView"];
 	if (thumbnail) {
 		CGRect thumbFrame = thumbnail.frame;
-		if (!isRTL()) {
+		if (!isRTL() || [[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"classic"]) {
 			thumbFrame.origin.x = thumbFrame.origin.x - labelWidth;
 		}
 		thumbnail.frame = thumbFrame;
