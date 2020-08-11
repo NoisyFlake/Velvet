@@ -181,7 +181,7 @@ BOOL isTesting;
 			view.colorIndicator.layer.cornerRadius = width/2;
 			view.colorIndicator.layer.continuousCorners = YES;
 		}
-		
+
 		NSString *indicatorColor = getColorFor(@"indicatorModernColor", view);
 		if (indicatorColor) view.colorIndicator.backgroundColor = [indicatorColor isEqual:@"dominant"] ? dominantColor : [UIColor velvetColorFromHexString:indicatorColor];
 
@@ -483,7 +483,9 @@ BOOL isTesting;
 	UIImageView *thumbnail = [self safeValueForKey:@"_thumbnailImageView"];
 	if (thumbnail) {
 		CGRect thumbFrame = thumbnail.frame;
-		thumbFrame.origin.x = thumbFrame.origin.x - labelWidth;
+		if (!isRTL()) {
+			thumbFrame.origin.x = thumbFrame.origin.x - labelWidth;
+		}
 		thumbnail.frame = thumbFrame;
 
 		NCNotificationShortLookViewController *controller = self._viewControllerForAncestor;
