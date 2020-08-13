@@ -32,6 +32,10 @@
 		NSMutableArray *mutableSpecifiers = [[self loadSpecifiersFromPlistName:@"Lockscreen" target:self] mutableCopy];
 
 		for (PSSpecifier *spec in [mutableSpecifiers reverseObjectEnumerator]) {
+			if ([spec.properties[@"key"] isEqual:@"indicatorCustomRoundedCornerLockscreen"]) {
+				if (![[[self preferences] valueForKey:@"indicatorRoundedCornerLockscreen"] isEqual:@"custom"]) [mutableSpecifiers removeObject:spec];
+			}
+
 			if ([spec.properties[@"key"] isEqual:@"customCornerRadiusLockscreen"]) {
 				if (![[[self preferences] valueForKey:@"roundedCornersLockscreen"] isEqual:@"custom"]) [mutableSpecifiers removeObject:spec];
 			}
@@ -50,7 +54,7 @@
 				if ([spec.properties[@"key"] isEqual:@"indicatorModernColorLockscreen"] && ([[[self preferences] valueForKey:@"indicatorModernLockscreen"] isEqual:@"none"] || [[[self preferences] valueForKey:@"indicatorModernLockscreen"] isEqual:@"icon"])) [mutableSpecifiers removeObject:spec];
 				if ([spec.properties[@"key"] isEqual:@"indicatorModernSizeLockscreen"] && ([[[self preferences] valueForKey:@"indicatorModernLockscreen"] isEqual:@"none"] || [[[self preferences] valueForKey:@"indicatorModernLockscreen"] isEqual:@"line"])) [mutableSpecifiers removeObject:spec];
 			}
-			
+
 			if ([spec.properties[@"key"] isEqual:@"borderPositionLockscreen"]) {
 				if ([[[self preferences] valueForKey:@"borderColorLockscreen"] isEqual:@"none"] || ![[self preferences] valueForKey:@"borderColorLockscreen"]) [mutableSpecifiers removeObject:spec];
 			}
@@ -64,6 +68,25 @@
 
 	return _specifiers;
 }
+
+- (void)setAppIconRoundedCorners:(id)value specifier:(PSSpecifier*)specifier {
+	[super setPreferenceValue:value specifier:specifier];
+
+	if ([value isEqual:@"custom"]) {
+		if ([self specifierForID:@"indicatorCustomRoundedCornerLockscreen"] == nil) {
+			NSArray *specifiers = [self loadSpecifiersFromPlistName:@"Lockscreen" target:self];
+			for (PSSpecifier *spec in specifiers) {
+				if ([spec.properties[@"key"] isEqual:@"indicatorCustomRoundedCornerLockscreen"]) {
+					[self insertSpecifier:spec afterSpecifierID:@"indicatorRoundedCornerLockscreen" animated:YES];
+					break;
+				}
+			}
+		}
+	} else {
+		[self removeSpecifierID:@"indicatorCustomRoundedCornerLockscreen" animated:YES];
+	}
+}
+
 
 - (void)setRoundedCorners:(id)value specifier:(PSSpecifier*)specifier {
 	[super setPreferenceValue:value specifier:specifier];

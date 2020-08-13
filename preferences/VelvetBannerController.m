@@ -31,6 +31,10 @@
 		NSMutableArray *mutableSpecifiers = [[self loadSpecifiersFromPlistName:@"Banner" target:self] mutableCopy];
 
 		for (PSSpecifier *spec in [mutableSpecifiers reverseObjectEnumerator]) {
+			if ([spec.properties[@"key"] isEqual:@"indicatorCustomRoundedCornerBanner"]) {
+				if (![[[self preferences] valueForKey:@"indicatorRoundedCornerBanner"] isEqual:@"custom"]) [mutableSpecifiers removeObject:spec];
+			}
+
 			if ([spec.properties[@"key"] isEqual:@"customCornerRadiusBanner"]) {
 				if (![[[self preferences] valueForKey:@"roundedCornersBanner"] isEqual:@"custom"]) [mutableSpecifiers removeObject:spec];
 			}
@@ -49,7 +53,7 @@
 				if ([spec.properties[@"key"] isEqual:@"indicatorModernColorBanner"] && ([[[self preferences] valueForKey:@"indicatorModernBanner"] isEqual:@"none"] || [[[self preferences] valueForKey:@"indicatorModernBanner"] isEqual:@"icon"])) [mutableSpecifiers removeObject:spec];
 				if ([spec.properties[@"key"] isEqual:@"indicatorModernSizeBanner"] && ([[[self preferences] valueForKey:@"indicatorModernBanner"] isEqual:@"none"] || [[[self preferences] valueForKey:@"indicatorModernBanner"] isEqual:@"line"])) [mutableSpecifiers removeObject:spec];
 			}
-			
+
 			if ([spec.properties[@"key"] isEqual:@"borderPositionBanner"]) {
 				if ([[[self preferences] valueForKey:@"borderColorBanner"] isEqual:@"none"] || ![[self preferences] valueForKey:@"borderColorBanner"]) [mutableSpecifiers removeObject:spec];
 			}
@@ -62,6 +66,24 @@
 	}
 
 	return _specifiers;
+}
+
+- (void)setAppIconRoundedCorners:(id)value specifier:(PSSpecifier*)specifier {
+	[super setPreferenceValue:value specifier:specifier];
+
+	if ([value isEqual:@"custom"]) {
+		if ([self specifierForID:@"indicatorCustomRoundedCornerBanner"] == nil) {
+			NSArray *specifiers = [self loadSpecifiersFromPlistName:@"Banner" target:self];
+			for (PSSpecifier *spec in specifiers) {
+				if ([spec.properties[@"key"] isEqual:@"indicatorCustomRoundedCornerBanner"]) {
+					[self insertSpecifier:spec afterSpecifierID:@"indicatorRoundedCornerBanner" animated:YES];
+					break;
+				}
+			}
+		}
+	} else {
+		[self removeSpecifierID:@"indicatorCustomRoundedCornerBanner" animated:YES];
+	}
 }
 
 - (void)setRoundedCorners:(id)value specifier:(PSSpecifier*)specifier {

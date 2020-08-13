@@ -128,10 +128,17 @@ BOOL isTesting;
 				view.imageIndicator.tintColor = UIColor.labelColor;
 				thumbnail.alpha = 0;
 			} else {
-				view.imageIndicator.image = [self getIconForBundleId:self.notificationRequest.sectionIdentifier];
+				if ([[preferences valueForKey:getPreferencesKeyFor(@"indicatorRoundedCorner", view)] isEqual:@"stock"]) {
+					view.imageIndicator.image = [self getIconForBundleId:self.notificationRequest.sectionIdentifier withMask:YES];
+					view.imageIndicator.clipsToBounds = NO;
+				} else {
+					view.imageIndicator.image = [self getIconForBundleId:self.notificationRequest.sectionIdentifier withMask:NO];
+					float cornerRadius = getAppIconCornerRadius(view);
+					if (cornerRadius < 0 || cornerRadius > size / 2) cornerRadius = size / 2;
+					view.imageIndicator.layer.cornerRadius = cornerRadius;
+					view.imageIndicator.clipsToBounds = YES;
+				}
 			}
-
-
 		} else if ([[preferences valueForKey:getPreferencesKeyFor(@"indicatorModern", view)] isEqual:@"dot"]) {
 			view.colorIndicator.hidden = NO;
 
@@ -347,7 +354,7 @@ BOOL isTesting;
 
 	if ([bundleId isEqual:@"com.apple.donotdisturb"]) return nil;
 
-	UIImage *icon = [self getIconForBundleId:bundleId];
+	UIImage *icon = [self getIconForBundleId:bundleId withMask:NO];
 
 	NSString *iconIdentifier = [UIImagePNGRepresentation(icon) base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
 	UIColor *color = colorCache[iconIdentifier];
@@ -361,7 +368,7 @@ BOOL isTesting;
 }
 
 %new
--(UIImage *)getIconForBundleId:(NSString *)bundleId {
+-(UIImage *)getIconForBundleId:(NSString *)bundleId withMask:(BOOL)isMasked {
 	UIImage *icon = nil;
 
 	if (bundleId != nil) {
@@ -378,7 +385,11 @@ BOOL isTesting;
 		imageInfo.scale = [UIScreen mainScreen].scale;
 		imageInfo.continuousCornerRadius = 13; // This actually doesn't do anything
 
-		icon = [sbIcon generateIconImageWithInfo:imageInfo];
+		if (isMasked) {
+			icon = [sbIcon generateIconImageWithInfo:imageInfo];
+		} else {
+			icon = [sbIcon unmaskedIconImageWithInfo:imageInfo];
+		}
 	}
 
 	if (!icon) {
@@ -536,6 +547,18 @@ BOOL isTesting;
 %end
 
 // ====================== STATIC HELPER METHODS ====================== //
+
+static float getAppIconCornerRadius(UIView *view) {
+	if ([[preferences valueForKey:getPreferencesKeyFor(@"indicatorRoundedCorner", view)] isEqual:@"none"]) {
+		return 0;
+	} else if ([[preferences valueForKey:getPreferencesKeyFor(@"indicatorRoundedCorner", view)] isEqual:@"round"]) {
+		return -1;
+	} else if ([[preferences valueForKey:getPreferencesKeyFor(@"indicatorRoundedCorner", view)] isEqual:@"custom"]) {
+		return [preferences floatForKey:getPreferencesKeyFor(@"indicatorCustomRoundedCorner", view)];
+	}
+
+	return 13; // stock
+}
 
 static float getCornerRadius(UIView *view) {
 	if ([[preferences valueForKey:getPreferencesKeyFor(@"roundedCorners", view)] isEqual:@"none"]) {

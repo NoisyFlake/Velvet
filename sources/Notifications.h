@@ -67,7 +67,7 @@
 -(void)velvetHideHeader:(BOOL)hidden;
 -(void)velvetHideGroupedNotifications:(BOOL)hidden;
 -(UIColor *)getDominantColor;
--(UIImage *)getIconForBundleId:(NSString *)bundleId;
+-(UIImage *)getIconForBundleId:(NSString *)bundleId withMask:(BOOL)isMasked;
 @end
 
 @interface JBBulletinManager : NSObject
@@ -84,6 +84,7 @@
 @end
 
 static float getCornerRadius(UIView *view);
+static float getAppIconCornerRadius(UIView *view);
 static float getIndicatorOffset(UIView *view);
 static BOOL isLockscreen(UIView *view);
 static NSString *getPreferencesKeyFor(NSString *key, UIView *view);
