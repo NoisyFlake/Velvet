@@ -148,7 +148,7 @@
 			<key>min</key>							<real>0</real>
 			<key>max</key>							<real>24</real>
 			<key>showValue</key>					<true/>
-			<key>default</key>						<real>13</real>
+			<key>default</key>						<real>5</real>
 			<key>defaults</key>						<string>com.initwithframe.velvet</string>
 			<key>key</key>							<string>indicatorCustomRoundedCornerBanner</string>
 			<key>id</key>							<string>indicatorCustomRoundedCornerBanner</string>

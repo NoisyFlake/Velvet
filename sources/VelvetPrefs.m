@@ -119,6 +119,8 @@
         @"borderWidthBanner": @2,
         @"roundedCornersBanner": @"stock",
         @"customCornerRadiusBanner": @13,
+        @"indicatorRoundedCornerBanner" : @"stock",
+        @"indicatorCustomRoundedCornerBanner" : @5,
 
         @"styleLockscreen": @"modern",
         @"indicatorClassicLockscreen": @"icon",
@@ -136,6 +138,8 @@
         @"borderWidthLockscreen": @2,
         @"roundedCornersLockscreen": @"stock",
         @"customCornerRadiusLockscreen": @13,
+        @"indicatorRoundedCornerLockscreen" : @"stock",
+        @"indicatorCustomRoundedCornerLockscreen" : @5,
 
         @"colorBackgroundMediaplayer": @"none",
         @"borderColorMediaplayer": @"none",
