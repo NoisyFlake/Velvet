@@ -127,6 +127,12 @@
 				if ([spec.properties[@"key"] isEqual:@"colorHeaderBanner"]) {
 					[self insertSpecifier:spec afterSpecifierID:@"indicatorClassicBanner" animated:YES];
 				}
+				if ([spec.properties[@"key"] isEqual:@"colorHeaderTitleBanner"]) {
+					[self insertSpecifier:spec afterSpecifierID:@"colorHeaderBanner" animated:YES];
+				}
+				if ([spec.properties[@"key"] isEqual:@"colorHeaderDateBanner"]) {
+					[self insertSpecifier:spec afterSpecifierID:@"colorHeaderTitleBanner" animated:YES];
+				}
 			}
 		}
 

@@ -129,6 +129,12 @@
 				if ([spec.properties[@"key"] isEqual:@"colorHeaderLockscreen"]) {
 					[self insertSpecifier:spec afterSpecifierID:@"indicatorClassicLockscreen" animated:YES];
 				}
+				if ([spec.properties[@"key"] isEqual:@"colorHeaderTitleLockscreen"]) {
+					[self insertSpecifier:spec afterSpecifierID:@"colorHeaderLockscreen" animated:YES];
+				}
+				if ([spec.properties[@"key"] isEqual:@"colorHeaderDateLockscreen"]) {
+					[self insertSpecifier:spec afterSpecifierID:@"colorHeaderLockscreen" animated:YES];
+				}
 			}
 		}
 
