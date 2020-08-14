@@ -195,6 +195,18 @@ BOOL isTesting;
 	} else if ([[preferences valueForKey:getPreferencesKeyFor(@"style", view)] isEqual:@"classic"]) {
 		[self velvetHideHeader:NO];
 
+		NSString *headerTitleColor = getColorFor(@"colorHeaderTitle", view);
+		if (headerTitleColor) {
+			header.titleLabel.layer.filters = nil;
+			header.titleLabel.textColor = [headerTitleColor isEqual:@"dominant"] ? [dominantColor colorWithAlphaComponent:0.8] : [UIColor velvetColorFromHexString:headerTitleColor];
+		}
+
+		NSString *headerDateColor = getColorFor(@"colorHeaderDate", view);
+		if (headerDateColor) {
+			header.dateLabel.layer.filters = nil;
+			header.dateLabel.textColor = [headerDateColor isEqual:@"dominant"] ? [dominantColor colorWithAlphaComponent:0.8] : [UIColor velvetColorFromHexString:headerDateColor];
+		}
+
 		NSString *headerColor = getColorFor(@"colorHeader", view);
 		if (headerColor) {
 			header.backgroundColor = [headerColor isEqual:@"dominant"] ? [dominantColor colorWithAlphaComponent:0.8] : [UIColor velvetColorFromHexString:headerColor];

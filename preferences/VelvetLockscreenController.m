@@ -50,6 +50,8 @@
 				if ([spec.properties[@"key"] isEqual:@"indicatorClassicLockscreen"]) [mutableSpecifiers removeObject:spec];
 				if ([spec.properties[@"key"] isEqual:@"indicatorClassicColorLockscreen"]) [mutableSpecifiers removeObject:spec];
 				if ([spec.properties[@"key"] isEqual:@"colorHeaderLockscreen"]) [mutableSpecifiers removeObject:spec];
+				if ([spec.properties[@"key"] isEqual:@"colorHeaderTitleLockscreen"]) [mutableSpecifiers removeObject:spec];
+				if ([spec.properties[@"key"] isEqual:@"colorHeaderDateLockscreen"]) [mutableSpecifiers removeObject:spec];
 
 				if ([spec.properties[@"key"] isEqual:@"indicatorModernColorLockscreen"] && ([[[self preferences] valueForKey:@"indicatorModernLockscreen"] isEqual:@"none"] || [[[self preferences] valueForKey:@"indicatorModernLockscreen"] isEqual:@"icon"])) [mutableSpecifiers removeObject:spec];
 				if ([spec.properties[@"key"] isEqual:@"indicatorModernSizeLockscreen"] && ([[[self preferences] valueForKey:@"indicatorModernLockscreen"] isEqual:@"none"] || [[[self preferences] valueForKey:@"indicatorModernLockscreen"] isEqual:@"line"])) [mutableSpecifiers removeObject:spec];
@@ -134,6 +136,8 @@
 		[self removeSpecifierID:@"indicatorClassicLockscreen" animated:NO];
 		[self removeSpecifierID:@"indicatorClassicColorLockscreen" animated:NO];
 		[self removeSpecifierID:@"colorHeaderLockscreen" animated:YES];
+		[self removeSpecifierID:@"colorHeaderTitleLockscreen" animated:YES];
+		[self removeSpecifierID:@"colorHeaderDateLockscreen" animated:YES];
 
 		if ([self specifierForID:@"indicatorModernLockscreen"] == nil) {
 			NSArray *specifiers = [self loadSpecifiersFromPlistName:@"Lockscreen" target:self];
