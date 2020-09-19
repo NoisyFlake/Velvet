@@ -95,7 +95,13 @@ BOOL isTesting;
 	if (thumbnail) thumbnail.alpha = 1;
 
 	PLPlatterHeaderContentView *header = [self.viewForPreview valueForKey:@"_headerContentView"];
-	if (header) header.backgroundColor = nil;
+	if (header) {
+		header.backgroundColor = nil;
+
+		// Actually we'd have to restore the filter we delete later, but currently there is no known way to do this. If people ask, tell them to respring to get back to default.
+		header.titleLabel.textColor = UIColor.labelColor;
+		header.dateLabel.textColor = UIColor.labelColor;
+	}
 
 	PLShadowView *shadowView = [self.viewForPreview valueForKey:@"_shadowView"];
 	if (shadowView) {
@@ -198,13 +204,7 @@ BOOL isTesting;
 		NSString *headerTitleColor = getColorFor(@"colorHeaderTitle", view);
 		if (headerTitleColor) {
 			header.titleLabel.layer.filters = nil;
-			header.titleLabel.textColor = [headerTitleColor isEqual:@"dominant"] ? [dominantColor colorWithAlphaComponent:0.8] : [UIColor velvetColorFromHexString:headerTitleColor];
-		}
-
-		NSString *headerDateColor = getColorFor(@"colorHeaderDate", view);
-		if (headerDateColor) {
-			header.dateLabel.layer.filters = nil;
-			header.dateLabel.textColor = [headerDateColor isEqual:@"dominant"] ? [dominantColor colorWithAlphaComponent:0.8] : [UIColor velvetColorFromHexString:headerDateColor];
+			header.titleLabel.textColor = [headerTitleColor isEqual:@"dominant"] ? dominantColor : [UIColor velvetColorFromHexString:headerTitleColor];
 		}
 
 		NSString *headerColor = getColorFor(@"colorHeader", view);
@@ -264,6 +264,15 @@ BOOL isTesting;
 		view.notificationContentView.secondaryLabel.textColor = [messageColor isEqual:@"dominant"] ? dominantColor : [UIColor velvetColorFromHexString:messageColor];
 	} else {
 		view.notificationContentView.secondaryLabel.textColor = nil;
+	}
+
+	NSString *headerDateColor = getColorFor(@"colorHeaderDate", view);
+	if (headerDateColor) {
+		// Yup, this is necessary as sometimes when receiving lockscreen notifications, dateLabel isn't initialized yet. Stupid iOS.
+		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^(void){
+			header.dateLabel.layer.filters = nil;
+			header.dateLabel.textColor = [headerDateColor isEqual:@"dominant"] ? dominantColor : [UIColor velvetColorFromHexString:headerDateColor];
+		});
 	}
 
 	NSString *backgroundColor = getColorFor(@"colorBackground", view);

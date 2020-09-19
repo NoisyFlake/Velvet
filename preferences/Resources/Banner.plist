@@ -71,15 +71,6 @@
 			<key>key</key>							<string>colorHeaderTitleBanner</string>
 			<key>label</key>						<string>Header Title Color</string>
 		</dict>
-		<dict>
-			<key>cell</key>							<string>PSLinkListCell</string>
-			<key>cellClass</key>					<string>VelvetColorListSelector</string>
-			<key>detail</key>						<string>VelvetColorListController</string>
-			<key>defaults</key>						<string>com.initwithframe.velvet</string>
-			<key>id</key>							<string>colorHeaderDateBanner</string>
-			<key>key</key>							<string>colorHeaderDateBanner</string>
-			<key>label</key>						<string>Header Date Color</string>
-		</dict>
 
 		<dict>
 			<key>cell</key>							<string>PSLinkListCell</string>
@@ -173,8 +164,6 @@
 		</dict>
 
 
-
-
 		<dict>
 			<key>cell</key>							<string>PSGroupCell</string>
 			<key>label</key>						<string>Background Options</string>
@@ -208,6 +197,15 @@
 			<key>defaults</key>						<string>com.initwithframe.velvet</string>
 			<key>key</key>							<string>colorSecondaryLabelBanner</string>
 			<key>label</key>						<string>Message Color</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSLinkListCell</string>
+			<key>cellClass</key>					<string>VelvetColorListSelector</string>
+			<key>detail</key>						<string>VelvetColorListController</string>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>id</key>							<string>colorHeaderDateBanner</string>
+			<key>key</key>							<string>colorHeaderDateBanner</string>
+			<key>label</key>						<string>Date Color</string>
 		</dict>
 		<dict>
 			<key>cell</key>							<string>PSSwitchCell</string>

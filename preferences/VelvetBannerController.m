@@ -50,7 +50,6 @@
 				if ([spec.properties[@"key"] isEqual:@"indicatorClassicColorBanner"]) [mutableSpecifiers removeObject:spec];
 				if ([spec.properties[@"key"] isEqual:@"colorHeaderBanner"]) [mutableSpecifiers removeObject:spec];
 				if ([spec.properties[@"key"] isEqual:@"colorHeaderTitleBanner"]) [mutableSpecifiers removeObject:spec];
-				if ([spec.properties[@"key"] isEqual:@"colorHeaderDateBanner"]) [mutableSpecifiers removeObject:spec];
 
 				if ([spec.properties[@"key"] isEqual:@"indicatorModernColorBanner"] && ([[[self preferences] valueForKey:@"indicatorModernBanner"] isEqual:@"none"] || [[[self preferences] valueForKey:@"indicatorModernBanner"] isEqual:@"icon"])) [mutableSpecifiers removeObject:spec];
 				if ([spec.properties[@"key"] isEqual:@"indicatorModernSizeBanner"] && ([[[self preferences] valueForKey:@"indicatorModernBanner"] isEqual:@"none"] || [[[self preferences] valueForKey:@"indicatorModernBanner"] isEqual:@"line"])) [mutableSpecifiers removeObject:spec];
@@ -130,9 +129,6 @@
 				if ([spec.properties[@"key"] isEqual:@"colorHeaderTitleBanner"]) {
 					[self insertSpecifier:spec afterSpecifierID:@"colorHeaderBanner" animated:YES];
 				}
-				if ([spec.properties[@"key"] isEqual:@"colorHeaderDateBanner"]) {
-					[self insertSpecifier:spec afterSpecifierID:@"colorHeaderTitleBanner" animated:YES];
-				}
 			}
 		}
 
@@ -141,7 +137,6 @@
 		[self removeSpecifierID:@"indicatorClassicColorBanner" animated:NO];
 		[self removeSpecifierID:@"colorHeaderBanner" animated:YES];
 		[self removeSpecifierID:@"colorHeaderTitleBanner" animated:YES];
-		[self removeSpecifierID:@"colorHeaderDateBanner" animated:YES];
 
 		if ([self specifierForID:@"indicatorModernBanner"] == nil) {
 			NSArray *specifiers = [self loadSpecifiersFromPlistName:@"Banner" target:self];

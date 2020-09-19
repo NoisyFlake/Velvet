@@ -62,6 +62,15 @@
 			<key>key</key>							<string>colorHeaderLockscreen</string>
 			<key>label</key>						<string>Header Color</string>
 		</dict>
+		<dict>
+			<key>cell</key>							<string>PSLinkListCell</string>
+			<key>cellClass</key>					<string>VelvetColorListSelector</string>
+			<key>detail</key>						<string>VelvetColorListController</string>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>id</key>							<string>colorHeaderTitleLockscreen</string>
+			<key>key</key>							<string>colorHeaderTitleLockscreen</string>
+			<key>label</key>						<string>Header Title Color</string>
+		</dict>
 
 		<dict>
 			<key>cell</key>							<string>PSLinkListCell</string>
@@ -186,6 +195,15 @@
 			<key>defaults</key>						<string>com.initwithframe.velvet</string>
 			<key>key</key>							<string>colorSecondaryLabelLockscreen</string>
 			<key>label</key>						<string>Message Color</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSLinkListCell</string>
+			<key>cellClass</key>					<string>VelvetColorListSelector</string>
+			<key>detail</key>						<string>VelvetColorListController</string>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>id</key>							<string>colorHeaderDateLockscreen</string>
+			<key>key</key>							<string>colorHeaderDateLockscreen</string>
+			<key>label</key>						<string>Date Color</string>
 		</dict>
 		<dict>
 			<key>cell</key>							<string>PSSwitchCell</string>
