@@ -127,41 +127,7 @@
 													</array>
 		</dict>
 
-		<dict>
-			<key>cell</key>							<string>PSGroupCell</string>
-			<key>label</key>						<string>App Icon Rounded Corners</string>
-		</dict>
-		<dict>
-			<key>cell</key>							<string>PSSegmentCell</string>
-			<key>default</key>						<string>stock</string>
-			<key>defaults</key>						<string>com.initwithframe.velvet</string>
-			<key>key</key>							<string>indicatorRoundedCornerLockscreen</string>
-			<key>id</key>							<string>indicatorRoundedCornerLockscreen</string>
-			<key>set</key>							<string>setAppIconRoundedCorners:specifier:</string>
-			<key>validTitles</key>					<array>
-														<string>None</string>
-														<string>Stock</string>
-														<string>Round</string>
-														<string>Custom</string>
-													</array>
-			<key>validValues</key>					<array>
-														<string>none</string>
-														<string>stock</string>
-														<string>round</string>
-														<string>custom</string>
-													</array>
-		</dict>
-		<dict>
-			<key>cell</key>							<string>PSSliderCell</string>
-			<key>cellClass</key>					<string>VelvetSlider</string>
-			<key>min</key>							<real>0</real>
-			<key>max</key>							<real>24</real>
-			<key>showValue</key>					<true/>
-			<key>default</key>						<real>5</real>
-			<key>defaults</key>						<string>com.initwithframe.velvet</string>
-			<key>key</key>							<string>indicatorCustomRoundedCornerLockscreen</string>
-			<key>id</key>							<string>indicatorCustomRoundedCornerLockscreen</string>
-		</dict>
+
 		<dict>
 			<key>cell</key>							<string>PSGroupCell</string>
 			<key>label</key>						<string>Background Options</string>
@@ -212,6 +178,43 @@
 			<key>key</key>							<string>nameAsTitleLockscreen</string>
 			<key>label</key>						<string>App Name as Title</string>
 			<key>cellClass</key>					<string>VelvetToggle</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>							<string>PSGroupCell</string>
+			<key>label</key>						<string>App Icon Rounded Corners</string>
+			<key>footerText</key>					<string>This only applies to the modern style app icon.</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSegmentCell</string>
+			<key>default</key>						<string>stock</string>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>indicatorRoundedCornerLockscreen</string>
+			<key>id</key>							<string>indicatorRoundedCornerLockscreen</string>
+			<key>set</key>							<string>setAppIconRoundedCorners:specifier:</string>
+			<key>validTitles</key>					<array>
+														<string>None</string>
+														<string>Stock</string>
+														<string>Round</string>
+														<string>Custom</string>
+													</array>
+			<key>validValues</key>					<array>
+														<string>none</string>
+														<string>stock</string>
+														<string>round</string>
+														<string>custom</string>
+													</array>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSliderCell</string>
+			<key>cellClass</key>					<string>VelvetSlider</string>
+			<key>min</key>							<real>0</real>
+			<key>max</key>							<real>24</real>
+			<key>showValue</key>					<true/>
+			<key>default</key>						<real>5</real>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>indicatorCustomRoundedCornerLockscreen</string>
+			<key>id</key>							<string>indicatorCustomRoundedCornerLockscreen</string>
 		</dict>
 
 		<dict>
