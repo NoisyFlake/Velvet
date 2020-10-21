@@ -262,8 +262,10 @@ BOOL isTesting;
 	NSString *messageColor = getColorFor(@"colorSecondaryLabel", view);
 	if (messageColor) {
 		view.notificationContentView.secondaryLabel.textColor = [messageColor isEqual:@"dominant"] ? dominantColor : [UIColor velvetColorFromHexString:messageColor];
+		view.notificationContentView.summaryLabel.textColor = view.notificationContentView.secondaryLabel.textColor;
 	} else {
 		view.notificationContentView.secondaryLabel.textColor = nil;
+		view.notificationContentView.summaryLabel.textColor = nil;
 	}
 
 	NSString *headerDateColor = getColorFor(@"colorHeaderDate", view);

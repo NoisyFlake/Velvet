@@ -7,6 +7,7 @@
 @end
 
 @interface BSUIEmojiLabelView : UIView
+@property (nonatomic,retain) UIColor * textColor;
 @end
 
 @interface NCNotificationContentView : UIView
