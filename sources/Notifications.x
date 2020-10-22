@@ -263,9 +263,11 @@ BOOL isTesting;
 	if (messageColor) {
 		view.notificationContentView.secondaryLabel.textColor = [messageColor isEqual:@"dominant"] ? dominantColor : [UIColor velvetColorFromHexString:messageColor];
 		view.notificationContentView.summaryLabel.textColor = view.notificationContentView.secondaryLabel.textColor;
+		view.notificationContentView.primarySubtitleLabel.textColor = view.notificationContentView.secondaryLabel.textColor;
 	} else {
 		view.notificationContentView.secondaryLabel.textColor = nil;
 		view.notificationContentView.summaryLabel.textColor = nil;
+		view.notificationContentView.primarySubtitleLabel.textColor = nil;
 	}
 
 	NSString *headerDateColor = getColorFor(@"colorHeaderDate", view);
@@ -700,12 +702,12 @@ static void testCustom() {
 
 		[[%c(JBBulletinManager) sharedInstance]
         showBulletinWithTitle:@"Home"
-        message:@"Would you like to turn the lights on?"
+        message:@"Your front door is now locked."
         bundleID:@"com.apple.Home"];
 
 		[[%c(JBBulletinManager) sharedInstance]
 			showBulletinWithTitle:@"iTunes Store"
-			message:@"Your favourite artist released a new track!"
+			message:@"Your recommendations for this week are in."
 			bundleID:@"com.apple.MobileStore"];
 
 		[[%c(JBBulletinManager) sharedInstance]
@@ -720,7 +722,7 @@ static void testCustom() {
 
 		[[%c(JBBulletinManager) sharedInstance]
 			showBulletinWithTitle:@"Tim Cook"
-			message:@"This looks even better than iOS 14!"
+			message:@"I forgot to implement this in iOS 14..."
 			bundleID:@"com.apple.MobileSMS"];
 	});
 }
