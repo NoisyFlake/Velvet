@@ -52,7 +52,7 @@ BOOL isTesting;
 		velvetBackground.layer.continuousCorners = YES;
 		velvetBackground.clipsToBounds = YES;
 
-		[view insertSubview:velvetBackground atIndex:1];
+		[view insertSubview:velvetBackground atIndex:2]; // TODO check if this still works on iOS 13 when it's not 1
 		view.velvetBackground = velvetBackground;
 	}
 
@@ -101,6 +101,22 @@ BOOL isTesting;
 		// Actually we'd have to restore the filter we delete later, but currently there is no known way to do this. If people ask, tell them to respring to get back to default.
 		header.titleLabel.textColor = UIColor.labelColor;
 		header.dateLabel.textColor = UIColor.labelColor;
+
+		bool hasHeaderGradient = NO;
+		for (CALayer *sublayer in header.layer.sublayers) {
+			if ([sublayer isKindOfClass:%c(CAGradientLayer)]) {
+				hasHeaderGradient = YES;
+				break;
+	}
+		}
+
+		if (!hasHeaderGradient) {
+			CAGradientLayer *gradient = [CAGradientLayer layer];
+			gradient.startPoint = CGPointZero;
+			gradient.endPoint = CGPointMake(1, 0);
+
+			[header.layer insertSublayer:gradient atIndex:0];
+		}
 	}
 
 	PLShadowView *shadowView = [self.viewForPreview valueForKey:@"_shadowView"];
@@ -209,7 +225,38 @@ BOOL isTesting;
 
 		NSString *headerColor = getColorFor(@"colorHeader", view);
 		if (headerColor) {
-			header.backgroundColor = [headerColor isEqual:@"dominant"] ? [dominantColor colorWithAlphaComponent:0.8] : [UIColor velvetColorFromHexString:headerColor];
+			UIColor *chosenColor = [headerColor isEqual:@"dominant"] ? [dominantColor colorWithAlphaComponent:0.8] : [UIColor velvetColorFromHexString:headerColor];
+
+			if ([[preferences valueForKey:getPreferencesKeyFor(@"gradientHeader", view)] isEqual:@"no"]) {
+				header.backgroundColor = chosenColor;
+			} else {
+				CGFloat hue, saturation, brightness, alpha ;
+				[chosenColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha ] ;
+				UIColor *highlightColor = [UIColor colorWithHue:hue saturation:saturation brightness:brightness+0.25 alpha:alpha];
+
+				NSArray *colorArray;
+				if ([[preferences valueForKey:getPreferencesKeyFor(@"gradientHeader", view)] isEqual:@"ltr"]) {
+					colorArray = @[(id)highlightColor.CGColor, (id)chosenColor.CGColor];
+				} else if ([[preferences valueForKey:getPreferencesKeyFor(@"gradientHeader", view)] isEqual:@"center"]) {
+					colorArray = @[(id)chosenColor.CGColor, (id)highlightColor.CGColor, (id)chosenColor.CGColor];
+				} else if ([[preferences valueForKey:getPreferencesKeyFor(@"gradientHeader", view)] isEqual:@"rtl"]) {
+					colorArray = @[(id)chosenColor.CGColor, (id)highlightColor.CGColor];
+				}
+
+				for (CALayer *sublayer in header.layer.sublayers) {
+					if ([sublayer isKindOfClass:%c(CAGradientLayer)]) {
+						((CAGradientLayer *)sublayer).colors = colorArray;
+
+						// Don't know why, but this has to be delayed a bit or header.bounds will be null
+						dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^(void){
+							((CAGradientLayer *)sublayer).frame = header.bounds;
+						});
+
+						break;
+					}
+				}
+			}
+
 
 			// Move the header to the velvetBackground view so that it gets automatically cut off with higher cornerRadius settings
 			[view.velvetBackground insertSubview:header atIndex:1];

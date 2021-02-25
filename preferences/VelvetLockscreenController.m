@@ -51,6 +51,8 @@
 				if ([spec.properties[@"key"] isEqual:@"indicatorClassicColorLockscreen"]) [mutableSpecifiers removeObject:spec];
 				if ([spec.properties[@"key"] isEqual:@"colorHeaderLockscreen"]) [mutableSpecifiers removeObject:spec];
 				if ([spec.properties[@"key"] isEqual:@"colorHeaderTitleLockscreen"]) [mutableSpecifiers removeObject:spec];
+				if ([spec.properties[@"key"] isEqual:@"gradientHeaderLockscreen"]) [mutableSpecifiers removeObject:spec];
+				if ([spec.properties[@"key"] isEqual:@"headerOptionsLockscreen"]) [mutableSpecifiers removeObject:spec];
 
 				if ([spec.properties[@"key"] isEqual:@"indicatorModernColorLockscreen"] && ([[[self preferences] valueForKey:@"indicatorModernLockscreen"] isEqual:@"none"] || [[[self preferences] valueForKey:@"indicatorModernLockscreen"] isEqual:@"icon"])) [mutableSpecifiers removeObject:spec];
 				if ([spec.properties[@"key"] isEqual:@"indicatorModernSizeLockscreen"] && ([[[self preferences] valueForKey:@"indicatorModernLockscreen"] isEqual:@"none"] || [[[self preferences] valueForKey:@"indicatorModernLockscreen"] isEqual:@"line"])) [mutableSpecifiers removeObject:spec];
@@ -125,11 +127,17 @@
 				if ([spec.properties[@"key"] isEqual:@"indicatorClassicColorLockscreen"] && !([[[self preferences] valueForKey:@"indicatorClassicLockscreen"] isEqual:@"none"] || [[[self preferences] valueForKey:@"indicatorClassicLockscreen"] isEqual:@"icon"])) {
 					[self insertSpecifier:spec afterSpecifierID:@"indicatorClassicLockscreen" animated:YES];
 				}
-				if ([spec.properties[@"key"] isEqual:@"colorHeaderLockscreen"]) {
+				if ([spec.properties[@"key"] isEqual:@"headerOptionsLockscreen"]) {
 					[self insertSpecifier:spec afterSpecifierID:@"indicatorClassicLockscreen" animated:YES];
 				}
-				if ([spec.properties[@"key"] isEqual:@"colorHeaderTitleLockscreen"]) {
+				if ([spec.properties[@"key"] isEqual:@"colorHeaderLockscreen"]) {
+					[self insertSpecifier:spec afterSpecifierID:@"headerOptionsLockscreen" animated:YES];
+				}
+				if ([spec.properties[@"key"] isEqual:@"gradientHeaderLockscreen"]) {
 					[self insertSpecifier:spec afterSpecifierID:@"colorHeaderLockscreen" animated:YES];
+				}
+				if ([spec.properties[@"key"] isEqual:@"colorHeaderTitleLockscreen"]) {
+					[self insertSpecifier:spec afterSpecifierID:@"gradientHeaderLockscreen" animated:YES];
 				}
 			}
 		}
@@ -139,6 +147,8 @@
 		[self removeSpecifierID:@"indicatorClassicColorLockscreen" animated:NO];
 		[self removeSpecifierID:@"colorHeaderLockscreen" animated:YES];
 		[self removeSpecifierID:@"colorHeaderTitleLockscreen" animated:YES];
+		[self removeSpecifierID:@"gradientHeaderLockscreen" animated:YES];
+		[self removeSpecifierID:@"headerOptionsLockscreen" animated:YES];
 
 		if ([self specifierForID:@"indicatorModernLockscreen"] == nil) {
 			NSArray *specifiers = [self loadSpecifiersFromPlistName:@"Lockscreen" target:self];

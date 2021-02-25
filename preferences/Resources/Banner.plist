@@ -53,6 +53,13 @@
 			<key>key</key>							<string>indicatorClassicColorBanner</string>
 			<key>label</key>						<string>Indicator Color</string>
 		</dict>
+
+		<dict>
+			<key>cell</key>							<string>PSGroupCell</string>
+			<key>label</key>						<string>Header Options</string>
+			<key>id</key>							<string>headerOptionsBanner</string>
+			<key>key</key>							<string>headerOptionsBanner</string>
+		</dict>
 		<dict>
 			<key>cell</key>							<string>PSLinkListCell</string>
 			<key>cellClass</key>					<string>VelvetColorListSelector</string>
@@ -60,7 +67,28 @@
 			<key>defaults</key>						<string>com.initwithframe.velvet</string>
 			<key>id</key>							<string>colorHeaderBanner</string>
 			<key>key</key>							<string>colorHeaderBanner</string>
-			<key>label</key>						<string>Header Color</string>
+			<key>label</key>						<string>Background Color</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSLinkListCell</string>
+			<key>detail</key>						<string>VelvetListItemsController</string>
+			<key>default</key>						<string>no</string>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>gradientHeaderBanner</string>
+			<key>id</key>							<string>gradientHeaderBanner</string>
+			<key>label</key>						<string>Use Gradient</string>
+			<key>validTitles</key>					<array>
+														<string>No</string>
+														<string>Left to Right</string>
+														<string>Center</string>
+														<string>Right to Left</string>
+													</array>
+			<key>validValues</key>					<array>
+														<string>no</string>
+														<string>ltr</string>
+														<string>center</string>
+														<string>rtl</string>
+													</array>
 		</dict>
 		<dict>
 			<key>cell</key>							<string>PSLinkListCell</string>
@@ -69,7 +97,7 @@
 			<key>defaults</key>						<string>com.initwithframe.velvet</string>
 			<key>id</key>							<string>colorHeaderTitleBanner</string>
 			<key>key</key>							<string>colorHeaderTitleBanner</string>
-			<key>label</key>						<string>Header Title Color</string>
+			<key>label</key>						<string>Label Color</string>
 		</dict>
 
 		<dict>

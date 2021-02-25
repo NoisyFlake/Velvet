@@ -50,6 +50,8 @@
 				if ([spec.properties[@"key"] isEqual:@"indicatorClassicColorBanner"]) [mutableSpecifiers removeObject:spec];
 				if ([spec.properties[@"key"] isEqual:@"colorHeaderBanner"]) [mutableSpecifiers removeObject:spec];
 				if ([spec.properties[@"key"] isEqual:@"colorHeaderTitleBanner"]) [mutableSpecifiers removeObject:spec];
+				if ([spec.properties[@"key"] isEqual:@"gradientHeaderBanner"]) [mutableSpecifiers removeObject:spec];
+				if ([spec.properties[@"key"] isEqual:@"headerOptionsBanner"]) [mutableSpecifiers removeObject:spec];
 
 				if ([spec.properties[@"key"] isEqual:@"indicatorModernColorBanner"] && ([[[self preferences] valueForKey:@"indicatorModernBanner"] isEqual:@"none"] || [[[self preferences] valueForKey:@"indicatorModernBanner"] isEqual:@"icon"])) [mutableSpecifiers removeObject:spec];
 				if ([spec.properties[@"key"] isEqual:@"indicatorModernSizeBanner"] && ([[[self preferences] valueForKey:@"indicatorModernBanner"] isEqual:@"none"] || [[[self preferences] valueForKey:@"indicatorModernBanner"] isEqual:@"line"])) [mutableSpecifiers removeObject:spec];
@@ -123,11 +125,17 @@
 				if ([spec.properties[@"key"] isEqual:@"indicatorClassicColorBanner"] && !([[[self preferences] valueForKey:@"indicatorClassicBanner"] isEqual:@"none"] || [[[self preferences] valueForKey:@"indicatorClassicBanner"] isEqual:@"icon"])) {
 					[self insertSpecifier:spec afterSpecifierID:@"indicatorClassicBanner" animated:YES];
 				}
-				if ([spec.properties[@"key"] isEqual:@"colorHeaderBanner"]) {
+				if ([spec.properties[@"key"] isEqual:@"headerOptionsBanner"]) {
 					[self insertSpecifier:spec afterSpecifierID:@"indicatorClassicBanner" animated:YES];
 				}
-				if ([spec.properties[@"key"] isEqual:@"colorHeaderTitleBanner"]) {
+				if ([spec.properties[@"key"] isEqual:@"colorHeaderBanner"]) {
+					[self insertSpecifier:spec afterSpecifierID:@"headerOptionsBanner" animated:YES];
+				}
+				if ([spec.properties[@"key"] isEqual:@"gradientHeaderBanner"]) {
 					[self insertSpecifier:spec afterSpecifierID:@"colorHeaderBanner" animated:YES];
+				}
+				if ([spec.properties[@"key"] isEqual:@"colorHeaderTitleBanner"]) {
+					[self insertSpecifier:spec afterSpecifierID:@"gradientHeaderBanner" animated:YES];
 				}
 			}
 		}
@@ -137,6 +145,8 @@
 		[self removeSpecifierID:@"indicatorClassicColorBanner" animated:NO];
 		[self removeSpecifierID:@"colorHeaderBanner" animated:YES];
 		[self removeSpecifierID:@"colorHeaderTitleBanner" animated:YES];
+		[self removeSpecifierID:@"gradientHeaderBanner" animated:YES];
+		[self removeSpecifierID:@"headerOptionsBanner" animated:YES];
 
 		if ([self specifierForID:@"indicatorModernBanner"] == nil) {
 			NSArray *specifiers = [self loadSpecifiersFromPlistName:@"Banner" target:self];
