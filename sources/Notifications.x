@@ -112,7 +112,7 @@ BOOL isTesting;
 
 		if (!hasHeaderGradient) {
 			CAGradientLayer *gradient = [CAGradientLayer layer];
-			gradient.startPoint = CGPointZero;
+			gradient.startPoint = CGPointMake(0, 0);
 			gradient.endPoint = CGPointMake(1, 0);
 
 			[header.layer insertSublayer:gradient atIndex:0];
@@ -217,15 +217,35 @@ BOOL isTesting;
 	} else if ([[preferences valueForKey:getPreferencesKeyFor(@"style", view)] isEqual:@"classic"]) {
 		[self velvetHideHeader:NO];
 
+		
 		NSString *headerTitleColor = getColorFor(@"colorHeaderTitle", view);
 		if (headerTitleColor) {
 			header.titleLabel.layer.filters = nil;
 			header.titleLabel.textColor = [headerTitleColor isEqual:@"dominant"] ? dominantColor : [UIColor velvetColorFromHexString:headerTitleColor];
 		}
 
+		NSString *headerDateColor = getColorFor(@"colorHeaderDate", view);
+		if (headerDateColor) {
+			// Yup, this is necessary as sometimes when receiving lockscreen notifications, dateLabel isn't initialized yet. Stupid iOS.
+			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^(void){
+				header.dateLabel.layer.filters = nil;
+				header.dateLabel.textColor = [headerDateColor isEqual:@"dominant"] ? dominantColor : [UIColor velvetColorFromHexString:headerDateColor];
+			});
+		}
+
 		NSString *headerColor = getColorFor(@"colorHeader", view);
 		if (headerColor) {
 			UIColor *chosenColor = [headerColor isEqual:@"dominant"] ? [dominantColor colorWithAlphaComponent:0.8] : [UIColor velvetColorFromHexString:headerColor];
+			if (chosenColor) {
+				if ([headerTitleColor isEqual:@"dominant"]) {
+					header.titleLabel.textColor = [chosenColor velvetIsDarkColor] ? UIColor.whiteColor : (self.traitCollection.userInterfaceStyle == 1 ? UIColor.blackColor : UIColor.systemGray4Color);
+				}
+
+				if ([headerDateColor isEqual:@"dominant"]) {
+					dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^(void){
+						header.dateLabel.textColor = [chosenColor velvetIsDarkColor] ? UIColor.whiteColor : (self.traitCollection.userInterfaceStyle == 1 ? UIColor.blackColor : UIColor.systemGray4Color);
+					});
+				}
 
 			if ([[preferences valueForKey:getPreferencesKeyFor(@"gradientHeader", view)] isEqual:@"no"]) {
 				header.backgroundColor = chosenColor;
@@ -255,6 +275,7 @@ BOOL isTesting;
 						break;
 					}
 				}
+			}
 			}
 
 
@@ -315,15 +336,6 @@ BOOL isTesting;
 		view.notificationContentView.secondaryLabel.textColor = nil;
 		view.notificationContentView.summaryLabel.textColor = nil;
 		view.notificationContentView.primarySubtitleLabel.textColor = nil;
-	}
-
-	NSString *headerDateColor = getColorFor(@"colorHeaderDate", view);
-	if (headerDateColor) {
-		// Yup, this is necessary as sometimes when receiving lockscreen notifications, dateLabel isn't initialized yet. Stupid iOS.
-		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^(void){
-			header.dateLabel.layer.filters = nil;
-			header.dateLabel.textColor = [headerDateColor isEqual:@"dominant"] ? dominantColor : [UIColor velvetColorFromHexString:headerDateColor];
-		});
 	}
 
 	NSString *backgroundColor = getColorFor(@"colorBackground", view);

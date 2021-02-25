@@ -11,4 +11,5 @@
 @interface UIColor (VelvetColorSupport)
 - (CGFloat)velvetColorBrightness;
 + (UIColor *)velvetColorFromHexString:(NSString *)hexString;
+- (BOOL)velvetIsDarkColor;
 @end
