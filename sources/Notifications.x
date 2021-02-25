@@ -145,7 +145,7 @@ BOOL isTesting;
 				view.imageIndicator.frame = CGRectMake(20, (view.frame.size.height - size)/2, size, size);
 			}
 
-			if ([self.notificationRequest.sectionIdentifier isEqual:@"com.apple.donotdisturb"]) {
+			if ([self.notificationRequest.sectionIdentifier isEqual:@"com.apple.donotdisturb"] || [self.notificationRequest.sectionIdentifier isEqual:@"com.apple.powerui.smartcharging"]) {
 				view.imageIndicator.image = [UIImage systemImageNamed:self.notificationRequest.content.attachmentImage.imageAsset.assetName];
 				view.imageIndicator.tintColor = UIColor.labelColor;
 				thumbnail.alpha = 0;
@@ -424,7 +424,7 @@ BOOL isTesting;
 		bundleId = self.notificationRequest.sectionIdentifier;
 	}
 
-	if ([bundleId isEqual:@"com.apple.donotdisturb"]) return nil;
+	if ([bundleId isEqual:@"com.apple.donotdisturb"] || [bundleId isEqual:@"com.apple.powerui.smartcharging"]) return nil;
 
 	UIImage *icon = [self getIconForBundleId:bundleId withMask:NO];
 
@@ -538,7 +538,7 @@ BOOL isTesting;
 			bundleId = controller.notificationRequest.sectionIdentifier;
 		}
 
-		if (arg1 == nil && bundleId != nil && ![bundleId isEqual:@"com.apple.donotdisturb"]) {
+		if (arg1 == nil && bundleId != nil && ![bundleId isEqual:@"com.apple.donotdisturb"] && ![bundleId isEqual:@"com.apple.powerui.smartcharging"]) {
 			SBApplication *app = [[%c(SBApplicationController) sharedInstance] applicationWithBundleIdentifier:bundleId];
 			if (app && app.displayName) {
 				arg1 = app.displayName;
@@ -572,7 +572,7 @@ BOOL isTesting;
 		thumbnail.frame = thumbFrame;
 
 		NCNotificationShortLookViewController *controller = self._viewControllerForAncestor;
-		if ([controller isKindOfClass:%c(NCNotificationShortLookViewController)] && [controller.notificationRequest.sectionIdentifier isEqual:@"com.apple.donotdisturb"] && [[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"modern"]) {
+		if ([controller isKindOfClass:%c(NCNotificationShortLookViewController)] && ([controller.notificationRequest.sectionIdentifier isEqual:@"com.apple.donotdisturb"] || [controller.notificationRequest.sectionIdentifier isEqual:@"com.apple.powerui.smartcharging"]) && [[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"modern"]) {
 			if (!isRTL()) {
 				labelWidth -= thumbnail.frame.size.width;
 			}
