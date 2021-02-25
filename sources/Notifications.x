@@ -106,6 +106,7 @@ BOOL isTesting;
 		for (CALayer *sublayer in header.layer.sublayers) {
 			if ([sublayer isKindOfClass:%c(CAGradientLayer)]) {
 				hasHeaderGradient = YES;
+				((CAGradientLayer *)sublayer).colors = nil;
 				break;
 	}
 		}
