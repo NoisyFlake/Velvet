@@ -333,6 +333,30 @@
 			<key>id</key>							<string>customCornerRadiusLockscreen</string>
 		</dict>
 
+		<dict>
+			<key>cell</key>							<string>PSGroupCell</string>
+			<key>label</key>						<string>Misc.</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSLinkListCell</string>
+			<key>detail</key>						<string>VelvetListItemsController</string>
+			<key>default</key>						<string>default</string>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>forceModeLockscreen</string>
+			<key>id</key>							<string>forceModeLockscreen</string>
+			<key>label</key>						<string>Force Mode</string>
+			<key>validTitles</key>					<array>
+														<string>Default</string>
+														<string>Light</string>
+														<string>Dark</string>
+													</array>
+			<key>validValues</key>					<array>
+														<string>default</string>
+														<string>light</string>
+														<string>dark</string>
+													</array>
+		</dict>
+
 	</array>
 	<key>title</key>
 	<string>Lockscreen</string>

@@ -42,6 +42,12 @@ BOOL isTesting;
 	// Notification view is not yet fully initialized
 	if (view.frame.size.width == 0) return;
 
+	if ([[preferences valueForKey:getPreferencesKeyFor(@"forceMode", view)] isEqual:@"dark"]) {
+		self.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
+	} else if ([[preferences valueForKey:getPreferencesKeyFor(@"forceMode", view)] isEqual:@"light"]) {
+		self.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+	}
+
 	float cornerRadius = getCornerRadius(view);
 	if (cornerRadius < 0) cornerRadius = view.frame.size.height / 2;
 
