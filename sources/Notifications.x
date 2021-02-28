@@ -58,7 +58,7 @@ BOOL isTesting;
 		velvetBackground.layer.continuousCorners = YES;
 		velvetBackground.clipsToBounds = YES;
 
-		[view insertSubview:velvetBackground atIndex:2]; // TODO check if this still works on iOS 13 when it's not 1
+		[view insertSubview:velvetBackground atIndex:(isLockscreen(view) ? 1 : 2)]; // TODO check if this still works on iOS 13 when it's not 1
 		view.velvetBackground = velvetBackground;
 	}
 
@@ -231,15 +231,6 @@ BOOL isTesting;
 			header.titleLabel.textColor = [headerTitleColor isEqual:@"dominant"] ? dominantColor : [UIColor velvetColorFromHexString:headerTitleColor];
 		}
 
-		NSString *headerDateColor = getColorFor(@"colorHeaderDate", view);
-		if (headerDateColor) {
-			// Yup, this is necessary as sometimes when receiving lockscreen notifications, dateLabel isn't initialized yet. Stupid iOS.
-			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^(void){
-				header.dateLabel.layer.filters = nil;
-				header.dateLabel.textColor = [headerDateColor isEqual:@"dominant"] ? dominantColor : [UIColor velvetColorFromHexString:headerDateColor];
-			});
-		}
-
 		NSString *headerColor = getColorFor(@"colorHeader", view);
 		if (headerColor) {
 			UIColor *chosenColor = [headerColor isEqual:@"dominant"] ? [dominantColor colorWithAlphaComponent:0.8] : [UIColor velvetColorFromHexString:headerColor];
@@ -248,15 +239,12 @@ BOOL isTesting;
 					header.titleLabel.textColor = [chosenColor velvetIsDarkColor] ? UIColor.whiteColor : (self.traitCollection.userInterfaceStyle == 1 ? UIColor.blackColor : UIColor.systemGray4Color);
 				}
 
-				if ([headerDateColor isEqual:@"dominant"]) {
-					dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^(void){
-						header.dateLabel.textColor = [chosenColor velvetIsDarkColor] ? UIColor.whiteColor : (self.traitCollection.userInterfaceStyle == 1 ? UIColor.blackColor : UIColor.systemGray4Color);
-					});
-				}
-
 			if ([[preferences valueForKey:getPreferencesKeyFor(@"gradientHeader", view)] isEqual:@"no"]) {
 				header.backgroundColor = chosenColor;
 			} else {
+					// This is just so we can check later if there is a background color
+					header.backgroundColor = [UIColor colorWithHue:0 saturation:0 brightness:0 alpha:0];
+
 				CGFloat hue, saturation, brightness, alpha ;
 				[chosenColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha ] ;
 				UIColor *highlightColor = [UIColor colorWithHue:hue saturation:saturation brightness:brightness+0.25 alpha:alpha];
@@ -327,24 +315,6 @@ BOOL isTesting;
 		if (indicatorColor) view.colorIndicator.backgroundColor = [indicatorColor isEqual:@"dominant"] ? dominantColor : [UIColor velvetColorFromHexString:indicatorColor];
 	}
 
-	NSString *titleColor = getColorFor(@"colorPrimaryLabel", view);
-	if (titleColor) {
-		view.notificationContentView.primaryLabel.textColor = [titleColor isEqual:@"dominant"] ? dominantColor : [UIColor velvetColorFromHexString:titleColor];
-	} else {
-		view.notificationContentView.primaryLabel.textColor = nil;
-	}
-
-	NSString *messageColor = getColorFor(@"colorSecondaryLabel", view);
-	if (messageColor) {
-		view.notificationContentView.secondaryLabel.textColor = [messageColor isEqual:@"dominant"] ? dominantColor : [UIColor velvetColorFromHexString:messageColor];
-		view.notificationContentView.summaryLabel.textColor = view.notificationContentView.secondaryLabel.textColor;
-		view.notificationContentView.primarySubtitleLabel.textColor = view.notificationContentView.secondaryLabel.textColor;
-	} else {
-		view.notificationContentView.secondaryLabel.textColor = nil;
-		view.notificationContentView.summaryLabel.textColor = nil;
-		view.notificationContentView.primarySubtitleLabel.textColor = nil;
-	}
-
 	NSString *backgroundColor = getColorFor(@"colorBackground", view);
 	if (backgroundColor) {
 		view.velvetBackground.backgroundColor = [backgroundColor isEqual:@"dominant"] ? [dominantColor colorWithAlphaComponent:0.6] : [UIColor velvetColorFromHexString:backgroundColor];
@@ -361,6 +331,50 @@ BOOL isTesting;
 		view.velvetBackground.backgroundColor = nil;
 		view.backgroundMaterialView.alpha = 1;
 		[self velvetHideGroupedNotifications:NO];
+	}
+
+	NSString *titleColor = getColorFor(@"colorPrimaryLabel", view);
+	if (titleColor) {
+		if (view.velvetBackground.backgroundColor && [titleColor isEqual:@"dominant"]) {
+			view.notificationContentView.primaryLabel.textColor = [view.velvetBackground.backgroundColor velvetIsDarkColor] ? UIColor.whiteColor : (self.traitCollection.userInterfaceStyle == 1 ? UIColor.blackColor : UIColor.systemGray4Color);
+		} else {
+		view.notificationContentView.primaryLabel.textColor = [titleColor isEqual:@"dominant"] ? dominantColor : [UIColor velvetColorFromHexString:titleColor];
+		}
+	} else {
+		view.notificationContentView.primaryLabel.textColor = nil;
+	}
+
+	NSString *messageColor = getColorFor(@"colorSecondaryLabel", view);
+	if (messageColor) {
+		if (view.velvetBackground.backgroundColor && [messageColor isEqual:@"dominant"]) {
+			view.notificationContentView.secondaryLabel.textColor = [view.velvetBackground.backgroundColor velvetIsDarkColor] ? UIColor.whiteColor : (self.traitCollection.userInterfaceStyle == 1 ? UIColor.blackColor : UIColor.systemGray4Color);
+		} else {
+		view.notificationContentView.secondaryLabel.textColor = [messageColor isEqual:@"dominant"] ? dominantColor : [UIColor velvetColorFromHexString:messageColor];
+		}
+		view.notificationContentView.summaryLabel.textColor = view.notificationContentView.secondaryLabel.textColor;
+		view.notificationContentView.primarySubtitleLabel.textColor = view.notificationContentView.secondaryLabel.textColor;
+	} else {
+		view.notificationContentView.secondaryLabel.textColor = nil;
+		view.notificationContentView.summaryLabel.textColor = nil;
+		view.notificationContentView.primarySubtitleLabel.textColor = nil;
+	}
+
+	NSString *headerDateColor = getColorFor(@"colorHeaderDate", view);
+	if (headerDateColor) {
+		// Yup, this is necessary as sometimes when receiving lockscreen notifications, dateLabel isn't initialized yet. Stupid iOS.
+		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^(void){
+			header.dateLabel.layer.filters = nil;
+
+			if (header.backgroundColor && [headerDateColor isEqual:@"dominant"]) {
+				NSLog(@"Hurensohn");
+				header.dateLabel.textColor = [header.backgroundColor velvetIsDarkColor] ? UIColor.whiteColor : (self.traitCollection.userInterfaceStyle == 1 ? UIColor.blackColor : UIColor.systemGray4Color);
+			} else if (view.velvetBackground.backgroundColor && [headerDateColor isEqual:@"dominant"]) {
+				header.dateLabel.textColor = [view.velvetBackground.backgroundColor velvetIsDarkColor] ? UIColor.whiteColor : (self.traitCollection.userInterfaceStyle == 1 ? UIColor.blackColor : UIColor.systemGray4Color);
+		} else {
+				header.dateLabel.textColor = [headerDateColor isEqual:@"dominant"] ? dominantColor : [UIColor velvetColorFromHexString:headerDateColor];
+		}
+			
+		});
 	}
 
 	NSString *borderColor = getColorFor(@"borderColor", view);
