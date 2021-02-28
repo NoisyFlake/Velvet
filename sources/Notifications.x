@@ -243,7 +243,7 @@ BOOL isTesting;
 				header.backgroundColor = chosenColor;
 			} else {
 					// This is just so we can check later if there is a background color
-					header.backgroundColor = [UIColor colorWithHue:0 saturation:0 brightness:0 alpha:0];
+					header.backgroundColor = chosenColor;
 
 				CGFloat hue, saturation, brightness, alpha ;
 				[chosenColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha ] ;
@@ -366,7 +366,6 @@ BOOL isTesting;
 			header.dateLabel.layer.filters = nil;
 
 			if (header.backgroundColor && [headerDateColor isEqual:@"dominant"]) {
-				NSLog(@"Hurensohn");
 				header.dateLabel.textColor = [header.backgroundColor velvetIsDarkColor] ? UIColor.whiteColor : (self.traitCollection.userInterfaceStyle == 1 ? UIColor.blackColor : UIColor.systemGray4Color);
 			} else if (view.velvetBackground.backgroundColor && [headerDateColor isEqual:@"dominant"]) {
 				header.dateLabel.textColor = [view.velvetBackground.backgroundColor velvetIsDarkColor] ? UIColor.whiteColor : (self.traitCollection.userInterfaceStyle == 1 ? UIColor.blackColor : UIColor.systemGray4Color);
