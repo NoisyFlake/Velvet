@@ -31,6 +31,18 @@ BOOL isTesting;
 }
 %end
 
+%hook NCNotificationStructuredListViewController
+- (void)viewDidLayoutSubviews {
+	%orig;
+
+	if ([[preferences valueForKey:@"forceModeLockscreen"] isEqual:@"dark"]) {
+		self.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
+	} else if ([[preferences valueForKey:@"forceModeLockscreen"] isEqual:@"light"]) {
+		self.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+	}
+}
+%end
+
 %hook NCNotificationShortLookViewController
 - (void)viewDidLayoutSubviews {
 	%orig;
@@ -114,7 +126,7 @@ BOOL isTesting;
 				hasHeaderGradient = YES;
 				((CAGradientLayer *)sublayer).colors = nil;
 				break;
-	}
+			}
 		}
 
 		if (!hasHeaderGradient) {
@@ -238,39 +250,39 @@ BOOL isTesting;
 				if ([headerTitleColor isEqual:@"dominant"]) {
 					header.titleLabel.textColor = [chosenColor velvetIsDarkColor] ? UIColor.whiteColor : (self.traitCollection.userInterfaceStyle == 1 ? UIColor.blackColor : UIColor.systemGray4Color);
 				}
-
-			if ([[preferences valueForKey:getPreferencesKeyFor(@"gradientHeader", view)] isEqual:@"no"]) {
-				header.backgroundColor = chosenColor;
-			} else {
+				
+				if ([[preferences valueForKey:getPreferencesKeyFor(@"gradientHeader", view)] isEqual:@"no"]) {
+					header.backgroundColor = chosenColor;
+				} else {
 					// This is just so we can check later if there is a background color
 					header.backgroundColor = chosenColor;
 
-				CGFloat hue, saturation, brightness, alpha ;
-				[chosenColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha ] ;
-				UIColor *highlightColor = [UIColor colorWithHue:hue saturation:saturation brightness:brightness+0.25 alpha:alpha];
+					CGFloat hue, saturation, brightness, alpha ;
+					[chosenColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha ] ;
+					UIColor *highlightColor = [UIColor colorWithHue:hue saturation:saturation brightness:brightness+0.25 alpha:alpha];
 
-				NSArray *colorArray;
-				if ([[preferences valueForKey:getPreferencesKeyFor(@"gradientHeader", view)] isEqual:@"ltr"]) {
-					colorArray = @[(id)highlightColor.CGColor, (id)chosenColor.CGColor];
-				} else if ([[preferences valueForKey:getPreferencesKeyFor(@"gradientHeader", view)] isEqual:@"center"]) {
-					colorArray = @[(id)chosenColor.CGColor, (id)highlightColor.CGColor, (id)chosenColor.CGColor];
-				} else if ([[preferences valueForKey:getPreferencesKeyFor(@"gradientHeader", view)] isEqual:@"rtl"]) {
-					colorArray = @[(id)chosenColor.CGColor, (id)highlightColor.CGColor];
-				}
+					NSArray *colorArray;
+					if ([[preferences valueForKey:getPreferencesKeyFor(@"gradientHeader", view)] isEqual:@"ltr"]) {
+						colorArray = @[(id)highlightColor.CGColor, (id)chosenColor.CGColor];
+					} else if ([[preferences valueForKey:getPreferencesKeyFor(@"gradientHeader", view)] isEqual:@"center"]) {
+						colorArray = @[(id)chosenColor.CGColor, (id)highlightColor.CGColor, (id)chosenColor.CGColor];
+					} else if ([[preferences valueForKey:getPreferencesKeyFor(@"gradientHeader", view)] isEqual:@"rtl"]) {
+						colorArray = @[(id)chosenColor.CGColor, (id)highlightColor.CGColor];
+					}
 
-				for (CALayer *sublayer in header.layer.sublayers) {
-					if ([sublayer isKindOfClass:%c(CAGradientLayer)]) {
-						((CAGradientLayer *)sublayer).colors = colorArray;
+					for (CALayer *sublayer in header.layer.sublayers) {
+						if ([sublayer isKindOfClass:%c(CAGradientLayer)]) {
+							((CAGradientLayer *)sublayer).colors = colorArray;
 
-						// Don't know why, but this has to be delayed a bit or header.bounds will be null
-						dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^(void){
-							((CAGradientLayer *)sublayer).frame = header.bounds;
-						});
+							// Don't know why, but this has to be delayed a bit or header.bounds will be null
+							dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^(void){
+								((CAGradientLayer *)sublayer).frame = header.bounds;
+							});
 
-						break;
+							break;
+						}
 					}
 				}
-			}
 			}
 
 
@@ -338,7 +350,7 @@ BOOL isTesting;
 		if (view.velvetBackground.backgroundColor && [titleColor isEqual:@"dominant"]) {
 			view.notificationContentView.primaryLabel.textColor = [view.velvetBackground.backgroundColor velvetIsDarkColor] ? UIColor.whiteColor : (self.traitCollection.userInterfaceStyle == 1 ? UIColor.blackColor : UIColor.systemGray4Color);
 		} else {
-		view.notificationContentView.primaryLabel.textColor = [titleColor isEqual:@"dominant"] ? dominantColor : [UIColor velvetColorFromHexString:titleColor];
+			view.notificationContentView.primaryLabel.textColor = [titleColor isEqual:@"dominant"] ? dominantColor : [UIColor velvetColorFromHexString:titleColor];
 		}
 	} else {
 		view.notificationContentView.primaryLabel.textColor = nil;
@@ -349,7 +361,7 @@ BOOL isTesting;
 		if (view.velvetBackground.backgroundColor && [messageColor isEqual:@"dominant"]) {
 			view.notificationContentView.secondaryLabel.textColor = [view.velvetBackground.backgroundColor velvetIsDarkColor] ? UIColor.whiteColor : (self.traitCollection.userInterfaceStyle == 1 ? UIColor.blackColor : UIColor.systemGray4Color);
 		} else {
-		view.notificationContentView.secondaryLabel.textColor = [messageColor isEqual:@"dominant"] ? dominantColor : [UIColor velvetColorFromHexString:messageColor];
+			view.notificationContentView.secondaryLabel.textColor = [messageColor isEqual:@"dominant"] ? dominantColor : [UIColor velvetColorFromHexString:messageColor];
 		}
 		view.notificationContentView.summaryLabel.textColor = view.notificationContentView.secondaryLabel.textColor;
 		view.notificationContentView.primarySubtitleLabel.textColor = view.notificationContentView.secondaryLabel.textColor;
@@ -369,9 +381,9 @@ BOOL isTesting;
 				header.dateLabel.textColor = [header.backgroundColor velvetIsDarkColor] ? UIColor.whiteColor : (self.traitCollection.userInterfaceStyle == 1 ? UIColor.blackColor : UIColor.systemGray4Color);
 			} else if (view.velvetBackground.backgroundColor && [headerDateColor isEqual:@"dominant"]) {
 				header.dateLabel.textColor = [view.velvetBackground.backgroundColor velvetIsDarkColor] ? UIColor.whiteColor : (self.traitCollection.userInterfaceStyle == 1 ? UIColor.blackColor : UIColor.systemGray4Color);
-		} else {
+			} else {
 				header.dateLabel.textColor = [headerDateColor isEqual:@"dominant"] ? dominantColor : [UIColor velvetColorFromHexString:headerDateColor];
-		}
+			}
 			
 		});
 	}
@@ -780,17 +792,17 @@ static void testCustom() {
 	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 4.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void) {
 
 		[[%c(JBBulletinManager) sharedInstance]
-        showBulletinWithTitle:@"Home"
+        showBulletinWithTitle:@""
         message:@"Your front door is now locked."
         bundleID:@"com.apple.Home"];
 
 		[[%c(JBBulletinManager) sharedInstance]
-			showBulletinWithTitle:@"iTunes Store"
+			showBulletinWithTitle:@""
 			message:@"Your recommendations for this week are in."
 			bundleID:@"com.apple.MobileStore"];
 
 		[[%c(JBBulletinManager) sharedInstance]
-			showBulletinWithTitle:@"Twitter"
+			showBulletinWithTitle:@"Velvet"
 			message:@"By @NoisyFlake & @HiMyNameIsUbik"
 			bundleID:@"com.atebits.Tweetie2"];
 

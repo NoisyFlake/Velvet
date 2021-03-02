@@ -121,3 +121,6 @@ struct SBIconImageInfo {
 @interface UIColor (Velvet)
 +(id)labelColor;
 @end
+
+@interface NCNotificationStructuredListViewController : UIViewController
+@end
