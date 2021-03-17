@@ -347,7 +347,7 @@ BOOL isTesting;
 
 	NSString *titleColor = getColorFor(@"colorPrimaryLabel", view);
 	if (titleColor) {
-		if (view.velvetBackground.backgroundColor && [titleColor isEqual:@"dominant"]) {
+		if (view.velvetBackground.backgroundColor && [titleColor isEqual:@"dominant"] && CGColorGetAlpha(view.velvetBackground.backgroundColor.CGColor) > 0) {
 			view.notificationContentView.primaryLabel.textColor = [view.velvetBackground.backgroundColor velvetIsDarkColor] ? UIColor.whiteColor : (self.traitCollection.userInterfaceStyle == 1 ? UIColor.blackColor : UIColor.systemGray4Color);
 		} else {
 			view.notificationContentView.primaryLabel.textColor = [titleColor isEqual:@"dominant"] ? dominantColor : [UIColor velvetColorFromHexString:titleColor];
