@@ -44,6 +44,11 @@
 				if ([spec.properties[@"key"] isEqual:@"indicatorModernColorBanner"]) [mutableSpecifiers removeObject:spec];
 				if ([spec.properties[@"key"] isEqual:@"indicatorModernSizeBanner"]) [mutableSpecifiers removeObject:spec];
 
+				if ([spec.properties[@"key"] isEqual:@"contactPictureBanner"]) [mutableSpecifiers removeObject:spec];
+				if ([spec.properties[@"key"] isEqual:@"useContactPictureBanner"]) [mutableSpecifiers removeObject:spec];
+				if ([spec.properties[@"key"] isEqual:@"useContactPictureIconBanner"]) [mutableSpecifiers removeObject:spec];
+				if ([spec.properties[@"key"] isEqual:@"contactPictureBorderBanner"]) [mutableSpecifiers removeObject:spec];
+
 				if ([spec.properties[@"key"] isEqual:@"indicatorClassicColorBanner"] && ([[[self preferences] valueForKey:@"indicatorClassicBanner"] isEqual:@"none"] || [[[self preferences] valueForKey:@"indicatorClassicBanner"] isEqual:@"icon"])) [mutableSpecifiers removeObject:spec];
 			} else {
 				if ([spec.properties[@"key"] isEqual:@"indicatorClassicBanner"]) [mutableSpecifiers removeObject:spec];
@@ -115,6 +120,11 @@
 		[self removeSpecifierID:@"indicatorModernColorBanner" animated:NO];
 		[self removeSpecifierID:@"indicatorModernSizeBanner" animated:YES];
 
+		[self removeSpecifierID:@"contactPictureBanner" animated:NO];
+		[self removeSpecifierID:@"useContactPictureBanner" animated:NO];
+		[self removeSpecifierID:@"useContactPictureIconBanner" animated:NO];
+		[self removeSpecifierID:@"contactPictureBorderBanner" animated:YES];
+
 
 		if ([self specifierForID:@"indicatorClassicBanner"] == nil) {
 			NSArray *specifiers = [self loadSpecifiersFromPlistName:@"Banner" target:self];
@@ -159,6 +169,19 @@
 				}
 				if ([spec.properties[@"key"] isEqual:@"indicatorModernSizeBanner"] && !([[[self preferences] valueForKey:@"indicatorModernBanner"] isEqual:@"none"] || [[[self preferences] valueForKey:@"indicatorModernBanner"] isEqual:@"line"])) {
 					[self insertSpecifier:spec afterSpecifierID:@"indicatorModernBanner" animated:YES];
+				}
+
+				if ([spec.properties[@"key"] isEqual:@"contactPictureBanner"]) {
+					[self insertSpecifier:spec afterSpecifierID:@"indicatorModernSizeBanner" animated:NO];
+				}
+				if ([spec.properties[@"key"] isEqual:@"useContactPictureBanner"]) {
+					[self insertSpecifier:spec afterSpecifierID:@"contactPictureBanner" animated:NO];
+				}
+				if ([spec.properties[@"key"] isEqual:@"useContactPictureIconBanner"]) {
+					[self insertSpecifier:spec afterSpecifierID:@"useContactPictureBanner" animated:NO];
+				}
+				if ([spec.properties[@"key"] isEqual:@"contactPictureBorderBanner"]) {
+					[self insertSpecifier:spec afterSpecifierID:@"useContactPictureIconBanner" animated:NO];
 				}
 			}
 		}

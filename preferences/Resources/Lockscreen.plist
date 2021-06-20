@@ -155,6 +155,41 @@
 													</array>
 		</dict>
 
+		<dict>
+			<key>cell</key>							<string>PSGroupCell</string>
+			<key>label</key>						<string>Contact Picture</string>
+			<key>footerText</key>					<string>Supports iMessage and WhatsApp</string>
+			<key>id</key>							<string>contactPictureLockscreen</string>
+			<key>key</key>							<string>contactPictureLockscreen</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSwitchCell</string>
+			<key>default</key>						<true/>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>useContactPictureLockscreen</string>
+			<key>id</key>							<string>useContactPictureLockscreen</string>
+			<key>label</key>						<string>Use Contact Picture if available</string>
+			<key>cellClass</key>					<string>VelvetToggle</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSwitchCell</string>
+			<key>default</key>						<true/>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>useContactPictureIconLockscreen</string>
+			<key>id</key>							<string>useContactPictureIconLockscreen</string>
+			<key>label</key>						<string>Show App Icon Preview</string>
+			<key>cellClass</key>					<string>VelvetToggle</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSLinkListCell</string>
+			<key>cellClass</key>					<string>VelvetColorListSelector</string>
+			<key>detail</key>						<string>VelvetColorListController</string>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>contactPictureBorderLockscreen</string>
+			<key>id</key>							<string>contactPictureBorderLockscreen</string>
+			<key>label</key>						<string>Border Color</string>
+		</dict>
+
 
 		<dict>
 			<key>cell</key>							<string>PSGroupCell</string>

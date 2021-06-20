@@ -125,6 +125,9 @@
         @"customCornerRadiusBanner": @13,
         @"indicatorRoundedCornerBanner" : @"stock",
         @"indicatorCustomRoundedCornerBanner" : @5,
+        @"useContactPictureBanner": @YES,
+        @"useContactPictureIconBanner": @YES,
+        @"contactPictureBorderBanner":@"none",
 
         @"styleLockscreen": @"modern",
         @"indicatorClassicLockscreen": @"icon",
@@ -148,6 +151,9 @@
         @"customCornerRadiusLockscreen": @13,
         @"indicatorRoundedCornerLockscreen" : @"stock",
         @"indicatorCustomRoundedCornerLockscreen" : @5,
+        @"useContactPictureLockscreen": @YES,
+        @"useContactPictureIconLockscreen": @YES,
+        @"contactPictureBorderLockscreen":@"none",
 
         @"colorBackgroundMediaplayer": @"none",
         @"borderColorMediaplayer": @"none",

@@ -24,6 +24,7 @@
 @property (retain, nonatomic) UIView * velvetBorder;
 @property (retain, nonatomic) VelvetBackgroundView * velvetBackground;
 @property (retain, nonatomic) UIImageView * imageIndicator;
+@property (retain, nonatomic) UIImageView * imageIndicatorCorner;
 @end
 
 @interface NCNotificationViewControllerView : UIView
@@ -54,7 +55,13 @@
 
 @interface NCNotificationRequest : NSObject
 @property (nonatomic,copy,readonly) NSString* sectionIdentifier;
+@property (nonatomic,copy,readonly) NSString* threadIdentifier;
 @property (nonatomic,retain) NCNotificationContent * content;
+@property (nonatomic,copy,readonly) NSDictionary * context;
+@end
+
+@interface CNContact : NSObject
+@property (nonatomic,copy,readonly) NSData * imageData;
 @end
 
 @interface NCNotificationViewController : UIViewController
@@ -69,6 +76,7 @@
 -(void)velvetHideGroupedNotifications:(BOOL)hidden;
 -(UIColor *)getDominantColor;
 -(UIImage *)getIconForBundleId:(NSString *)bundleId withMask:(BOOL)isMasked;
+-(UIImage *)getContactPicture;
 @end
 
 @interface JBBulletinManager : NSObject

@@ -2,6 +2,8 @@
 #import "Notifications.h"
 #import "VelvetPrefs.h"
 #import "ColorSupport.h"
+#import "FolderFinder.h"
+#import <Contacts/Contacts.h>
 
 BOOL showCustomMessages = NO;
 BOOL isTesting;
@@ -11,6 +13,7 @@ BOOL isTesting;
 %property (retain, nonatomic) UIView * velvetBorder;
 %property (retain, nonatomic) VelvetBackgroundView * velvetBackground;
 %property (retain, nonatomic) UIImageView * imageIndicator;
+%property (retain, nonatomic) UIImageView * imageIndicatorCorner;
 - (void)layoutSubviews {
 	%orig;
 
@@ -95,6 +98,13 @@ BOOL isTesting;
 		view.imageIndicator = imageIndicator;
 	}
 
+	if (view.imageIndicatorCorner == nil) {
+		UIImageView *imageIndicatorCorner = [[UIImageView alloc] initWithFrame:CGRectZero];
+
+		[view insertSubview:imageIndicatorCorner atIndex:4];
+		view.imageIndicatorCorner = imageIndicatorCorner;
+	}
+
 	view.backgroundMaterialView.layer.cornerRadius = cornerRadius;
 	UIView *stackDimmingView = [self.view valueForKey:@"_stackDimmingView"];
 	stackDimmingView.layer.cornerRadius = cornerRadius;
@@ -102,6 +112,9 @@ BOOL isTesting;
 
 	// Hide and reset everything so we can set it up from scratch in the next steps
 	view.imageIndicator.hidden = YES;
+	view.imageIndicator.layer.borderWidth = 0;
+	view.imageIndicator.layer.borderColor = nil;
+	view.imageIndicatorCorner.hidden = YES;
 	view.velvetBorder.hidden = YES;
 	view.colorIndicator.hidden = YES;
 	view.colorIndicator.layer.cornerRadius = 0;
@@ -164,20 +177,42 @@ BOOL isTesting;
 				view.imageIndicator.frame = CGRectMake(20, (view.frame.size.height - size)/2, size, size);
 			}
 
+			view.imageIndicatorCorner.frame = CGRectMake((view.imageIndicator.frame.origin.x + view.imageIndicator.frame.size.width) - 15, (view.imageIndicator.frame.origin.y + view.imageIndicator.frame.size.height) - 15, 15, 15);
+
 			if ([self.notificationRequest.sectionIdentifier isEqual:@"com.apple.donotdisturb"] || [self.notificationRequest.sectionIdentifier isEqual:@"com.apple.powerui.smartcharging"]) {
 				view.imageIndicator.image = [UIImage systemImageNamed:self.notificationRequest.content.attachmentImage.imageAsset.assetName];
 				view.imageIndicator.tintColor = UIColor.labelColor;
 				thumbnail.alpha = 0;
 			} else {
-				if ([[preferences valueForKey:getPreferencesKeyFor(@"indicatorRoundedCorner", view)] isEqual:@"stock"]) {
-					view.imageIndicator.image = [self getIconForBundleId:self.notificationRequest.sectionIdentifier withMask:YES];
-					view.imageIndicator.clipsToBounds = NO;
-				} else {
-					view.imageIndicator.image = [self getIconForBundleId:self.notificationRequest.sectionIdentifier withMask:NO];
-					float cornerRadius = getAppIconCornerRadius(view);
-					if (cornerRadius < 0 || cornerRadius > size / 2) cornerRadius = size / 2;
-					view.imageIndicator.layer.cornerRadius = cornerRadius;
+				UIImage *contactPicture = [self getContactPicture];
+
+				if ([preferences boolForKey:getPreferencesKeyFor(@"useContactPicture", view)] && contactPicture != nil) {			
+					view.imageIndicator.image = contactPicture;
+					view.imageIndicator.layer.cornerRadius = view.imageIndicator.frame.size.height / 2;
 					view.imageIndicator.clipsToBounds = YES;
+					view.imageIndicator.contentMode = UIViewContentModeScaleAspectFill;
+
+					if ([preferences boolForKey:getPreferencesKeyFor(@"useContactPictureIcon", view)]) {
+						view.imageIndicatorCorner.image = [self getIconForBundleId:self.notificationRequest.sectionIdentifier withMask:YES];
+						view.imageIndicatorCorner.hidden = NO;
+					}
+
+					NSString *contactBorderColor = getColorFor(@"contactPictureBorder", view);
+					if (contactBorderColor) {
+						view.imageIndicator.layer.borderWidth = 1;
+						view.imageIndicator.layer.borderColor = [contactBorderColor isEqual:@"dominant"] ? dominantColor.CGColor : [UIColor velvetColorFromHexString:contactBorderColor].CGColor;
+					}
+				} else {
+					if ([[preferences valueForKey:getPreferencesKeyFor(@"indicatorRoundedCorner", view)] isEqual:@"stock"]) {
+						view.imageIndicator.image = [self getIconForBundleId:self.notificationRequest.sectionIdentifier withMask:YES];
+						view.imageIndicator.clipsToBounds = NO;
+					} else {
+						view.imageIndicator.image = [self getIconForBundleId:self.notificationRequest.sectionIdentifier withMask:NO];
+						float cornerRadius = getAppIconCornerRadius(view);
+						if (cornerRadius < 0 || cornerRadius > size / 2) cornerRadius = size / 2;
+						view.imageIndicator.layer.cornerRadius = cornerRadius;
+						view.imageIndicator.clipsToBounds = YES;
+					}
 				}
 			}
 		} else if ([[preferences valueForKey:getPreferencesKeyFor(@"indicatorModern", view)] isEqual:@"dot"]) {
@@ -515,6 +550,64 @@ BOOL isTesting;
 
 	return icon;
 }
+
+%new
+-(UIImage *)getContactPicture {
+	UIImage *contactPicture = nil;
+
+	if ([self.notificationRequest.sectionIdentifier isEqual:@"com.apple.MobileSMS"]) {
+		
+		if ([self.notificationRequest.context valueForKey:@"userInfo"] == nil) return nil;
+
+		NSString *identifier = [[self.notificationRequest.context valueForKey:@"userInfo"] valueForKey:@"CKBBContextKeySenderPersonCentricID"];
+		CNContactStore *contactStore = [[CNContactStore alloc] init];
+		NSArray *keys = @[CNContactIdentifierKey, CNContactImageDataKey];
+		CNContact *contact = [contactStore unifiedContactWithIdentifier:identifier keysToFetch:keys error:nil];
+
+		if (contact && contact.imageData != nil) {
+			contactPicture = [UIImage imageWithData:contact.imageData scale:[UIScreen mainScreen].scale];
+		}
+	
+	} else if ([self.notificationRequest.sectionIdentifier isEqual:@"net.whatsapp.WhatsApp"]) {
+
+		if (self.notificationRequest.threadIdentifier == nil) return nil;
+
+		NSString *chatId = [self.notificationRequest.threadIdentifier componentsSeparatedByString:@"@"][0];
+		NSFileManager *fileManager = [[NSFileManager alloc] init];
+
+		NSString *file;
+		NSString *whatsAppPicture;
+		NSString *containerPath = [FolderFinder findSharedFolder:@"group.net.whatsapp.WhatsApp.shared"];
+		NSString *picturesPath = [NSString stringWithFormat:@"%@/Media/Profile", containerPath];
+		NSEnumerator *files = [[fileManager contentsOfDirectoryAtPath:picturesPath error:nil] reverseObjectEnumerator];
+
+		while (file = [files nextObject]) {
+			NSArray *parts = [file componentsSeparatedByString:@"-"];
+
+			// DMs
+			if ([parts count] == 2) {
+				if ([chatId isEqualToString:parts[0]]){
+					whatsAppPicture = file;
+					break;
+				}
+			}
+
+			// Groups
+			if ([parts count] == 3) {
+				if ([chatId isEqualToString:[NSString stringWithFormat:@"%@-%@", parts[0], parts[1]]]){
+					whatsAppPicture = file;
+					break;
+				}
+			}
+		}
+
+		if (whatsAppPicture != nil) {
+			contactPicture = [UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/%@", picturesPath, whatsAppPicture]];
+		}
+	}
+
+	return contactPicture;
+}
 %end
 
 %hook BSUIDefaultDateLabel
@@ -792,18 +885,18 @@ static void testCustom() {
 	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 4.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void) {
 
 		[[%c(JBBulletinManager) sharedInstance]
-        showBulletinWithTitle:@""
-        message:@"Your front door is now locked."
+        showBulletinWithTitle:@"Home"
+        message:@"Someone is at your front door."
         bundleID:@"com.apple.Home"];
 
 		[[%c(JBBulletinManager) sharedInstance]
-			showBulletinWithTitle:@""
-			message:@"Your recommendations for this week are in."
-			bundleID:@"com.apple.MobileStore"];
+			showBulletinWithTitle:@"Award received!"
+			message:@"You received a platinum award."
+			bundleID:@"com.christianselig.Apollo"];
 
 		[[%c(JBBulletinManager) sharedInstance]
-			showBulletinWithTitle:@"Velvet"
-			message:@"By @NoisyFlake & @HiMyNameIsUbik"
+			showBulletinWithTitle:@"Twitter"
+			message:@"#Velvet and #WWDC21 are now trending in your area."
 			bundleID:@"com.atebits.Tweetie2"];
 
 		[[%c(JBBulletinManager) sharedInstance]
@@ -813,7 +906,7 @@ static void testCustom() {
 
 		[[%c(JBBulletinManager) sharedInstance]
 			showBulletinWithTitle:@"Tim Cook"
-			message:@"I forgot to implement this in iOS 14..."
+			message:@"Thanks for the new notification design!"
 			bundleID:@"com.apple.MobileSMS"];
 	});
 }
