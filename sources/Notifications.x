@@ -177,7 +177,7 @@ BOOL isTesting;
 				view.imageIndicator.frame = CGRectMake(20, (view.frame.size.height - size)/2, size, size);
 			}
 
-			view.imageIndicatorCorner.frame = CGRectMake((view.imageIndicator.frame.origin.x + view.imageIndicator.frame.size.width) - 15, (view.imageIndicator.frame.origin.y + view.imageIndicator.frame.size.height) - 15, 15, 15);
+			view.imageIndicatorCorner.frame = CGRectMake((view.imageIndicator.frame.origin.x + view.imageIndicator.frame.size.width) - 13, (view.imageIndicator.frame.origin.y + view.imageIndicator.frame.size.height) - 13, 15, 15);
 
 			if ([self.notificationRequest.sectionIdentifier isEqual:@"com.apple.donotdisturb"] || [self.notificationRequest.sectionIdentifier isEqual:@"com.apple.powerui.smartcharging"]) {
 				view.imageIndicator.image = [UIImage systemImageNamed:self.notificationRequest.content.attachmentImage.imageAsset.assetName];
@@ -382,7 +382,7 @@ BOOL isTesting;
 
 	NSString *titleColor = getColorFor(@"colorPrimaryLabel", view);
 	if (titleColor) {
-		if (view.velvetBackground.backgroundColor && [titleColor isEqual:@"dominant"] && CGColorGetAlpha(view.velvetBackground.backgroundColor.CGColor) > 0) {
+		if ([backgroundColor isEqual:@"dominant"] && [titleColor isEqual:@"dominant"]) {
 			view.notificationContentView.primaryLabel.textColor = [view.velvetBackground.backgroundColor velvetIsDarkColor] ? UIColor.whiteColor : (self.traitCollection.userInterfaceStyle == 1 ? UIColor.blackColor : UIColor.systemGray4Color);
 		} else {
 			view.notificationContentView.primaryLabel.textColor = [titleColor isEqual:@"dominant"] ? dominantColor : [UIColor velvetColorFromHexString:titleColor];
@@ -393,7 +393,7 @@ BOOL isTesting;
 
 	NSString *messageColor = getColorFor(@"colorSecondaryLabel", view);
 	if (messageColor) {
-		if (view.velvetBackground.backgroundColor && [messageColor isEqual:@"dominant"]) {
+		if ([backgroundColor isEqual:@"dominant"] && [messageColor isEqual:@"dominant"]) {
 			view.notificationContentView.secondaryLabel.textColor = [view.velvetBackground.backgroundColor velvetIsDarkColor] ? UIColor.whiteColor : (self.traitCollection.userInterfaceStyle == 1 ? UIColor.blackColor : UIColor.systemGray4Color);
 		} else {
 			view.notificationContentView.secondaryLabel.textColor = [messageColor isEqual:@"dominant"] ? dominantColor : [UIColor velvetColorFromHexString:messageColor];
@@ -560,12 +560,28 @@ BOOL isTesting;
 		if ([self.notificationRequest.context valueForKey:@"userInfo"] == nil) return nil;
 
 		NSString *identifier = [[self.notificationRequest.context valueForKey:@"userInfo"] valueForKey:@"CKBBContextKeySenderPersonCentricID"];
-		CNContactStore *contactStore = [[CNContactStore alloc] init];
-		NSArray *keys = @[CNContactIdentifierKey, CNContactImageDataKey];
-		CNContact *contact = [contactStore unifiedContactWithIdentifier:identifier keysToFetch:keys error:nil];
+		if (identifier != nil) {
+			// DMs
+			CNContactStore *contactStore = [[CNContactStore alloc] init];
+			NSArray *keys = @[CNContactIdentifierKey, CNContactImageDataKey];
+			CNContact *contact = [contactStore unifiedContactWithIdentifier:identifier keysToFetch:keys error:nil];
 
-		if (contact && contact.imageData != nil) {
-			contactPicture = [UIImage imageWithData:contact.imageData scale:[UIScreen mainScreen].scale];
+			if (contact && contact.imageData != nil) {
+				contactPicture = [UIImage imageWithData:contact.imageData scale:[UIScreen mainScreen].scale];
+			}
+		} else {
+			// Groups
+			identifier = [[self.notificationRequest.context valueForKey:@"userInfo"] valueForKey:@"CKBBContextKeyChatGroupID"];
+
+			// Unfortunately it is not possible to access sharedConversationList outside of the messages app
+
+			// CKConversationList *conversationList = [%c(CKConversationList) sharedConversationList];
+			// CKConversation *conversation = [conversationList conversationForExistingChatWithGroupID:identifier];
+			// CNGroupIdentity *identity = conversation._conversationVisualIdentity;
+
+			// if (identity && identity.groupPhoto != nil) {
+			// 	contactPicture = [UIImage imageWithData:identity.groupPhoto scale:[UIScreen mainScreen].scale];
+			// }
 		}
 	
 	} else if ([self.notificationRequest.sectionIdentifier isEqual:@"net.whatsapp.WhatsApp"]) {
@@ -886,27 +902,32 @@ static void testCustom() {
 
 		[[%c(JBBulletinManager) sharedInstance]
         showBulletinWithTitle:@"Home"
-        message:@"Someone is at your front door."
+        message:@"Someone is at your front door"
         bundleID:@"com.apple.Home"];
 
+		// [[%c(JBBulletinManager) sharedInstance]
+		// 	showBulletinWithTitle:@"Award received!"
+		// 	message:@"You received a platinum award"
+		// 	bundleID:@"com.christianselig.Apollo"];
+
 		[[%c(JBBulletinManager) sharedInstance]
-			showBulletinWithTitle:@"Award received!"
-			message:@"You received a platinum award."
-			bundleID:@"com.christianselig.Apollo"];
+			showBulletinWithTitle:@""
+			message:@"noisyflake, himynameisubik and 2 others liked your photo"
+			bundleID:@"com.burbn.instagram"];
 
 		[[%c(JBBulletinManager) sharedInstance]
 			showBulletinWithTitle:@"Twitter"
-			message:@"#Velvet and #WWDC21 are now trending in your area."
+			message:@"#Velvet is now trending on Twitter"
 			bundleID:@"com.atebits.Tweetie2"];
 
-		[[%c(JBBulletinManager) sharedInstance]
-			showBulletinWithTitle:@"Tim Cook"
-			message:@"ETA?!"
-			bundleID:@"com.apple.MobileSMS"];
+		// [[%c(JBBulletinManager) sharedInstance]
+		// 	showBulletinWithTitle:@"Tim Cook"
+		// 	message:@"ETA?!"
+		// 	bundleID:@"com.apple.MobileSMS"];
 
 		[[%c(JBBulletinManager) sharedInstance]
 			showBulletinWithTitle:@"Tim Cook"
-			message:@"Thanks for the new notification design!"
+			message:@"What do we have here?"
 			bundleID:@"com.apple.MobileSMS"];
 	});
 }
@@ -914,6 +935,20 @@ static void testCustom() {
 static BOOL isRTL() {
 	return [UIApplication sharedApplication].userInterfaceLayoutDirection == UIUserInterfaceLayoutDirectionRightToLeft;
 }
+
+// ---- Enable this when creating mockup screenshots to force iMessages to belong to a specific contact for the contact picture ---- //
+// %hook NCNotificationRequest
+// -(NSDictionary *)context {
+// 	NSDictionary *orig = %orig;
+// 	NSMutableDictionary *mutable = (orig == nil) ? [NSMutableDictionary new] : [orig mutableCopy];
+// 	NSMutableDictionary *mutableInfo = ([mutable valueForKey:@"userInfo"] == nil) ? [NSMutableDictionary new] : [[mutable valueForKey:@"userInfo"] mutableCopy];
+
+// 	[mutableInfo setObject:@"CCB8AEBD-CA4A-448C-AB41-80DF87E52524:ABPerson" forKey:@"CKBBContextKeySenderPersonCentricID"];
+// 	[mutable setObject:mutableInfo forKey:@"userInfo"];
+
+// 	return mutable;
+// }
+// %end
 
 %ctor {
 	preferences = [VelvetPrefs sharedInstance];

@@ -92,6 +92,20 @@
 @interface PLShadowView : UIImageView
 @end
 
+@interface CNGroupIdentity : NSObject
+@property (nonatomic,retain) NSData * groupPhoto;
+@end
+
+@interface CKConversation : NSObject
+@property (nonatomic,retain) CNGroupIdentity * _conversationVisualIdentity;
+@end
+
+@interface CKConversationList : NSObject
+@property (nonatomic,retain) NSMutableDictionary * conversationsDictionary;
++(id)sharedConversationList;
+-(id)conversationForExistingChatWithGroupID:(id)arg1;
+@end
+
 static float getCornerRadius(UIView *view);
 static float getAppIconCornerRadius(UIView *view);
 static float getIndicatorOffset(UIView *view);
