@@ -58,6 +58,7 @@
 @property (nonatomic,copy,readonly) NSString* threadIdentifier;
 @property (nonatomic,retain) NCNotificationContent * content;
 @property (nonatomic,copy,readonly) NSDictionary * context;
+@property (nonatomic,readonly) UNNotification * userNotification;
 @end
 
 @interface CNContact : NSObject

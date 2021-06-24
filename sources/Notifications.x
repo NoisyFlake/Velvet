@@ -4,6 +4,9 @@
 #import "ColorSupport.h"
 #import "FolderFinder.h"
 #import <Contacts/Contacts.h>
+#import <UserNotifications/UNNotification.h>
+#import <UserNotifications/UNNotificationRequest.h>
+#import <UserNotifications/UNNotificationContent.h>
 
 BOOL showCustomMessages = NO;
 BOOL isTesting;
@@ -557,9 +560,9 @@ BOOL isTesting;
 
 	if ([self.notificationRequest.sectionIdentifier isEqual:@"com.apple.MobileSMS"]) {
 		
-		if ([self.notificationRequest.context valueForKey:@"userInfo"] == nil) return nil;
+		if (self.notificationRequest.userNotification.request.content.userInfo == nil) return nil;
 
-		NSString *identifier = [[self.notificationRequest.context valueForKey:@"userInfo"] valueForKey:@"CKBBContextKeySenderPersonCentricID"];
+		NSString *identifier = [self.notificationRequest.userNotification.request.content.userInfo valueForKey:@"CKBBContextKeySenderPersonCentricID"];
 		if (identifier != nil) {
 			// DMs
 			CNContactStore *contactStore = [[CNContactStore alloc] init];
@@ -927,7 +930,7 @@ static void testCustom() {
 
 		[[%c(JBBulletinManager) sharedInstance]
 			showBulletinWithTitle:@"Tim Cook"
-			message:@"What do we have here?"
+			message:@"Looks like there's no need for iOS 15"
 			bundleID:@"com.apple.MobileSMS"];
 	});
 }
