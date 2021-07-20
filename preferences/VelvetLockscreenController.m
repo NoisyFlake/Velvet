@@ -46,6 +46,7 @@
 				if ([spec.properties[@"key"] isEqual:@"indicatorModernSizeLockscreen"]) [mutableSpecifiers removeObject:spec];
 
 				if ([spec.properties[@"key"] isEqual:@"contactPictureLockscreen"]) [mutableSpecifiers removeObject:spec];
+				if ([spec.properties[@"key"] isEqual:@"contactPictureNetworkLockscreen"]) [mutableSpecifiers removeObject:spec];
 				if ([spec.properties[@"key"] isEqual:@"useContactPictureLockscreen"]) [mutableSpecifiers removeObject:spec];
 				if ([spec.properties[@"key"] isEqual:@"useContactPictureIconLockscreen"]) [mutableSpecifiers removeObject:spec];
 				if ([spec.properties[@"key"] isEqual:@"contactPictureBorderLockscreen"]) [mutableSpecifiers removeObject:spec];
@@ -126,6 +127,7 @@
 
 		[self removeSpecifierID:@"contactPictureLockscreen" animated:NO];
 		[self removeSpecifierID:@"useContactPictureLockscreen" animated:NO];
+		[self removeSpecifierID:@"contactPictureNetworkLockscreen" animated:NO];
 		[self removeSpecifierID:@"useContactPictureIconLockscreen" animated:NO];
 		[self removeSpecifierID:@"contactPictureBorderLockscreen" animated:YES];
 
@@ -183,8 +185,11 @@
 				if ([spec.properties[@"key"] isEqual:@"useContactPictureLockscreen"]) {
 					[self insertSpecifier:spec afterSpecifierID:@"contactPictureLockscreen" animated:NO];
 				}
-				if ([spec.properties[@"key"] isEqual:@"useContactPictureIconLockscreen"]) {
+				if ([spec.properties[@"key"] isEqual:@"contactPictureNetworkLockscreen"]) {
 					[self insertSpecifier:spec afterSpecifierID:@"useContactPictureLockscreen" animated:NO];
+				}
+				if ([spec.properties[@"key"] isEqual:@"useContactPictureIconLockscreen"]) {
+					[self insertSpecifier:spec afterSpecifierID:@"contactPictureNetworkLockscreen" animated:NO];
 				}
 				if ([spec.properties[@"key"] isEqual:@"contactPictureBorderLockscreen"]) {
 					[self insertSpecifier:spec afterSpecifierID:@"useContactPictureIconLockscreen" animated:NO];

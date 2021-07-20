@@ -158,7 +158,7 @@
 		<dict>
 			<key>cell</key>							<string>PSGroupCell</string>
 			<key>label</key>						<string>Contact Picture</string>
-			<key>footerText</key>					<string>Supports iMessage and WhatsApp</string>
+			<key>footerText</key>					<string>Supports Discord, iMessage, Instagram, Twitter and WhatsApp. Network connection required for Discord, Instagram and Twitter.</string>
 			<key>id</key>							<string>contactPictureBanner</string>
 			<key>key</key>							<string>contactPictureBanner</string>
 		</dict>
@@ -168,7 +168,16 @@
 			<key>defaults</key>						<string>com.initwithframe.velvet</string>
 			<key>key</key>							<string>useContactPictureBanner</string>
 			<key>id</key>							<string>useContactPictureBanner</string>
-			<key>label</key>						<string>Use Contact Picture if available</string>
+			<key>label</key>						<string>Use Contact Picture</string>
+			<key>cellClass</key>					<string>VelvetToggle</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSwitchCell</string>
+			<key>default</key>						<true/>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>contactPictureNetworkBanner</string>
+			<key>id</key>							<string>contactPictureNetworkBanner</string>
+			<key>label</key>						<string>Allow network connection</string>
 			<key>cellClass</key>					<string>VelvetToggle</string>
 		</dict>
 		<dict>
@@ -189,6 +198,7 @@
 			<key>id</key>							<string>contactPictureBorderBanner</string>
 			<key>label</key>						<string>Border Color</string>
 		</dict>
+		
 
 		<dict>
 			<key>cell</key>							<string>PSGroupCell</string>

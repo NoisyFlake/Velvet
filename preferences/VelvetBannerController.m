@@ -46,6 +46,7 @@
 
 				if ([spec.properties[@"key"] isEqual:@"contactPictureBanner"]) [mutableSpecifiers removeObject:spec];
 				if ([spec.properties[@"key"] isEqual:@"useContactPictureBanner"]) [mutableSpecifiers removeObject:spec];
+				if ([spec.properties[@"key"] isEqual:@"contactPictureNetworkBanner"]) [mutableSpecifiers removeObject:spec];
 				if ([spec.properties[@"key"] isEqual:@"useContactPictureIconBanner"]) [mutableSpecifiers removeObject:spec];
 				if ([spec.properties[@"key"] isEqual:@"contactPictureBorderBanner"]) [mutableSpecifiers removeObject:spec];
 
@@ -123,6 +124,7 @@
 		[self removeSpecifierID:@"indicatorModernSizeBanner" animated:YES];
 
 		[self removeSpecifierID:@"contactPictureBanner" animated:NO];
+		[self removeSpecifierID:@"contactPictureNetworkBanner" animated:NO];
 		[self removeSpecifierID:@"useContactPictureBanner" animated:NO];
 		[self removeSpecifierID:@"useContactPictureIconBanner" animated:NO];
 		[self removeSpecifierID:@"contactPictureBorderBanner" animated:YES];
@@ -181,8 +183,11 @@
 				if ([spec.properties[@"key"] isEqual:@"useContactPictureBanner"]) {
 					[self insertSpecifier:spec afterSpecifierID:@"contactPictureBanner" animated:NO];
 				}
-				if ([spec.properties[@"key"] isEqual:@"useContactPictureIconBanner"]) {
+				if ([spec.properties[@"key"] isEqual:@"contactPictureNetworkBanner"]) {
 					[self insertSpecifier:spec afterSpecifierID:@"useContactPictureBanner" animated:NO];
+				}
+				if ([spec.properties[@"key"] isEqual:@"useContactPictureIconBanner"]) {
+					[self insertSpecifier:spec afterSpecifierID:@"contactPictureNetworkBanner" animated:NO];
 				}
 				if ([spec.properties[@"key"] isEqual:@"contactPictureBorderBanner"]) {
 					[self insertSpecifier:spec afterSpecifierID:@"useContactPictureIconBanner" animated:NO];

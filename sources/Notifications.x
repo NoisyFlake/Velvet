@@ -32,7 +32,7 @@ CGFloat compactHeight = 20;
 		NCNotificationShortLookViewController *controller = self._viewControllerForAncestor;
 		if ([controller.notificationRequest.sectionIdentifier isEqual:@"com.apple.donotdisturb"] || [controller.notificationRequest.sectionIdentifier isEqual:@"com.apple.powerui.smartcharging"]) {
 			yAdjustment += 2;
-	}
+		}
 
 		if ([preferences boolForKey:getPreferencesKeyFor(@"compactStyle", self)]) {
 			yAdjustment -= compactHeight / 2;
@@ -222,9 +222,23 @@ CGFloat compactHeight = 20;
 				view.imageIndicator.tintColor = UIColor.labelColor;
 				thumbnail.alpha = 0;
 			} else {
+				if ([[preferences valueForKey:getPreferencesKeyFor(@"indicatorRoundedCorner", view)] isEqual:@"stock"]) {
+					view.imageIndicator.image = [self getIconForBundleId:self.notificationRequest.sectionIdentifier withMask:YES];
+					view.imageIndicator.clipsToBounds = NO;
+				} else {
+					view.imageIndicator.image = [self getIconForBundleId:self.notificationRequest.sectionIdentifier withMask:NO];
+					float cornerRadius = getAppIconCornerRadius(view);
+					if (cornerRadius < 0 || cornerRadius > size / 2) cornerRadius = size / 2;
+					view.imageIndicator.layer.cornerRadius = cornerRadius;
+					view.imageIndicator.clipsToBounds = YES;
+				}
+
+				if ([preferences boolForKey:getPreferencesKeyFor(@"useContactPicture", view)]) {
+					dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 				UIImage *contactPicture = [self getContactPicture];
 
-				if ([preferences boolForKey:getPreferencesKeyFor(@"useContactPicture", view)] && contactPicture != nil) {			
+						dispatch_async(dispatch_get_main_queue(), ^{
+							if (contactPicture != nil) {
 					view.imageIndicator.image = contactPicture;
 					view.imageIndicator.layer.cornerRadius = view.imageIndicator.frame.size.height / 2;
 					view.imageIndicator.clipsToBounds = YES;
@@ -240,17 +254,10 @@ CGFloat compactHeight = 20;
 						view.imageIndicator.layer.borderWidth = 1;
 						view.imageIndicator.layer.borderColor = [contactBorderColor isEqual:@"dominant"] ? dominantColor.CGColor : [UIColor velvetColorFromHexString:contactBorderColor].CGColor;
 					}
-				} else {
-					if ([[preferences valueForKey:getPreferencesKeyFor(@"indicatorRoundedCorner", view)] isEqual:@"stock"]) {
-						view.imageIndicator.image = [self getIconForBundleId:self.notificationRequest.sectionIdentifier withMask:YES];
-						view.imageIndicator.clipsToBounds = NO;
-					} else {
-						view.imageIndicator.image = [self getIconForBundleId:self.notificationRequest.sectionIdentifier withMask:NO];
-						float cornerRadius = getAppIconCornerRadius(view);
-						if (cornerRadius < 0 || cornerRadius > size / 2) cornerRadius = size / 2;
-						view.imageIndicator.layer.cornerRadius = cornerRadius;
-						view.imageIndicator.clipsToBounds = YES;
 					}
+
+						});
+					});
 				}
 			}
 		} else if ([[preferences valueForKey:getPreferencesKeyFor(@"indicatorModern", view)] isEqual:@"dot"]) {
@@ -658,6 +665,40 @@ CGFloat compactHeight = 20;
 		if (whatsAppPicture != nil) {
 			contactPicture = [UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/%@", picturesPath, whatsAppPicture]];
 		}
+
+	} else if ([self.notificationRequest.sectionIdentifier isEqual:@"com.hammerandchisel.discord"] && [preferences boolForKey:getPreferencesKeyFor(@"contactPictureNetwork", self.viewForPreview)]) {
+
+		if (self.notificationRequest.userNotification.request.content.userInfo == nil) return nil;
+
+		NSDictionary *message = self.notificationRequest.userNotification.request.content.userInfo[@"message"];
+		NSDictionary *author = message[@"author"];
+		NSString *avatarId = author[@"avatar"];
+		NSString *authorId = author[@"id"];
+		NSURL *imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://cdn.discordapp.com/avatars/%@/%@.png?size=80", authorId, avatarId]];
+		
+		NSData *imageData = [NSData dataWithContentsOfURL:imageURL];
+		contactPicture = [UIImage imageWithData:imageData];
+	
+	} else if ([self.notificationRequest.sectionIdentifier isEqual:@"com.burbn.instagram"] && [preferences boolForKey:getPreferencesKeyFor(@"contactPictureNetwork", self.viewForPreview)]) {
+
+		if (self.notificationRequest.userNotification.request.content.userInfo == nil) return nil;
+
+		NSURL *imageURL = [NSURL URLWithString:self.notificationRequest.userNotification.request.content.userInfo[@"a"]];
+		
+		NSData *imageData = [NSData dataWithContentsOfURL:imageURL];
+		contactPicture = [UIImage imageWithData:imageData];
+
+	} else if ([self.notificationRequest.sectionIdentifier isEqual:@"com.atebits.Tweetie2"] && [preferences boolForKey:getPreferencesKeyFor(@"contactPictureNetwork", self.viewForPreview)]) {
+
+		if (self.notificationRequest.userNotification.request.content.userInfo == nil) return nil;
+
+		NSString *username = self.notificationRequest.userNotification.request.content.userInfo[@"D"];
+
+		// Unfortunately, there is no easy way to get it the official way, since Twitter has no API without Auth, and we can't scrape the HTML because the page requires JavaScript
+		NSURL *imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://unavatar.io/twitter/%@?fallback=false", username]];
+
+		NSData *imageData = [NSData dataWithContentsOfURL:imageURL];
+		contactPicture = [UIImage imageWithData:imageData];
 	}
 
 	return contactPicture;
