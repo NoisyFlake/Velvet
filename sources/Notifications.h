@@ -25,6 +25,7 @@
 @property (retain, nonatomic) VelvetBackgroundView * velvetBackground;
 @property (retain, nonatomic) UIImageView * imageIndicator;
 @property (retain, nonatomic) UIImageView * imageIndicatorCorner;
+@property (nonatomic,retain) UIImage * thumbnail;
 @end
 
 @interface NCNotificationViewControllerView : UIView
@@ -61,9 +62,9 @@
 @property (nonatomic,readonly) UNNotification * userNotification;
 @end
 
-@interface CNContact : NSObject
-@property (nonatomic,copy,readonly) NSData * imageData;
-@end
+// @interface CNContact : NSObject
+// @property (nonatomic,copy,readonly) NSData * imageData;
+// @end
 
 @interface NCNotificationViewController : UIViewController
 @property (nonatomic,retain) NCNotificationRequest * notificationRequest;

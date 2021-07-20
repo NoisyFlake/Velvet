@@ -50,6 +50,8 @@
 				if ([spec.properties[@"key"] isEqual:@"useContactPictureIconLockscreen"]) [mutableSpecifiers removeObject:spec];
 				if ([spec.properties[@"key"] isEqual:@"contactPictureBorderLockscreen"]) [mutableSpecifiers removeObject:spec];
 
+				if ([spec.properties[@"key"] isEqual:@"compactStyleLockscreen"]) [mutableSpecifiers removeObject:spec];
+
 				if ([spec.properties[@"key"] isEqual:@"indicatorClassicColorLockscreen"] && ([[[self preferences] valueForKey:@"indicatorClassicLockscreen"] isEqual:@"none"] || [[[self preferences] valueForKey:@"indicatorClassicLockscreen"] isEqual:@"icon"])) [mutableSpecifiers removeObject:spec];
 			} else {
 				if ([spec.properties[@"key"] isEqual:@"indicatorClassicLockscreen"]) [mutableSpecifiers removeObject:spec];
@@ -127,6 +129,8 @@
 		[self removeSpecifierID:@"useContactPictureIconLockscreen" animated:NO];
 		[self removeSpecifierID:@"contactPictureBorderLockscreen" animated:YES];
 
+		[self removeSpecifierID:@"compactStyleLockscreen" animated:YES];
+
 
 		if ([self specifierForID:@"indicatorClassicLockscreen"] == nil) {
 			NSArray *specifiers = [self loadSpecifiersFromPlistName:@"Lockscreen" target:self];
@@ -184,6 +188,10 @@
 				}
 				if ([spec.properties[@"key"] isEqual:@"contactPictureBorderLockscreen"]) {
 					[self insertSpecifier:spec afterSpecifierID:@"useContactPictureIconLockscreen" animated:NO];
+				}
+
+				if ([spec.properties[@"key"] isEqual:@"compactStyleLockscreen"]) {
+					[self insertSpecifier:spec afterSpecifierID:@"forceModeLockscreen" animated:NO];
 				}
 			}
 		}

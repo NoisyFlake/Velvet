@@ -11,6 +11,8 @@
 BOOL showCustomMessages = NO;
 BOOL isTesting;
 
+CGFloat compactHeight = 20;
+
 %hook NCNotificationShortLookView
 %property (retain, nonatomic) VelvetIndicatorView * colorIndicator;
 %property (retain, nonatomic) UIView * velvetBorder;
@@ -24,6 +26,12 @@ BOOL isTesting;
 
 	CGRect frame = self.frame;
 	self.velvetBackground.frame = frame;
+
+	if ([[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"modern"] && [preferences boolForKey:getPreferencesKeyFor(@"compactStyle", self)]) {
+		CGRect contentFrame = self.notificationContentView.frame;
+		self.notificationContentView.frame = CGRectMake(contentFrame.origin.x, contentFrame.origin.y - (compactHeight / 2), contentFrame.size.width, contentFrame.size.height);
+	}
+
 }
 - (CGSize)sizeThatFitsContentWithSize:(CGSize)arg1 {
 	ifDisabled(self) return %orig;
@@ -33,6 +41,11 @@ BOOL isTesting;
 	if ([[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"classic"] && ![[preferences valueForKey:getPreferencesKeyFor(@"colorHeader", self)] isEqual:@"none"]) {
     	orig.height += 10;
 	}
+
+	if ([[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"modern"] && [preferences boolForKey:getPreferencesKeyFor(@"compactStyle", self)]) {
+		orig.height -= compactHeight;
+	}
+
     return orig;
 }
 %end
@@ -639,7 +652,20 @@ BOOL isTesting;
 	// Move the dateLabel into the corner to make room for the centered notification text
 	if ([[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"modern"]) {
 		if (self.superview.frame.size.width > 0) {
+
+			if ([preferences boolForKey:getPreferencesKeyFor(@"compactStyle", self)]) {
+				NCNotificationShortLookViewController *controller = self._viewControllerForAncestor;
+				if ([controller isKindOfClass:%c(NCNotificationShortLookViewController)]) {
+					if (controller.viewForPreview.thumbnail != nil) {
+						frame.origin.y += -4;
+					} else {
+						frame.origin.y += 3;
+					}
+				}
+			} else {
 			frame.origin.y -= 3;
+			}
+
 		}
 	}
 
@@ -685,7 +711,7 @@ BOOL isTesting;
 		return;
 	}
 
-	if ([preferences boolForKey:getPreferencesKeyFor(@"nameAsTitle", self)]) {
+	if ([[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"modern"]) {
 
 		NCNotificationShortLookViewController *controller = self._viewControllerForAncestor;
 		NSString *bundleId = nil;
@@ -717,6 +743,9 @@ BOOL isTesting;
 	CGRect summaryLabelFrame = self.summaryLabel.frame;
 
 	CGFloat labelWidth = getIndicatorOffset(self);
+	CGFloat dateLabelWidth = 0;
+
+	NCNotificationShortLookViewController *controller = self._viewControllerForAncestor;
 
 	// Moves the image preview to the correct place
 	UIImageView *thumbnail = [self safeValueForKey:@"_thumbnailImageView"];
@@ -725,9 +754,13 @@ BOOL isTesting;
 		if (!isRTL() || [[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"classic"]) {
 			thumbFrame.origin.x = thumbFrame.origin.x - labelWidth;
 		}
+
+		if ([[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"modern"] && [preferences boolForKey:getPreferencesKeyFor(@"compactStyle", self)]) {
+			thumbFrame.origin.y += compactHeight / 2;
+		}
+
 		thumbnail.frame = thumbFrame;
 
-		NCNotificationShortLookViewController *controller = self._viewControllerForAncestor;
 		if ([controller isKindOfClass:%c(NCNotificationShortLookViewController)] && ([controller.notificationRequest.sectionIdentifier isEqual:@"com.apple.donotdisturb"] || [controller.notificationRequest.sectionIdentifier isEqual:@"com.apple.powerui.smartcharging"]) && [[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"modern"]) {
 			if (!isRTL()) {
 				labelWidth -= thumbnail.frame.size.width;
@@ -735,7 +768,15 @@ BOOL isTesting;
 		}
 	}
 
-	primaryLabelFrame.size.width = self.primaryLabel.frame.size.width - labelWidth;
+	// Reduce the title label in modern style so that it doesn't overlap with the dateLabel
+	if ([[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"modern"] && [controller isKindOfClass:%c(NCNotificationShortLookViewController)]) {
+		PLPlatterHeaderContentView *header = [controller.viewForPreview valueForKey:@"_headerContentView"];
+		if (header) {
+			dateLabelWidth = header.dateLabel.frame.size.width + 3;
+		}
+	}
+
+	primaryLabelFrame.size.width = self.primaryLabel.frame.size.width - labelWidth - dateLabelWidth;
 	secondaryLabelFrame.size.width = self.secondaryLabel.frame.size.width - labelWidth;
 	primarySubtitleLabelFrame.size.width = self.primarySubtitleLabel.frame.size.width - labelWidth;
 	summaryLabelFrame.size.width = self.summaryLabel.frame.size.width - labelWidth;

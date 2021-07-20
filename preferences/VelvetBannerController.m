@@ -49,6 +49,8 @@
 				if ([spec.properties[@"key"] isEqual:@"useContactPictureIconBanner"]) [mutableSpecifiers removeObject:spec];
 				if ([spec.properties[@"key"] isEqual:@"contactPictureBorderBanner"]) [mutableSpecifiers removeObject:spec];
 
+				if ([spec.properties[@"key"] isEqual:@"compactStyleBanner"]) [mutableSpecifiers removeObject:spec];
+
 				if ([spec.properties[@"key"] isEqual:@"indicatorClassicColorBanner"] && ([[[self preferences] valueForKey:@"indicatorClassicBanner"] isEqual:@"none"] || [[[self preferences] valueForKey:@"indicatorClassicBanner"] isEqual:@"icon"])) [mutableSpecifiers removeObject:spec];
 			} else {
 				if ([spec.properties[@"key"] isEqual:@"indicatorClassicBanner"]) [mutableSpecifiers removeObject:spec];
@@ -125,6 +127,8 @@
 		[self removeSpecifierID:@"useContactPictureIconBanner" animated:NO];
 		[self removeSpecifierID:@"contactPictureBorderBanner" animated:YES];
 
+		[self removeSpecifierID:@"compactStyleBanner" animated:YES];
+
 
 		if ([self specifierForID:@"indicatorClassicBanner"] == nil) {
 			NSArray *specifiers = [self loadSpecifiersFromPlistName:@"Banner" target:self];
@@ -182,6 +186,10 @@
 				}
 				if ([spec.properties[@"key"] isEqual:@"contactPictureBorderBanner"]) {
 					[self insertSpecifier:spec afterSpecifierID:@"useContactPictureIconBanner" animated:NO];
+				}
+
+				if ([spec.properties[@"key"] isEqual:@"compactStyleBanner"]) {
+					[self insertSpecifier:spec afterSpecifierID:@"forceModeBanner" animated:NO];
 				}
 			}
 		}

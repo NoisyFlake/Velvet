@@ -206,7 +206,6 @@
 		<dict>
 			<key>cell</key>							<string>PSGroupCell</string>
 			<key>label</key>						<string>Label Options</string>
-			<key>footerText</key>					<string>Displays the app name if there is no title.</string>
 		</dict>
 		<dict>
 			<key>cell</key>							<string>PSLinkListCell</string>
@@ -232,14 +231,6 @@
 			<key>id</key>							<string>colorHeaderDateBanner</string>
 			<key>key</key>							<string>colorHeaderDateBanner</string>
 			<key>label</key>						<string>Date Color</string>
-		</dict>
-		<dict>
-			<key>cell</key>							<string>PSSwitchCell</string>
-			<key>default</key>						<false/>
-			<key>defaults</key>						<string>com.initwithframe.velvet</string>
-			<key>key</key>							<string>nameAsTitleBanner</string>
-			<key>label</key>						<string>App Name as Title</string>
-			<key>cellClass</key>					<string>VelvetToggle</string>
 		</dict>
 
 		<dict>
@@ -389,6 +380,15 @@
 														<string>light</string>
 														<string>dark</string>
 													</array>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSSwitchCell</string>
+			<key>default</key>						<false/>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>compactStyleBanner</string>
+			<key>id</key>							<string>compactStyleBanner</string>
+			<key>label</key>						<string>Compact Style</string>
+			<key>cellClass</key>					<string>VelvetToggle</string>
 		</dict>
 
 	</array>

@@ -117,7 +117,6 @@
         @"colorBackgroundBanner": @"none",
         @"colorPrimaryLabelBanner": @"dominant",
         @"colorSecondaryLabelBanner": @"none",
-        @"nameAsTitleBanner": @NO,
         @"borderColorBanner": @"none",
         @"borderPositionBanner": @"all",
         @"borderWidthBanner": @2,
@@ -128,6 +127,7 @@
         @"useContactPictureBanner": @YES,
         @"useContactPictureIconBanner": @YES,
         @"contactPictureBorderBanner":@"none",
+        @"compactStyleBanner": @NO,
 
         @"styleLockscreen": @"modern",
         @"indicatorClassicLockscreen": @"icon",
@@ -143,7 +143,6 @@
         @"colorBackgroundLockscreen": @"none",
         @"colorPrimaryLabelLockscreen": @"dominant",
         @"colorSecondaryLabelLockscreen": @"none",
-        @"nameAsTitleLockscreen": @NO,
         @"borderColorLockscreen": @"none",
         @"borderPositionLockscreen": @"all",
         @"borderWidthLockscreen": @2,
@@ -154,6 +153,7 @@
         @"useContactPictureLockscreen": @YES,
         @"useContactPictureIconLockscreen": @YES,
         @"contactPictureBorderLockscreen":@"none",
+        @"compactStyleLockscreen": @NO,
 
         @"colorBackgroundMediaplayer": @"none",
         @"borderColorMediaplayer": @"none",
