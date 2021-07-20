@@ -36,6 +36,12 @@
 -(NCNotificationViewControllerView *)_notificationCellView;
 @end
 
+@interface NCNotificationListCellActionButtonsView : UIView
+@end
+
+@interface NCNotificationListCoalescingControlsView : UIView
+@end
+
 @interface NCNotificationListView : UIScrollView
 @property(nonatomic, getter=isGrouped) BOOL grouped;
 @property(nonatomic, getter=hasPerformedFirstLayout) BOOL performedFirstLayout;

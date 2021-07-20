@@ -50,13 +50,25 @@ CGFloat compactHeight = 20;
 }
 %end
 
-%hook NCNotificationStructuredListViewController
-- (void)viewDidLayoutSubviews {
+%hook NCNotificationListCellActionButtonsView
+-(void)didMoveToWindow {
 	%orig;
 
-	if ([[preferences valueForKey:@"forceModeLockscreen"] isEqual:@"dark"]) {
+	if ([[preferences valueForKey:getPreferencesKeyFor(@"forceMode", (UIView *)self)] isEqual:@"dark"]) {
 		self.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
-	} else if ([[preferences valueForKey:@"forceModeLockscreen"] isEqual:@"light"]) {
+	} else if ([[preferences valueForKey:getPreferencesKeyFor(@"forceMode", (UIView *)self)] isEqual:@"light"]) {
+		self.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+	}
+}
+%end
+
+%hook NCNotificationListCoalescingControlsView
+-(void)didMoveToWindow {
+	%orig;
+
+	if ([[preferences valueForKey:getPreferencesKeyFor(@"forceMode", (UIView *)self)] isEqual:@"dark"]) {
+		self.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
+	} else if ([[preferences valueForKey:getPreferencesKeyFor(@"forceMode", (UIView *)self)] isEqual:@"light"]) {
 		self.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
 	}
 }
