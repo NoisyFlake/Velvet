@@ -785,7 +785,7 @@ CGFloat compactHeight = 20;
 
 		if ([controller isKindOfClass:%c(NCNotificationShortLookViewController)] && ([controller.notificationRequest.sectionIdentifier isEqual:@"com.apple.donotdisturb"] || [controller.notificationRequest.sectionIdentifier isEqual:@"com.apple.powerui.smartcharging"]) && [[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"modern"]) {
 			if (!isRTL()) {
-				labelWidth -= thumbnail.frame.size.width;
+				labelWidth -= thumbnail.frame.size.width + 10;
 			}
 		}
 	}
@@ -795,6 +795,9 @@ CGFloat compactHeight = 20;
 		PLPlatterHeaderContentView *header = [controller.viewForPreview valueForKey:@"_headerContentView"];
 		if (header) {
 			dateLabelWidth = header.dateLabel.frame.size.width + 3;
+
+			// iOS automatically adjusts the title based on the thumbnail, but we don't want that because they're not on the same height
+			if (thumbnail != nil) dateLabelWidth -= thumbnail.frame.size.width + 10;
 		}
 	}
 
