@@ -27,10 +27,20 @@ CGFloat compactHeight = 20;
 	CGRect frame = self.frame;
 	self.velvetBackground.frame = frame;
 
-	if ([[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"modern"] && [preferences boolForKey:getPreferencesKeyFor(@"compactStyle", self)]) {
-		CGRect contentFrame = self.notificationContentView.frame;
-		self.notificationContentView.frame = CGRectMake(contentFrame.origin.x, contentFrame.origin.y - (compactHeight / 2), contentFrame.size.width, contentFrame.size.height);
+	CGFloat yAdjustment = 0;
+	if ([[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"modern"]) {
+		NCNotificationShortLookViewController *controller = self._viewControllerForAncestor;
+		if ([controller.notificationRequest.sectionIdentifier isEqual:@"com.apple.donotdisturb"] || [controller.notificationRequest.sectionIdentifier isEqual:@"com.apple.powerui.smartcharging"]) {
+			yAdjustment += 2;
 	}
+
+		if ([preferences boolForKey:getPreferencesKeyFor(@"compactStyle", self)]) {
+			yAdjustment -= compactHeight / 2;
+		}
+	}
+
+	CGRect contentFrame = self.notificationContentView.frame;
+	self.notificationContentView.frame = CGRectMake(contentFrame.origin.x, contentFrame.origin.y + yAdjustment, contentFrame.size.width, contentFrame.size.height);
 
 }
 - (CGSize)sizeThatFitsContentWithSize:(CGSize)arg1 {
