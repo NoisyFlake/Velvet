@@ -1,7 +1,7 @@
 Package: com.initwithframe.velvet
 Name: Velvet
 Depends: mobilesubstrate, firmware (>= 13.0), preferenceloader, net.limneos.libbulletin (>= 0.1-158), com.spark.libsparkcolourpicker
-Version: 1.4
+Version: 1.5
 Architecture: iphoneos-arm
 Description: A new way to customize your notifications!
 Maintainer: initWithFrame

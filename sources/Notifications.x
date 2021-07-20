@@ -210,9 +210,9 @@ CGFloat compactHeight = 20;
 			float size = [preferences integerForKey:getPreferencesKeyFor(@"indicatorModernSize", view)];
 
 			if (isRTL()) {
-				view.imageIndicator.frame = CGRectMake(view.frame.size.width - size - 20, (view.frame.size.height - size)/2, size, size);
+				view.imageIndicator.frame = CGRectMake(view.frame.size.width - size - 16, (view.frame.size.height - size)/2, size, size);
 			} else {
-				view.imageIndicator.frame = CGRectMake(20, (view.frame.size.height - size)/2, size, size);
+				view.imageIndicator.frame = CGRectMake(16, (view.frame.size.height - size)/2, size, size);
 			}
 
 			view.imageIndicatorCorner.frame = CGRectMake((view.imageIndicator.frame.origin.x + view.imageIndicator.frame.size.width) - 13, (view.imageIndicator.frame.origin.y + view.imageIndicator.frame.size.height) - 13, 15, 15);
@@ -756,7 +756,7 @@ CGFloat compactHeight = 20;
 	if ([[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"modern"]) {
 		frame.origin.y = frame.origin.y - 14;
 		if (!isRTL()) {
-			frame.origin.x = frame.origin.x + getIndicatorOffset(self);
+			frame.origin.x = frame.origin.x + getIndicatorOffset(self) - 4;
 		}
 	} else if ([[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"classic"] && ![[preferences valueForKey:getPreferencesKeyFor(@"colorHeader", self)] isEqual:@"none"]) {
 		frame.origin.y = frame.origin.y + 10;
