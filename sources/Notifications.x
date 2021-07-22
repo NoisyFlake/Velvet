@@ -1011,23 +1011,34 @@ static void testCustom() {
 	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 4.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void) {
 
 		[[%c(JBBulletinManager) sharedInstance]
-        showBulletinWithTitle:@"Home"
-        message:@"Someone is at your front door"
-        bundleID:@"com.apple.Home"];
+        showBulletinWithTitle:@"PayPal"
+        message:@"You received 1.2M EUR from Apple"
+        bundleID:@"com.yourcompany.PPClient"];
 
 		// [[%c(JBBulletinManager) sharedInstance]
 		// 	showBulletinWithTitle:@"Award received!"
-		// 	message:@"You received a platinum award"
+		// 	message:@"You received an Argentium award"
 		// 	bundleID:@"com.christianselig.Apollo"];
 
 		[[%c(JBBulletinManager) sharedInstance]
-			showBulletinWithTitle:@""
-			message:@"noisyflake, himynameisubik and 2 others liked your photo"
+			showBulletinWithTitle:@"Amazon"
+			message:@"Your package was delivered"
+			bundleID:@"com.amazon.AmazonDE"];
+		// });
+
+		// [[%c(JBBulletinManager) sharedInstance]
+		// showBulletinWithTitle:@"Tim Cook"
+		// message:@"Compact mode looks nice, glad you finally implemented it."
+		// bundleID:@"com.apple.MobileSMS"];
+
+		[[%c(JBBulletinManager) sharedInstance]
+			showBulletinWithTitle:@"himynameisubik"
+			message:@"Contact pictures for other apps? :o"
 			bundleID:@"com.burbn.instagram"];
 
 		[[%c(JBBulletinManager) sharedInstance]
-			showBulletinWithTitle:@"Twitter"
-			message:@"#Velvet is now trending on Twitter"
+			showBulletinWithTitle:@"Tim Cook"
+			message:@"New compact mode looks nice!"
 			bundleID:@"com.atebits.Tweetie2"];
 
 		// [[%c(JBBulletinManager) sharedInstance]
@@ -1035,10 +1046,7 @@ static void testCustom() {
 		// 	message:@"ETA?!"
 		// 	bundleID:@"com.apple.MobileSMS"];
 
-		[[%c(JBBulletinManager) sharedInstance]
-			showBulletinWithTitle:@"Tim Cook"
-			message:@"Looks like there's no need for iOS 15"
-			bundleID:@"com.apple.MobileSMS"];
+		
 	});
 }
 
@@ -1047,16 +1055,19 @@ static BOOL isRTL() {
 }
 
 // ---- Enable this when creating mockup screenshots to force iMessages to belong to a specific contact for the contact picture ---- //
-// %hook NCNotificationRequest
-// -(NSDictionary *)context {
+// %hook UNNotificationContent
+// -(NSDictionary *)userInfo {
 // 	NSDictionary *orig = %orig;
-// 	NSMutableDictionary *mutable = (orig == nil) ? [NSMutableDictionary new] : [orig mutableCopy];
-// 	NSMutableDictionary *mutableInfo = ([mutable valueForKey:@"userInfo"] == nil) ? [NSMutableDictionary new] : [[mutable valueForKey:@"userInfo"] mutableCopy];
+// 	NSMutableDictionary *mutableInfo = (orig == nil ? [NSMutableDictionary new] : [orig mutableCopy]);
 
-// 	[mutableInfo setObject:@"CCB8AEBD-CA4A-448C-AB41-80DF87E52524:ABPerson" forKey:@"CKBBContextKeySenderPersonCentricID"];
-// 	[mutable setObject:mutableInfo forKey:@"userInfo"];
+// 	if ([self.title isEqual:@"Tim Cook"]) {
+// 		// [mutableInfo setObject:@"CCB8AEBD-CA4A-448C-AB41-80DF87E52524:ABPerson" forKey:@"CKBBContextKeySenderPersonCentricID"];
+// 		[mutableInfo setObject:@"tim_cook" forKey:@"D"];
+// 	} else {
+// 		[mutableInfo setObject:@"https://scontent-frx5-1.cdninstagram.com/v/t51.2885-19/s150x150/58409498_2497209443636801_3696262869415886848_n.jpg?_nc_ht=scontent-frx5-1.cdninstagram.com&_nc_ohc=CeaFceMF-jIAX-PVBLU&edm=ABfd0MgBAAAA&ccb=7-4&oh=a46ef4fb8f363b7a545814667c7433f7&oe=61010793&_nc_sid=7bff83" forKey:@"a"];
+// 	}
 
-// 	return mutable;
+// 	return mutableInfo;
 // }
 // %end
 
