@@ -163,6 +163,7 @@
         @"borderWidthMediaplayer": @2,
         @"roundedCornersMediaplayer": @"stock",
         @"customCornerRadiusMediaplayer": @13,
+        @"forceModeMediaplayer": @"default",
 
         @"colorHeaderWidget": @"none",
         @"colorBackgroundWidget": @"none",

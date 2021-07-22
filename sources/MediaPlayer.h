@@ -18,6 +18,9 @@
 @interface CSMediaControlsView : CSCoverSheetViewBase
 @end
 
+@interface CSNotificationAdjunctListViewController : UIViewController
+@end
+
 static float getCornerRadius();
 static void updateMediaplayerColors();
 static BOOL colorFlowLockscreenColoringEnabled();

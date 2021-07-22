@@ -106,6 +106,31 @@
 			<key>id</key>							<string>customCornerRadiusMediaplayer</string>
 		</dict>
 
+		<dict>
+			<key>cell</key>							<string>PSGroupCell</string>
+			<key>label</key>						<string>Misc.</string>
+			<key>footerText</key>					<string>This option might require a respring</string>
+		</dict>
+		<dict>
+			<key>cell</key>							<string>PSLinkListCell</string>
+			<key>detail</key>						<string>VelvetListItemsController</string>
+			<key>default</key>						<string>default</string>
+			<key>defaults</key>						<string>com.initwithframe.velvet</string>
+			<key>key</key>							<string>forceModeMediaplayer</string>
+			<key>id</key>							<string>forceModeMediaplayer</string>
+			<key>label</key>						<string>Force Mode</string>
+			<key>validTitles</key>					<array>
+														<string>Default</string>
+														<string>Light</string>
+														<string>Dark</string>
+													</array>
+			<key>validValues</key>					<array>
+														<string>default</string>
+														<string>light</string>
+														<string>dark</string>
+													</array>
+		</dict>
+
 	</array>
 	<key>title</key>
 	<string>Media Player</string>

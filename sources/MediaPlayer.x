@@ -10,10 +10,26 @@ UIColor *velvetArtworkBorderColor;
 
 BOOL colorFlowInstalled;
 
+%hook CSNotificationAdjunctListViewController
+
+-(void)viewDidLayoutSubviews {
+	%orig;
+	
+	if ([[preferences valueForKey:@"forceModeMediaplayer"] isEqual:@"dark"]) {
+		self.overrideUserInterfaceStyle = UIUserInterfaceStyleDark;
+	} else if ([[preferences valueForKey:@"forceModeMediaplayer"] isEqual:@"light"]) {
+		self.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+	}
+}
+
+%end
+
 %hook CSMediaControlsView
 
 - (void)didMoveToWindow {
 	%orig;
+
+	
 
 	if (![preferences boolForKey:@"enableMediaplayer"] || colorFlowLockscreenResizingEnabled()) return;
 	NSString *backgroundColor = [preferences valueForKey:@"colorBackgroundMediaplayer"];
