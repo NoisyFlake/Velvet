@@ -815,7 +815,7 @@ CGFloat compactHeight = 20;
 	if (thumbnail) {
 		CGRect thumbFrame = thumbnail.frame;
 		if (!isRTL() || [[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"classic"]) {
-			thumbFrame.origin.x = thumbFrame.origin.x - labelWidth;
+			thumbFrame.origin.x = thumbFrame.origin.x - labelWidth + 4;
 		}
 
 		if ([[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"modern"] && [preferences boolForKey:getPreferencesKeyFor(@"compactStyle", self)]) {
