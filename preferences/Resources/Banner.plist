@@ -397,7 +397,7 @@
 			<key>defaults</key>						<string>com.initwithframe.velvet</string>
 			<key>key</key>							<string>compactStyleBanner</string>
 			<key>id</key>							<string>compactStyleBanner</string>
-			<key>label</key>						<string>Compact Style</string>
+			<key>label</key>						<string>Compact Mode</string>
 			<key>cellClass</key>					<string>VelvetToggle</string>
 		</dict>
 

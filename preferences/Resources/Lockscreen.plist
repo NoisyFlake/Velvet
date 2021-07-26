@@ -168,7 +168,7 @@
 			<key>defaults</key>						<string>com.initwithframe.velvet</string>
 			<key>key</key>							<string>useContactPictureLockscreen</string>
 			<key>id</key>							<string>useContactPictureLockscreen</string>
-			<key>label</key>						<string>Use Contact Picture if available</string>
+			<key>label</key>						<string>Use Contact Picture</string>
 			<key>cellClass</key>					<string>VelvetToggle</string>
 		</dict>
 		<dict>
@@ -397,7 +397,7 @@
 			<key>defaults</key>						<string>com.initwithframe.velvet</string>
 			<key>key</key>							<string>compactStyleLockscreen</string>
 			<key>id</key>							<string>compactStyleLockscreen</string>
-			<key>label</key>						<string>Compact Style</string>
+			<key>label</key>						<string>Compact Mode</string>
 			<key>cellClass</key>					<string>VelvetToggle</string>
 		</dict>
 

@@ -235,26 +235,26 @@ CGFloat compactHeight = 20;
 
 				if ([preferences boolForKey:getPreferencesKeyFor(@"useContactPicture", view)]) {
 					dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-				UIImage *contactPicture = [self getContactPicture];
+						UIImage *contactPicture = [self getContactPicture];
 
 						dispatch_async(dispatch_get_main_queue(), ^{
-							if (contactPicture != nil) {
-					view.imageIndicator.image = contactPicture;
-					view.imageIndicator.layer.cornerRadius = view.imageIndicator.frame.size.height / 2;
-					view.imageIndicator.clipsToBounds = YES;
-					view.imageIndicator.contentMode = UIViewContentModeScaleAspectFill;
+							if (contactPicture != nil && view != nil && view.window != nil) {
+								view.imageIndicator.image = contactPicture;
+								view.imageIndicator.layer.cornerRadius = view.imageIndicator.frame.size.height / 2;
+								view.imageIndicator.clipsToBounds = YES;
+								view.imageIndicator.contentMode = UIViewContentModeScaleAspectFill;
 
-					if ([preferences boolForKey:getPreferencesKeyFor(@"useContactPictureIcon", view)]) {
-						view.imageIndicatorCorner.image = [self getIconForBundleId:self.notificationRequest.sectionIdentifier withMask:YES];
-						view.imageIndicatorCorner.hidden = NO;
-					}
+								if ([preferences boolForKey:getPreferencesKeyFor(@"useContactPictureIcon", view)]) {
+									view.imageIndicatorCorner.image = [self getIconForBundleId:self.notificationRequest.sectionIdentifier withMask:YES];
+									view.imageIndicatorCorner.hidden = NO;
+								}
 
-					NSString *contactBorderColor = getColorFor(@"contactPictureBorder", view);
-					if (contactBorderColor) {
-						view.imageIndicator.layer.borderWidth = 1;
-						view.imageIndicator.layer.borderColor = [contactBorderColor isEqual:@"dominant"] ? dominantColor.CGColor : [UIColor velvetColorFromHexString:contactBorderColor].CGColor;
-					}
-					}
+								NSString *contactBorderColor = getColorFor(@"contactPictureBorder", view);
+								if (contactBorderColor) {
+									view.imageIndicator.layer.borderWidth = 1;
+									view.imageIndicator.layer.borderColor = [contactBorderColor isEqual:@"dominant"] ? dominantColor.CGColor : [UIColor velvetColorFromHexString:contactBorderColor].CGColor;
+								}
+							}
 
 						});
 					});
@@ -835,7 +835,7 @@ CGFloat compactHeight = 20;
 	if ([[preferences valueForKey:getPreferencesKeyFor(@"style", self)] isEqual:@"modern"] && [controller isKindOfClass:%c(NCNotificationShortLookViewController)]) {
 		PLPlatterHeaderContentView *header = [controller.viewForPreview valueForKey:@"_headerContentView"];
 		if (header) {
-			dateLabelWidth = header.dateLabel.frame.size.width + 3;
+			dateLabelWidth = header.dateLabel.frame.size.width;
 
 			// iOS automatically adjusts the title based on the thumbnail, but we don't want that because they're not on the same height
 			if (thumbnail != nil) dateLabelWidth -= thumbnail.frame.size.width + 10;
