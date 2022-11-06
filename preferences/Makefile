@@ -1,8 +1,5 @@
-ifneq ("$(wildcard $(THEOS)/sdks/iPhoneOS12.4.sdk)", "")
-	TARGET = iphone:clang:12.4:12.4
-else
-	TARGET = iphone:clang:latest
-endif
+TARGET = iphone:clang:latest
+
 ARCHS = arm64 arm64e
 
 include $(THEOS)/makefiles/common.mk

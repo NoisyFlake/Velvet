@@ -1,3 +1,5 @@
+#import <UIKit/UIKit.h>
+
 #ifdef DEBUG
 #define NSLog(fmt, ...) NSLog((@"[Velvet] " fmt), ##__VA_ARGS__)
 #else

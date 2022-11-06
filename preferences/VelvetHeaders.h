@@ -1,6 +1,5 @@
-#import <Preferences/PSListController.h>
-#import <Preferences/PSTableCell.h>
-#import <Preferences/PSSpecifier.h>
+#import <UIKit/UIKit.h>
+#import <Preferences/Preferences.h>
 #include "../sources/VelvetPrefs.h"
 
 #ifdef DEBUG
@@ -36,12 +35,12 @@
 @interface PSSegmentableSlider : UISlider
 @end
 
-@interface PSControlTableCell : PSTableCell
-@property (nonatomic, retain) UIControl *control;
-@end
+// @interface PSControlTableCell (Private)
+// @property (nonatomic, retain) UIControl *control;
+// @end
 
-@interface PSSliderTableCell : PSControlTableCell
-@end
+// @interface PSSliderTableCell : PSControlTableCell
+// @end
 
 @interface VelvetSlider : PSSliderTableCell
 @end
@@ -52,9 +51,9 @@
 @interface VelvetColorListSelector : PSTableCell
 @end
 
-@interface PSSwitchTableCell : PSControlTableCell
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(id)identifier specifier:(id)specifier;
-@end
+// @interface PSSwitchTableCell : PSControlTableCell
+// - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(id)identifier specifier:(id)specifier;
+// @end
 
 @interface VelvetToggle : PSSwitchTableCell
 @end
@@ -78,8 +77,8 @@
 @interface VelvetBannerController : VelvetBaseController
 @end
 
-@interface PSListItemsController : PSListController
-@end
+// @interface PSListItemsController : PSListController
+// @end
 
 @interface VelvetListItemsController : PSListItemsController
 @end

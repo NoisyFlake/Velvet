@@ -97,7 +97,7 @@
     [prefs mergeOldSettings];
 
     [prefs registerDefaults:@{
-        @"enabled": @YES,
+        @"enabled": @NO,
         @"enableBanners" : @YES,
         @"enableLockscreen" : @YES,
         @"enableMediaplayer" : @YES,
